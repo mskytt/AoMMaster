@@ -12,17 +12,20 @@ import numpy as np
 import random
 #from arch import arch_model
 
-import sys
-print '\n'.join(sys.path)
-np.__file__
-
-import imp
-imp.find_module('arch')
-#class timeseries(self):
+import FormatData
 
 
+def install_and_import(package):
+    import importlib
+    try:
+        importlib.import_module(package)
+    except ImportError:
+        import pip
+        pip.main(['install', package])
+    finally:
+        globals()[package] = importlib.import_module(package)
 
-#create time series
+#get data
 
 
 
@@ -37,7 +40,7 @@ def calculate_log_returns(timeseries):
 
 def garch11(data):
 
-    model = arch_model(data, p=1, q=1)
+    model = arch.arch_model(data, p=1, q=1)
     res = model.fit(update_freq=10)
     print(res.summary())
 
@@ -48,10 +51,9 @@ def main_test(timeseries):
 
 
 
-timeseries = np.array(random.random((100,)))
 
 print("test")
 
-main_test(timeseries)
+install_and_import('arch')
 
 
