@@ -5,8 +5,7 @@
 
 
 #import packages
-
-import stat
+from scipy import stat
 import math
 import numpy as np
 import random
@@ -14,35 +13,16 @@ import random
 
 import FormatData
 
-
-def install_and_import(package):
-    import importlib
-    try:
-        importlib.import_module(package)
-    except ImportError:
-        import pip
-        pip.main(['install', package])
-    finally:
-        globals()[package] = importlib.import_module(package)
-
-#get data
-
-
-
 #simple calc methods
 
-def calculate_log_returns(timeseries):
+def calculate_log_returns(matrix):
 
-    log_returns =  math.log((timeseries[-1]/timeseries[1:]) -1)
+    log_returnMatrix =  math.log((matrix[0:-2,:]/matrix[1:-1,:]) -1)
 
-    return log_returns
+    return log_returnsMatrix
 
 
-def garch11(data):
 
-    model = arch.arch_model(data, p=1, q=1)
-    res = model.fit(update_freq=10)
-    print(res.summary())
 
 def main_test(timeseries):
     data = calculate_log_returns(timeseries)
@@ -51,9 +31,21 @@ def main_test(timeseries):
 
 
 
+# ---------------GARCH ---------------
+
+# def garch11(data):
+#
+#     model = arch.arch_model(data, p=1, q=1)
+#     res = model.fit(update_freq=10)
+#     print(res.summary())
+
+#def getGARCH11Volatilities():
+
+
+
 
 print("test")
 
-install_and_import('arch')
+tools.install_and_import('arch')
 
 
