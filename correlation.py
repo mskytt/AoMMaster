@@ -1,4 +1,3 @@
-
 #this is a draft for a correlation analysis model
 
 #edit 1 Anna
@@ -59,6 +58,7 @@ for module in import_modules:
     except ImportError:
         tools.archInstallSucessfull(False)
         print module + " not imported"
+
 
 
 
