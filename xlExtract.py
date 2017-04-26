@@ -1,9 +1,10 @@
 #!/usr/bin/env python
+
 """
     Class to extract data from excel files with column indices at first row and 
     row indices specified using indexcolumn in initializer, default is 0.
 
-    v0.1 - Måns Skytt
+    v0.1 - Mans Skytt
 
 """
 
@@ -46,7 +47,7 @@ class xlExtract(object):
 
 
 ## Example 
-OISdata = xlExtract('OIS_data.xlsx','EONIA_ASK',0)
+OISdata = xlExtract('Data/OIS_data.xlsx','EONIA_ASK',0)
 
 OISdataDF = OISdata.ws
 OISdataInd = OISdata.index
