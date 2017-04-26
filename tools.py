@@ -1,4 +1,3 @@
-
 def install_and_import(package):
     import importlib
     try:
@@ -8,3 +7,7 @@ def install_and_import(package):
         pip.main(['install', package])
     finally:
         globals()[package] = importlib.import_module(package)
+
+
+def archInstallSucessfull(Sucess = True):
+    return Sucess

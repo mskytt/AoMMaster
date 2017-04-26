@@ -1,59 +1,58 @@
-
 #this is a draft for a correlation analysis model
 
-#edit 1 Anna
-
-
 #import packages
-
-import stat
-import math
-import numpy as np
-import random
-#from arch import arch_model
-
-import FormatData
-
-
-def install_and_import(package):
-    import importlib
-    try:
-        importlib.import_module(package)
-    except ImportError:
-        import pip
-        pip.main(['install', package])
-    finally:
-        globals()[package] = importlib.import_module(package)
-
-#get data
-
-
+import tools
+import_modules = ['scipy.stat', 'math', 'numpy','arch', 'datetime']
 
 #simple calc methods
 
-def calculate_log_returns(timeseries):
+#TODO: change to vector?
+def calculate_log_returns(matrix):
 
-    log_returns =  math.log((timeseries[-1]/timeseries[1:]) -1)
+    log_returnMatrix =  math.log((matrix[0:-2,:]/matrix[1:-1,:]) -1)
 
-    return log_returns
+    return log_returnsMatrix
+
+
+
+#TODO: should we do this on vectors or matrices?
+def main_test(data):
+
+    for timeseries in data:
+    log_returns = calculate_log_returns(timeseries)
+    if archInstallSucessfull:
+        sigmas = []
+        sigmas.append(getGARCH11Volatilities(log_returns))
+        #DCC
+
+
+# ---------------GARCH ---------------
+
+#def getGARCH11Volatilities():
+
 
 
 def garch11(data):
 
     model = arch.arch_model(data, p=1, q=1)
     res = model.fit(update_freq=10)
+   #TODO
+    fig = res.plot(annualize='D')
     print(res.summary())
-
-def main_test(timeseries):
-    data = calculate_log_returns(timeseries)
-
-    garch11(data)
 
 
 
 
 print("test")
 
-install_and_import('arch')
+
+for module in import_modules:
+    try:
+        tools.install_and_import(module)
+    except ImportError:
+        tools.archInstallSucessfull(False)
+        print module + " not imported"
+
+
 
 
