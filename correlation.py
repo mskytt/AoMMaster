@@ -1,8 +1,5 @@
 #this is a draft for a correlation analysis model
 
-#edit 1 Anna
-
-
 #import packages
 import tools
 import_modules = ['scipy.stat', 'math', 'numpy','arch', 'datetime']
@@ -42,9 +39,6 @@ def garch11(data):
    #TODO
     fig = res.plot(annualize='D')
     print(res.summary())
-
-
-
 
 
 

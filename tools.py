@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 def install_and_import(package):
     import importlib
     try:
