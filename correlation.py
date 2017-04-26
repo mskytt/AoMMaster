@@ -2,17 +2,11 @@
 
 #import packages
 import tools
-import_modules = ['scipy.stat', 'math', 'numpy','arch', 'datetime']
-
-#simple calc methods
-
-#TODO: change to vector?
-def calculate_log_returns(matrix):
-
-    log_returnsMatrix =  math.log((matrix[0:-2,:]/matrix[1:-1,:]) -1)
-
-    return log_returnsMatrix
-
+import numpy as np
+import math
+import datetime as dt
+import scipy
+#import_modules = ['scipy.stat', 'math', 'numpy','arch', 'datetime']
 
 
 #TODO: should we do this on vectors or matrices?
@@ -24,6 +18,29 @@ def main_test(data):
         sigmas = []
         sigmas.append(getGARCH11Volatilities(log_returns))
         #DCC
+
+
+
+
+
+# ---------------math tools ---------------
+#TODO: change to vector?
+def calculate_log_returns(matrix):
+
+    log_returnsMatrix =  math.log((matrix[0:-2,:]/matrix[1:-1,:]) -1)
+
+    return log_returnsMatrix
+
+def getMean(data):
+    return np.mean(data)
+
+def diagionalizeVectorToMatrix(vector):
+    
+    return matrix
+
+
+
+
 
 
 # ---------------GARCH ---------------
@@ -42,13 +59,15 @@ def getGARCH11volatilities(data):
 
 
 # --------------- DCC ---------------
-
+def DCC():
 #for loop for dates
 
 
-#calculate the mean of each asset
+    #calculate the unconditional mean of each asset
+    meanMatrix = getMean(log_ret)
 
-meanMatrix = getMean(log_ret)
+
+
 
 #asset matrix of means
 #diagonalize garch volatilities per asset
