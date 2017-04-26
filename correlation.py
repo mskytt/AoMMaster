@@ -9,7 +9,7 @@ import_modules = ['scipy.stat', 'math', 'numpy','arch', 'datetime']
 #TODO: change to vector?
 def calculate_log_returns(matrix):
 
-    log_returnMatrix =  math.log((matrix[0:-2,:]/matrix[1:-1,:]) -1)
+    log_returnsMatrix =  math.log((matrix[0:-2,:]/matrix[1:-1,:]) -1)
 
     return log_returnsMatrix
 
@@ -28,22 +28,35 @@ def main_test(data):
 
 # ---------------GARCH ---------------
 
-#def getGARCH11Volatilities():
 
-
-
-def garch11(data):
-
-    model = arch.arch_model(data, p=1, q=1)
-    res = model.fit(update_freq=10)
-   #TODO
-    fig = res.plot(annualize='D')
+def getGARCH11volatilities(data):
+    from arch.univariate import ARCH, GARCH
+    ar.volatility = ARCH(p=5)
+    #TODO: vad finns i res? Testa och se hur vollan tas
+    res = ar.fit(update_freq=0, disp='off')
     print(res.summary())
+    fig = res.plot(annualize='D')
+
+    #testa för att se hur vollan kan returnas
+    return res
 
 
+# --------------- DCC ---------------
+
+#for loop for dates
 
 
-print("test")
+#calculate the mean of each asset
+
+meanMatrix = getMean(log_ret)
+
+#asset matrix of means
+#diagonalize garch volatilities per asset
+#log returns per asset
+#skapa eta
+#hur reda ut Q_tilde? Hur uppskatta alpha och beta
+#skapa Q
+
 
 
 for module in import_modules:
