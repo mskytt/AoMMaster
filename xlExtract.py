@@ -55,7 +55,7 @@ LookupColumn = 'EUREON2W='
 LookupTime = '2017-04-21'
 LookupTime2 = OISdata.index[0:5]
 
-print type(OISdata.extractData(LookupColumn, LookupTime2, True).values)
+#print type(OISdata.extractData(LookupColumn, LookupTime2, True).values)
 #OISdataDF['columns'] = OISdataDF['columns'].astype('str')
 # OISdataNump = OISdataDF.values #Extract as numpy array
 # OISdataDF.index = OISdataDF.index.to_datetime() # Convert indices to datetime

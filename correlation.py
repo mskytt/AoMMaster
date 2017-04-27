@@ -14,21 +14,15 @@ import pdb
 
 
 #TODO: should we do this on vectors or matrices?
-def main_test(data):
+def main_test(returns):
 
-    #for timeseries in matrixOfData:
-    print data
     #har borde vi plocka bort nans
-
-
-    log_returns = calculate_log_returns(data)
+    log_returns = calculate_log_returns(returns)
     print "log returns calculated"
     print log_returns
-    pdb.set_trace()
-    sigmas = []
-    sigmas.append(getGARCH11Volatilities(log_returns))
+    sigmas = getGARCH11Volatilities(log_returns)
 
-        #DCC
+    #DCC
 
 
 
@@ -54,16 +48,25 @@ def diagionalizeVectorToMatrix(vector):
 # ---------------GARCH ---------------
 
 
-def getGARCH11volatilities(data):
-    from arch.univariate import ARCH, GARCH
-    ar.volatility = ARCH(p=5)
-    #TODO: vad finns i res? Testa och se hur vollan tas
-    res = ar.fit(update_freq=0, disp='off')
-    print(res.summary())
-    fig = res.plot(annualize='D')
 
-    #test to see how the vol could be returned
-    return res
+def getGARCH11Volatilities(log_returns):
+
+    from arch.univariate import ARCH
+    from arch import arch_model
+
+    am = arch_model(log_returns) 
+    res = am.fit(update_freq=5)
+
+    print(res.summary())
+
+    # ar.volatility = ARCH(p=5)
+    # #TODO: vad finns i res? Testa och se hur vollan tas
+    # res = ar.fit(update_freq=0, disp='off')
+    # print(res.summary())
+    # fig = res.plot(annualize='D')
+
+    # #test to see how the vol could be returned
+    # return res
 
 
 # --------------- DCC ---------------
@@ -75,6 +78,10 @@ def DCC():
     meanMatrix = getMean(log_ret)
 
 
+
+
+
+# --------------- start program ---------------
 OISData =xlExtract('Data/OIS_data.xlsx','EONIA_ASK',0)
 print OISData
 print "OISData extracted"
