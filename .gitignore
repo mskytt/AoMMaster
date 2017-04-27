@@ -1,1 +1,8 @@
-# ~*
+ # Python ignore
+ *.pyc
+
+ # Excel temporary
+~$*.xls*
+
+# Excel Backup File
+*.xlk
