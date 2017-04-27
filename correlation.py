@@ -16,14 +16,12 @@ import pdb
 #TODO: should we do this on vectors or matrices?
 def main_test(data):
 
-
-    
-
-
-
     #for timeseries in matrixOfData:
+    print data
+    #har borde vi plocka bort nans
 
-    log_returns = calculate_log_returns(matrixOfData_OIS)
+
+    log_returns = calculate_log_returns(data)
     print "log returns calculated"
     print log_returns
     pdb.set_trace()
@@ -37,12 +35,9 @@ def main_test(data):
 
 
 # ---------------math tools ---------------
-#TODO: change to vector?
+#takes the log return row-wise
 def calculate_log_returns(matrix):
-
-    log_returnsMatrix =  math.log((matrix[0:-2,:]/matrix[1:-1,:]) -1)
-
-    return log_returnsMatrix
+    return np.log(matrix[0:-2,:]) - np.log(matrix[2:,:])
 
 def getMean(data):
     return np.mean(data, dtype=np.float64)
@@ -81,9 +76,10 @@ def DCC():
 
 
 OISData =xlExtract('Data/OIS_data.xlsx','EONIA_ASK',0)
+print OISData
 print "OISData extracted"
 matrixOfData_OIS = OISData.ws.values
-test_main(matrixOfData_OIS)
+main_test(matrixOfData_OIS)
 #asset matrix of means
 #diagonalize garch volatilities per asset
 #log returns per asset
