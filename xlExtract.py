@@ -7,8 +7,8 @@
 """
 
 from __future__ import division
-import arch, stat, math, random, os.path, inspect, time
-import matplotlib.pyplot as plt
+import arch, stat, math, os.path, inspect, time
+#import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import datetime

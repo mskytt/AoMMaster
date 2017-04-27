@@ -2,21 +2,32 @@
 
 #import packages
 import tools
+import scipy
+from xlExtract import xlExtract
 import numpy as np
 import math
 import datetime as dt
 import scipy
+import pdb
+
 #import_modules = ['scipy.stat', 'math', 'numpy','arch', 'datetime']
 
 
 #TODO: should we do this on vectors or matrices?
 def main_test(data):
 
-    for timeseries in data:
-    log_returns = calculate_log_returns(timeseries)
-    if archInstallSucessfull:
-        sigmas = []
-        sigmas.append(getGARCH11Volatilities(log_returns))
+    #for timeseries in matrixOfData:
+    print data
+    #har borde vi plocka bort nans
+
+
+    log_returns = calculate_log_returns(data)
+    print "log returns calculated"
+    print log_returns
+    pdb.set_trace()
+    sigmas = []
+    sigmas.append(getGARCH11Volatilities(log_returns))
+
         #DCC
 
 
@@ -24,18 +35,15 @@ def main_test(data):
 
 
 # ---------------math tools ---------------
-#TODO: change to vector?
+#takes the log return row-wise
 def calculate_log_returns(matrix):
-
-    log_returnsMatrix =  math.log((matrix[0:-2,:]/matrix[1:-1,:]) -1)
-
-    return log_returnsMatrix
+    return np.log(matrix[0:-2,:]) - np.log(matrix[2:,:])
 
 def getMean(data):
-    return np.mean(data)
+    return np.mean(data, dtype=np.float64)
 
 def diagionalizeVectorToMatrix(vector):
-    
+
     return matrix
 
 
@@ -54,7 +62,7 @@ def getGARCH11volatilities(data):
     print(res.summary())
     fig = res.plot(annualize='D')
 
-    #testa för att se hur vollan kan returnas
+    #test to see how the vol could be returned
     return res
 
 
@@ -67,8 +75,11 @@ def DCC():
     meanMatrix = getMean(log_ret)
 
 
-
-
+OISData =xlExtract('Data/OIS_data.xlsx','EONIA_ASK',0)
+print OISData
+print "OISData extracted"
+matrixOfData_OIS = OISData.ws.values
+main_test(matrixOfData_OIS)
 #asset matrix of means
 #diagonalize garch volatilities per asset
 #log returns per asset
@@ -78,13 +89,13 @@ def DCC():
 
 
 
-for module in import_modules:
-    try:
-        tools.install_and_import(module)
-    except ImportError:
-        tools.archInstallSucessfull(False)
-        print module + " not imported"
-
-
+# for module in import_modules:
+#     try:
+#         tools.install_and_import(module)
+#     except ImportError:
+#         tools.archInstallSucessfull(False)
+#         print module + " not imported"
+#
+#
 
 
