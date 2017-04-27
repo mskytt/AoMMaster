@@ -61,7 +61,7 @@ OISdataCol = OISdata.columns
 LookupColumn = 'EUREON2W='
 LookupTime = '2017-04-21'
 LookupTime2 = OISdata.index[0:5]
-DataExtract = OISdataFilled.extractData(LookupColumn, LookupTime, False, True)
+gitDataExtract = OISdataFilled.extractData(LookupColumn, LookupTime, False, True)
 
 print DataExtract
 """
