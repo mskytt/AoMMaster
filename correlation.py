@@ -26,7 +26,17 @@ def main_test(returns):
 
 
 
+# --------------- FormatData ---------------
 
+#from panda framework to structs 
+
+
+
+def pandaMatrixToPandaColumns(pandaData,col):
+
+    key = PandaData.index
+    value = pandaData.columns
+    # DataFrame([data, index, columns, dtype, copy])
 
 # ---------------math tools ---------------
 #takes the log return row-wise
@@ -80,13 +90,11 @@ def DCC():
 
 
 
-
 # --------------- start program ---------------
-OISData =xlExtract('Data/OIS_data.xlsx','EONIA_ASK',0)
-print OISData
-print "OISData extracted"
-matrixOfData_OIS = OISData.ws.values
-main_test(matrixOfData_OIS)
+pandaData =xlExtract('Data/OIS_data.xlsx','EONIA_ASK',0)
+
+
+main_test(pandaData)
 #asset matrix of means
 #diagonalize garch volatilities per asset
 #log returns per asset
