@@ -4,9 +4,14 @@
     row indices specified using indexcolumn in initializer, default is 0.
 
     v0.1 - Mans Skytt
+    ----------------------------------------------------------
+    Added linear interpolation of data and changed .ws to .df to represent data frame
+    
+    v0.2 - Mans Skytt
+    ----------------------------------------------------------
+
 """
 
-from __future__ import division
 import arch, stat, math, os.path, inspect, time
 #import matplotlib.pyplot as plt
 import numpy as np
