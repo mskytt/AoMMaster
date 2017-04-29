@@ -110,6 +110,8 @@ pandaData =xlExtract(pathsToData[2],sheets[2],indexColumns[2])
  #     print col_index
 col_name = pandaData.columns[0]
 print col_name
+
+
 main_test(pandaData,col_name)
 #asset matrix of means
 #diagonalize garch volatilities per asset
