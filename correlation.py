@@ -1,27 +1,28 @@
 #this is a draft for a correlation analysis model
 
 #import packages
-import tools
-import scipy
+from __future__ import division
 from xlExtract import xlExtract
 import numpy as np
-import math
-import datetime as dt
-import scipy
+import pandas as pd
 import pdb
 
-#import_modules = ['scipy.stat', 'math', 'numpy','arch', 'datetime']
+
+
 
 
 #TODO: should we do this on vectors or matrices?
-def main_test(returns):
+def main_test(pandaData,col):
 
-    #har borde vi plocka bort nans
-    log_returns = calculate_log_returns(returns)
+    returns = xlExtract.extractData(pandaData, col_name,'2017-04-21' , entireTS = True, useLinterpDF = True)
+    print returns
+    print returns.values
+    log_returns = calculate_log_returns(returns.values)
     print "log returns calculated"
     print log_returns
+    pdb.set_trace()
     sigmas = getGARCH11Volatilities(log_returns)
-
+    print sigmas
     #DCC
 
 
@@ -31,17 +32,20 @@ def main_test(returns):
 #from panda framework to structs 
 
 
-
 def pandaMatrixToPandaColumns(pandaData,col):
 
-    key = PandaData.index
-    value = pandaData.columns
-    # DataFrame([data, index, columns, dtype, copy])
+    key = pandaData.index
+    value = pandaData.columns[col]
+    returns = pd.DataFrame([value, key])
+    return returns
+
+
+
+
 
 # ---------------math tools ---------------
-#takes the log return row-wise
-def calculate_log_returns(matrix):
-    return np.log(matrix[0:-2,:]) - np.log(matrix[2:,:])
+def calculate_log_returns(vector):
+    return np.log(division(vector[0:-2],vector[1:-1]))
 
 def getMean(data):
     return np.mean(data, dtype=np.float64)
@@ -91,10 +95,24 @@ def DCC():
 
 
 # --------------- start program ---------------
-pandaData =xlExtract('Data/OIS_data.xlsx','EONIA_ASK',0)
+
+#Data extracts
+
+pathsToData = ['Data/OIS_data.xlsx', 'Data/OilFutures.xlsx', 'Data/GoldFutures.xlsx' ] 
+sheets = ['EONIA_ASK', 'ReutersICEBCTS', 'ReutersCOMEXGoldTS1', 'ReutersCOMEXGoldTS2', 'ReutersCOMEXGoldTS3', 'ReutersCOMEXGoldTS4']
+indexColumns = [0, 0, 0]
 
 
-main_test(pandaData)
+pandaData =xlExtract(pathsToData[2],sheets[2],indexColumns[2])
+
+
+ # for col_index in xrange(0,len(pandaData.columns)):
+ #     print col_index
+col_name = pandaData.columns[0]
+print col_name
+
+
+main_test(pandaData,col_name)
 #asset matrix of means
 #diagonalize garch volatilities per asset
 #log returns per asset
