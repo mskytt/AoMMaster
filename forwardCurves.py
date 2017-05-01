@@ -41,11 +41,9 @@ def OIStoZeroCoupon(maturityDates, OISrates):
             dateIter += 1
     return ZCrates[0,:] # Ugly but needed due to allocation of matrix! gonna try to switch allocation
 
-
 def ZeroCoupontoForward(maturityDates, ZCrates):
     forwardRate = 0 # manipulation of ZC to get forward rates
-    # do stuff
-    return forwardRates
+    deltaTs = [j-i for i, j in zip(maturityDates[:-1], maturityDates[1:])]
 
 
 
@@ -54,8 +52,8 @@ matDates = [1/52, 2/52,3/52,1/12,2/12,3/12,4/12,5/12,6/12,7/12,8/12,9/12,10/12,1
 y = OIStoZeroCoupon(matDates,OISdataMat[0,0:len(matDates)])
 cs = CubicSpline(matDates,y)
 xs = np.arange(min(matDates), max(matDates), 1/365)
+print ZeroCoupontoForward(matDates,y)
 
-"""
 plt.axis([0,max(matDates),-0.4,1.7]) # lock axis
 plt.ion()
 row = 3000
@@ -70,4 +68,3 @@ while row < 3500:
     plt.pause(0.001)
     plt.clf()
     row += 1
-"""
