@@ -36,7 +36,7 @@ class xlExtract(object):
 
             self.columns = self.df.columns.astype(str) # Convert columns to strings 
             self.dflinterp = self.df.apply(pd.Series.interpolate) # Linear interpolated Data frame
-            
+            self.df.dropna(how = 'all') #drop rows with all nan-values
         else:
             raise IOError(
             "File not found: " + xlpath)
@@ -56,13 +56,17 @@ class xlExtract(object):
         else:
             return self.dflinterp.loc[:, LookupColumn]
 
+
+
+
+
 ## Example 
 """
 OISdata = xlExtract('Data/OIS_data.xlsx','EONIA_ASK',0)
 
 OISdataDF = OISdata.df
 OISdataInd = OISdata.index
-OISdataCol = OISdata.columns
+OISdataCol =  .columns
 LookupColumn = 'EUREON2W='
 LookupTime = '2017-04-21'
 LookupTime2 = OISdata.index[0:5]
