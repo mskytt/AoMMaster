@@ -25,39 +25,29 @@ def main_test(pandaData,col_name):
 
 
 
-    print prices.values
+    print prices.values[0]
     log_returns = calculate_log_returns(prices.values)
     print "log returns calculated"
-    #print log_returns
-    pdb.set_trace()
+    print log_returns
     sigmas = getGARCH11Volatilities(log_returns)
     print sigmas
+    pdb.set_trace()
     #DCC
-
-
-
-# --------------- FormatData ---------------
-
-#from panda framework to structs 
-
-
-def pandaMatrixToPandaColumns(pandaData):
-
-    key = pandaData.index
-    value = pandaData.columns[col]
-    returns = pd.DataFrame([value, key])
-    return returns
-
-
 
 
 
 # ---------------math tools ---------------
 def calculate_log_returns(prices):
-    return np.log(float(prices[0:-2])) - np.log(float(prices[1:-1]))
+    #print type(prices[0])
+    return np.log(prices[0:-2].astype(float))- np.log(prices[1:-1].astype(float))
 
-# def getMean(data):
-#     return np.mean(data, dtype=np.float64)
+
+# # ---------------math tools ---------------
+# def calculate_log_returns(prices):
+#     return np.log(prices[0:-2]) - np.log(prices[1:-1])
+
+# # def getMean(data):
+# #     return np.mean(data, dtype=np.float64)
 
 # def diagionalizeVectorToMatrix(vector):
 
