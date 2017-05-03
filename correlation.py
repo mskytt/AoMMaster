@@ -6,92 +6,7 @@ from xlExtract import xlExtract
 import numpy as np
 import pandas as pd
 import pdb
-
-
-
-
-
-
-#TODO: should we do this on vectors or matrices?
-def main_test(pandaData,col_name):
-
-    prices = xlExtract.extractData(pandaData, col_name,'2017-04-21' , entireTS = True, useLinterpDF = True)
-    prices = prices.dropna() #remove nan-rows
-
-    try:
-     int(prices.values[0])
-    except ValueError:
-        prices = prices[1:] #remove non-number first row
-
-
-
-    print prices.values[0]
-    log_returns = calculate_log_returns(prices.values)
-    print "log returns calculated"
-    print log_returns
-    sigmas = getGARCH11Volatilities(log_returns)
-    print sigmas
-    pdb.set_trace()
-    #DCC
-
-
-
-# ---------------math tools ---------------
-def calculate_log_returns(prices):
-    #print type(prices[0])
-    return np.log(prices[0:-2].astype(float))- np.log(prices[1:-1].astype(float))
-
-
-# # ---------------math tools ---------------
-# def calculate_log_returns(prices):
-#     return np.log(prices[0:-2]) - np.log(prices[1:-1])
-
-# # def getMean(data):
-# #     return np.mean(data, dtype=np.float64)
-
-# def diagionalizeVectorToMatrix(vector):
-
-#     return matrix
-
-
-
-
-
-
-# ---------------GARCH ---------------
-
-
-
-def getGARCH11Volatilities(log_returns):
-
-    from arch.univariate import ARCH
-    from arch import arch_model
-
-    am = arch_model(log_returns) 
-    res = am.fit(update_freq=5)
-
-    print(res.summary())
-
-    # ar.volatility = ARCH(p=5)
-    # #TODO: vad finns i res? Testa och se hur vollan tas
-    # res = ar.fit(update_freq=0, disp='off')
-    # print(res.summary())
-    # fig = res.plot(annualize='D')
-
-    # #test to see how the vol could be returned
-    # return res
-
-
-# --------------- DCC ---------------
-def DCC():
-#for loop for dates
-
-
-    #calculate the unconditional mean of each asset
-    meanMatrix = getMean(log_ret)
-
-
-
+import matplotlib.pyplot as plt
 
 # --------------- start program ---------------
 
@@ -101,16 +16,79 @@ pathsToData = ['Data/OIS_data.xlsx', 'Data/OilFutures.xlsx', 'Data/GoldFutures.x
 sheets = ['EONIA_ASK', 'ReutersICEBCTS', 'ReutersCOMEXGoldTS1', 'ReutersCOMEXGoldTS2', 'ReutersCOMEXGoldTS3', 'ReutersCOMEXGoldTS4']
 indexColumns = [0, 0, 0]
 
-#extract one column
-pandaColumn =xlExtract(pathsToData[2],sheets[2],indexColumns[2])
-#change to for-loop later
- # for col_index in xrange(0,len(pandaData.columns)):
- #   
-col_name = pandaColumn.columns[0]
 
 
-main_test(pandaColumn, col_name)
 
+class simpleTimeSeries(object):
+
+    def __init__(self, pandaColumn, col_name):
+
+        self.prices = xlExtract.extractData(pandaColumn, col_name,'2017-04-21' , entireTS = True, useLinterpDF = True).dropna()
+        try:
+            int(self.prices.values[0])
+        except ValueError:
+            self.prices = self.prices[1:] #remove non-number first row
+
+
+        self.logReturns =  np.diff(np.log(self.prices.astype(float)))
+        self.mean = np.mean(self.logReturns, dtype=np.float64)
+        self.calculateGARCH11Variables()
+        self. controlStatistics()
+
+
+        
+
+    def calculateGARCH11Variables(self):
+
+        from arch.univariate import ARCH
+        from arch import arch_model
+
+        am = arch_model(self.logReturns) 
+        res = am.fit(update_freq=5)
+        self.GARCHVolatility = res._volatility
+        #fig = res.plot(annualize='D')
+        #fig.show()
+        print(res.summary())
+
+    def controlStatistics(self):
+        print "Standard deviation of log returns"
+        print np.std(self.logReturns)
+
+
+
+# --------------- DCC ---------------
+# def DCC():
+# #for loop for dates
+
+
+#     #calculate the unconditional mean of each asset
+#     meanMatrix = getMean(log_ret)
+
+
+
+def plotDistribution(log_returns):
+    plt.hist(log_returns)
+    plt.title("Histogram")
+    plt.xlabel("Value")
+    plt.ylabel("Frequency")
+    plt.show()
+
+
+
+
+
+
+
+pandaColumn =xlExtract(pathsToData[2],sheets[2],indexColumns[2]) #extract one column
+
+col_name = pandaColumn.columns[0] #change to for-loop later
+
+timeSeries = simpleTimeSeries(pandaColumn,col_name)
+
+#plotDistribution(timeSeries.log_returns)
+#print timeSeries.GARCHmu
+#print timeSeries.mean
+    #DCC
 
 #asset matrix of means
 #diagonalize garch volatilities per asset
