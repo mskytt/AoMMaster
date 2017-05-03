@@ -1,8 +1,11 @@
  # Python ignore
- *.pyc
+*.pyc
 
  # Excel temporary
 ~$*.xls*
 
 # Excel Backup File
 *.xlk
+
+# Data files generated
+*.hdf5
