@@ -8,11 +8,12 @@ import pandas as pd
 import pdb
 import matplotlib.pyplot as plt
 from math import sqrt
+from forwardCurves import OIStoZeroCoupon
 
 
 
 
-class simpleTimeSeries(object):
+class BondorFuturesTimeSeries(object):
 
     def __init__(self, prices, col_name):
 
@@ -26,9 +27,9 @@ class simpleTimeSeries(object):
         self.logReturns =  -100*np.diff(np.log(self.prices.astype(float))) #log returns in percentage
         print "print log returns"
         print self.logReturns
-        self.mean = np.mean(self.logReturns, dtype=np.float64)
+        self.mean_annualized = np.mean(self.logReturns, dtype=np.float64)*sqrt(252) #constant mean
         self.calculateGARCH11Variables()
-        self. controlStatistics()
+
 
 
         
@@ -45,7 +46,7 @@ class simpleTimeSeries(object):
         print self.GARCHVolatility_annualized 
         #fig = res.plot(annualize='D')
         #fig.show()
-        print(res.summary())
+        #print(res.summary())
 
     def controlStatistics(self):
         print "Standard deviation of log returns"
@@ -71,6 +72,8 @@ def plotDistribution(log_returns):
     plt.show()
 
 
+#$def createDiagonalMatrixOfVector(vector):
+
 
 
 
@@ -81,20 +84,51 @@ def plotDistribution(log_returns):
 # --------------- start program ---------------
 
 #Data extracts
-
 pathsToData = ['Data/OIS_data.xlsx', 'Data/OilFutures.xlsx', 'Data/GoldFutures.xlsx' ] 
-sheets = ['EONIA_ASK', 'ReutersICEBCTS', 'ReutersCOMEXGoldTS1', 'ReutersCOMEXGoldTS2', 'ReutersCOMEXGoldTS3', 'ReutersCOMEXGoldTS4']
+sheets = ['EONIA_MID', 'ReutersICEBCTS', 'ReutersCOMEXGoldTS1', 'ReutersCOMEXGoldTS2', 'ReutersCOMEXGoldTS3', 'ReutersCOMEXGoldTS4']
 indexColumns = [0, 0, 0]
 
-pandaData =xlExtract(pathsToData[2],sheets[2],indexColumns[0]) #extract one sheet with index column 0 
+#GOLD and OIS-bonds
+dfFuturesData =xlExtract(pathsToData[2],sheets[2],indexColumns[2]) #extract one sheet with index column 0 
+dfBondsData = xlExtract(pathsToData[0],sheets[0],indexColumns[0]) 
 
 
-#for i in xrange(len(pandaData.columns)):
+meansFutures = []
+GARCHVolatilitiesFutures = []
+
+#BondFutures_pairs = 
+
+#for interest-futures pairs!
+#FUTURES
+#for i in xrange(len(dfFuturesData.columns)):
 for i in xrange(0):
-    pandaColumn = pandaData.columns[i]
-    prices = xlExtract.extractData(pandaData, pandaColumn,'2017-04-21' , entireTS = True, useLinterpDF = True).dropna()
-    timeSeries = simpleTimeSeries(prices, pandaColumn)
+    dfColumnFutures = dfFuturesData.columns[i]
 
+
+    dfFuturesPrices = xlExtract.extractData(dfFuturesData, dfColumn,'2017-04-21' , entireTS = True, useLinterpDF = True).dropna()
+    #dfBondPrices = xlExtract.extractData(dfBondsData, dfColumn,'2017-04-21' , entireTS = True, useLinterpDF = True).dropna()
+
+    timeSeriesFutures = BondorFuturesTimeSeries(dfFuturesPrices, dfColumn)
+    meansFutures.append(simpleTimeseries.mean_annualized)
+    GARCHVolatilities.append(simpleTimeseries.GARCHVolatility_annualized)
+
+
+dfMeansFutures = pd.DataFrame(meansFutures,index = dfFuturesData.index)
+dfGARCHVolatilitiesFutures =pd.DataFrame(GARCHVolatilitiesFutures,index = dfFuturesData.index) 
+
+
+#INTEREST RATES
+
+
+#kolla vilka datum som matchar
+for date in dfFuturesData.index:
+    dfFuturesData.col
+
+
+
+# --------------- DCC ---------------
+
+#create matrix from each individual timestep of each 
 
 #plotDistribution(timeSeries.log_returns)
 #print timeSeries.GARCHmu
