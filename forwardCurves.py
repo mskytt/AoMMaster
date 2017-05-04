@@ -8,7 +8,9 @@
 """
 from __future__ import division
 from xlExtract import xlExtract
+from h5pyStorage import storeToHDF5, loadFromHDF5
 from scipy.interpolate import CubicSpline
+from scipy.optimize import minimize
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
@@ -50,23 +52,36 @@ def ZeroCoupontoForward(maturityDates, ZCrates):
 
 def runCubicInterp(OISdataVec, matDates):
     # Interpolate with cubic spline given maturity dates and data as a 1D numpy array
-    ZCrates = OIStoZeroCoupon(matDates,OISdataVec) # Get zero coupon rates
-    forwardRates = ZeroCoupontoForward(matDates,ZCrates) # convert ZC to forward rates
-    cs = CubicSpline(matDates,forwardRates) # Creates cubic spline object that takes time argument
+    ZCRates = OIStoZeroCoupon(matDates,OISdataVec) # Get zero coupon rates
+    forwardRates = ZeroCoupontoForward(matDates,ZCRates) # convert ZC to forward rates
+    csFor = CubicSpline(matDates,forwardRates) # Creates cubic spline object that takes time argument
+    csZC = CubicSpline(matDates, ZCRates)
     times = np.arange(min(matDates), max(matDates), 1/365)
-    csForwardRates = cs(times) # Splined rates
-    return forwardRates, csForwardRates, times 
+    csForwardRates = csFor(times) # Splined rates
+    csZCRates = csZC(times)
+    return forwardRates, csForwardRates, ZCRates, csZCRates, times
 
 def OIStoForMatHelp(OISdataVec, matDates):
     # Helpter function to OISMatToForwardMat(), only returning interpolated forward rates
-    forwardRates, csForwardRates, times = runCubicInterp(OISdataVec, matDates)
+    forwardRates, csForwardRates, ZCRates, csZCRates, times = runCubicInterp(OISdataVec, matDates)
     return csForwardRates
+
+def OIStoZCMatHelp(OISdataVec, matDates):
+    # Helpter function to OISMatToForwardMat(), only returning interpolated forward rates
+    forwardRates, csForwardRates, ZCRates, csZCRates, times = runCubicInterp(OISdataVec, matDates)
+    return csZCRates
 
 def OISMatToForwardMat(OISdataMat, matDates):
     # Compute matrix of forward rates from OIS data matrix and vector of maturity dates
     forwardMat = np.apply_along_axis(OIStoForMatHelp, 1, OISdataMat, matDates)
-    _, _, times = runCubicInterp(OISdataMat[0,:], matDates)
+    _, _, _, _, times = runCubicInterp(OISdataMat[0,:], matDates)
     return forwardMat, times
+
+def OISMatToZCMat(OISdataMat, matDates):
+    # Compute matrix of forward rates from OIS data matrix and vector of maturity dates
+    ZCMat = np.apply_along_axis(OIStoZCMatHelp, 1, OISdataMat, matDates)
+    _, _, _, _, times = runCubicInterp(OISdataMat[0,:], matDates)
+    return ZCMat, times
 
 def runInterpTest():
     matDatesTest = [0.083333333, 0.166666667, 0.25, 0.5, 0.75, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -83,11 +98,11 @@ def runPlotLoop(endRow, startRow, matDates, OISdataMat):
     plt.ion()
     row = startRow
     while row < endRow: 
-        forwardRates, csForwardRates, times = runCubicInterp(OISdataMat[row,0:len(matDates)], matDates)            
-        plt.plot(matDates, forwardRates, 'o', label='data')
-        plt.plot(times, csForwardRates, label='spline')
+        forwardRates, csForwardRates, ZCRates, csZCRates, times = runCubicInterp(OISdataMat[row,:len(matDates)], matDates)            
+        plt.plot(matDates, ZCRates, 'o', label='data')
+        plt.plot(times, csZCRates, label='spline')
         plt.title(OISdataDF.index[row])
-        plt.pause(0.001)
+        plt.pause(0.1)
         plt.clf()
         row += 1
     return
@@ -120,28 +135,133 @@ def genEigs(mat):
     eigPerc = [val/sumEigVals for val in eigVals]
     return eigVals, eigVecs, eigPerc
 
-OISdata = xlExtract('Data/OIS_data.xlsx','EONIA_ASK',0)
-OISdataDF = OISdata.dflinterp # type: pandas.core.frame.DataFrame
-OISdataInd = OISdata.index # type: pandas.tseries.index.DatetimeIndex
-OISdataCol = OISdata.columns # type: pandas.indexes.base.Index
-OISdataMat = OISdataDF.values/100 # type: numpy.ndarray
+def genPCs(eigVals, eigVecs, eigPerc, percExpl):
+    i = 0
+    cumPerc = 0
+    PC = np.zeros(eigVecs.shape)
+    while cumPerc < percExpl:
+        PC[:,i] = eigVecs[:,i]*np.sqrt(eigVals[i])
+        cumPerc += eigPerc[i]
+        i += 1
+    print cumPerc
+    return PC[:,:i-1], i
 
+print 'Started.'
+
+"""
+    Define some data based parameters
+"""
 matDates = [1/52, 2/52,3/52,1/12,2/12,3/12,4/12,5/12,6/12,7/12,8/12,9/12,10/12,11/12,1,15/12,18/12,21/12,2,3,4,5,6,7,8,9,10] #,12,15,20,30,40,50]
 EONIAdataCutoff = 3037 # Number of days with valid data, for EONIA: 3037, from 2005-08-11 and forward
 FFE2YdataCutoff = 1328
 FFE1YdataCutoff = 315
 
-forwardMat, times = OISMatToForwardMat(OISdataMat, matDates)
-eigVals, eigVecs, eigPerc = genEigs(forwardMat[0:EONIAdataCutoff,:])
-#plt.plot(times,eigVecs[:,0],times,eigVecs[:,1],times,eigVecs[:,2])
-#plt.show()
+"""
+    Set bools to choose where to get data from
+"""
+readExcel = False # Read from excel
+genForward = False # Generate forward rates matrix
+genZC = False # Generate zero coupon rates matrix
+genForEigs = False # Generate forward eigenvalues
+genZCEigs = False # Generate zero coupon eigenvalues
+
+"""
+    Read from excel or from .hdf5 file
+"""
+if readExcel:
+    OISdata = xlExtract('Data/OIS_data.xlsx','EONIA_ASK',0)
+    OISdataDF = OISdata.dflinterp # type: pandas.core.frame.DataFrame
+    OISdataInd = OISdata.index # type: pandas.tseries.index.DatetimeIndex
+    OISdataCol = OISdata.columns # type: pandas.indexes.base.Index
+    OISdataMat = OISdataDF.values/100 # type: numpy.ndarray
+    print 'Extracted data using xlExtract.'
+    storeToHDF5('EONIAask.hdf5', 'OISdataMat', OISdataMat)
+    print 'Stored OIS data matrix to file.'
+else:
+    OISdataMat = loadFromHDF5('EONIAask.hdf5','OISdataMat')
+    print 'Read matrix from file.'
+
+"""
+    Generate forward/Zero-coupon matrix
+"""
+if genForward:
+    forwardMat, times = OISMatToForwardMat(OISdataMat, matDates)
+    forMatDiff = -1*np.diff(forwardMat[:EONIAdataCutoff,:], axis = 0)
+    print 'Generated forward matrices.'
+    storeToHDF5('EONIAask.hdf5', 'forwardMat', forwardMat)
+    storeToHDF5('EONIAask.hdf5', 'forMatDiff', forMatDiff)
+    #storeToHDF5('EONIAask.hdf5', 'times', times)
+    print 'Stored forward matrices to file.'
+else:
+    forwardMat = loadFromHDF5('EONIAask.hdf5','forwardMat')
+    forMatDiff = loadFromHDF5('EONIAask.hdf5','forMatDiff')
+    #times = loadFromHDF5('EONIAask.hdf5','times')
+    print 'Read forward matrices from file.'
+
+if genZC:
+    ZCMat, times = OISMatToZCMat(OISdataMat, matDates)
+    ZCMatDiff = -1*np.diff(ZCMat[:EONIAdataCutoff,:], axis = 0)
+    print 'Generated zero coupon matrices.'
+    storeToHDF5('EONIAask.hdf5', 'ZCMat', ZCMat)
+    storeToHDF5('EONIAask.hdf5', 'ZCMatDiff', ZCMatDiff)
+    storeToHDF5('EONIAask.hdf5', 'times', times)
+    print 'Stored zero coupon matrices to file.'
+else:
+    ZCMat = loadFromHDF5('EONIAask.hdf5','ZCMat')
+    ZCMatDiff = loadFromHDF5('EONIAask.hdf5','ZCMatDiff')
+    times = loadFromHDF5('EONIAask.hdf5','times')
+    print 'Read zero coupon matrices from file.'
+
+"""
+#    Generate forward/Zero-coupon eigen values
+"""
+if genForEigs:
+    forEigVals, forEigVecs, forEigPerc = genEigs(forMatDiff)
+    print 'Generated eigen values/vecs from forward differences.'
+    storeToHDF5('EONIAask.hdf5', 'forEigVals', forEigVals)
+    storeToHDF5('EONIAask.hdf5', 'forEigVecs', forEigVecs)
+    storeToHDF5('EONIAask.hdf5', 'forEigPerc', forEigPerc)
+    print 'Stored forward eigen values/vecs to file.'
+else:
+    forEigVals = loadFromHDF5('EONIAask.hdf5','forEigVals')
+    forEigVecs = loadFromHDF5('EONIAask.hdf5','forEigVecs')
+    forEigPerc = loadFromHDF5('EONIAask.hdf5','forEigPerc')
+    print 'Read forward eigen values/vecs from file.'
+
+if genZCEigs:
+    ZCEigVals, ZCEigVecs, ZCEigPerc = genEigs(ZCMatDiff)
+    print 'Generated eigen values/vecs from ZC differences'
+    storeToHDF5('EONIAask.hdf5', 'ZCEigVals', ZCEigVals)
+    storeToHDF5('EONIAask.hdf5', 'ZCEigVecs', ZCEigVecs)
+    storeToHDF5('EONIAask.hdf5', 'ZCEigPerc', ZCEigPerc)
+    print 'Stored zero coupon eigen values/vecs to file.'
+else:
+    ZCEigVals = loadFromHDF5('EONIAask.hdf5','ZCEigVals')
+    ZCEigVecs = loadFromHDF5('EONIAask.hdf5','ZCEigVecs')
+    ZCEigPerc = loadFromHDF5('EONIAask.hdf5','ZCEigPerc')
+    print 'Read zero coupon eigen values/vecs from file.'
+
+forPCs, forNumbFactors = genPCs(forEigVals, forEigVecs, forEigPerc, 0.999)
+ZCPCs, ZCNumbFactors = genPCs(ZCEigVals, ZCEigVecs, ZCEigPerc, 0.999)
+print 'Generated PCs.'
+
+#plt.plot(times,forPCs[:,0:3])
+plt.plot(times,forwardMat[0,:])
+plt.show()
 
 
-#runSurfPlot(forwardMat[0:EONIAdataCutoff,:], times)
+#runSurfPlot(forMatDiff, times)
+
+#startRow = 0
+# endRow = EONIAdataCutoff
+# runPlotLoop(endRow, startRow, matDates, OISdataMat)
+
 """
-startRow = 0
-endRow = 3000
-runPlotLoop(endRow, startRow, matDates, OISdataMat)
+#    Minimizing derivatives of forward curve
 """
+#minFun = lambda x: np.sum(((x[0:-2] - x[1:-1]))**2)
+#resOpt = minimize(minFun, forwardMat[0,:], method='Nelder-Mead', tol=1e-4, options={'disp': True, 'maxiter': 10000})
+#print 'Optimization done'
+#print resOpt.x - forwardMat[0,:]
 
 
