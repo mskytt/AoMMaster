@@ -10,8 +10,12 @@ def storeToHDF5(filename, datasetName, data_):
 		f = h5py.File(filename, 'a')
 	else: # Not pre-existing, write
 		f = h5py.File(filename, 'w')  
-	
-	f.create_dataset(datasetName, data = data_)
+	try:
+		f.create_dataset(datasetName, data = data_)
+	except RuntimeError: # Name exists, replace!
+		print 'Name already exists, replacing!'
+		del f[datasetName]
+		f.create_dataset(datasetName, data= data_)	
 	f.close()
 	return
 """
