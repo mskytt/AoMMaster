@@ -94,7 +94,7 @@ def runInterpTest():
     return    
 
 def runPlotLoop(endRow, startRow, matDates, OISdataMat):
-    plt.axis([0,max(matDates),-0.4,1.7]) # lock axis
+    plt.axis([min(matDates),max(matDates),-0.4,1.7]) # lock axis
     plt.ion()
     row = startRow
     while row < endRow: 
@@ -155,7 +155,7 @@ def runGenerateData(readExcel, genForward, genZC):
         Define some data based parameters
     """
     EONIAmatDates = [1/52, 2/52,3/52,1/12,2/12,3/12,4/12,5/12,6/12,7/12,8/12,9/12,10/12,11/12,1,15/12,18/12,21/12,2,3,4,5,6,7,8,9,10] #,12,15,20,30,40,50]
-    EONIAdataCutoff = 500 # Number of days with valid data, for EONIA: 3037, from 2005-08-11 and forward
+    EONIAdataCutoff = 3037 # Number of days with valid data, for EONIA: 3037, from 2005-08-11 and forward
     FFE2YdataCutoff = 1328
     FFE1YdataCutoff = 315
 
@@ -163,7 +163,7 @@ def runGenerateData(readExcel, genForward, genZC):
         Read from excel or from .hdf5 file
     """
     if readExcel:
-        OISdata = xlExtract('Data/OIS_data.xlsx','EONIA_ASK',0)
+        OISdata = xlExtract('Data/OIS_data.xlsx','EONIA_BID',0)
         OISdataDF = OISdata.dflinterp # type: pandas.core.frame.DataFrame
         OISdataInd = OISdata.index # type: pandas.tseries.index.DatetimeIndex
         OISdataCol = OISdata.columns # type: pandas.indexes.base.Index
@@ -274,7 +274,6 @@ def runGenForPCs(genForEigs):
 
 def run():
     EONIAmatDates = [1/52, 2/52,3/52,1/12,2/12,3/12,4/12,5/12,6/12,7/12,8/12,9/12,10/12,11/12,1,15/12,18/12,21/12,2,3,4,5,6,7,8,9,10] #,12,15,20,30,40,50]
-
     times = loadFromHDF5('EONIAask.hdf5','times')
     forPCs = loadFromHDF5('EONIAask.hdf5','forPCs')
     ZCPCs = loadFromHDF5('EONIAask.hdf5','ZCPCs')
@@ -290,19 +289,3 @@ def run():
     # runPlotLoop(endRow, startRow, EONIAmatDates, OISdataMat)
     return
 
-"""
-    Set bools to choose where to get data from
-"""
-readExcel = True # Read from excel
-genForward = False # Generate forward rates matrix
-genZC = False # Generate zero coupon rates matrix
-genForEigs = False # Generate forward eigenvalues
-genZCEigs = False # Generate zero coupon eigenvalues
-
-"""
-    Run functions
-"""
-runGenerateData(readExcel, genForward, genZC)
-runGenZCPCs(genZCEigs)
-runGenForPCs(genForEigs)
-run()
