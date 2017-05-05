@@ -13,7 +13,7 @@ from forwardCurves import OIStoZeroCoupon
 
 
 
-class BondorFuturesTimeSeries(object):
+class TimeSeries(object):
 
     def __init__(self, prices, col_name):
 
@@ -25,8 +25,6 @@ class BondorFuturesTimeSeries(object):
 
 
         self.logReturns =  -100*np.diff(np.log(self.prices.astype(float))) #log returns in percentage
-        print "print log returns"
-        print self.logReturns
         self.mean_annualized = np.mean(self.logReturns, dtype=np.float64)*sqrt(252) #constant mean
         self.calculateGARCH11Variables()
 
@@ -43,9 +41,6 @@ class BondorFuturesTimeSeries(object):
         res = am.fit(update_freq=5)
         self.GARCHVolatility = res._volatility
         self.GARCHVolatility_annualized = self.GARCHVolatility *sqrt(252)
-        print self.GARCHVolatility_annualized 
-        #fig = res.plot(annualize='D')
-        #fig.show()
         #print(res.summary())
 
     def controlStatistics(self):
@@ -54,13 +49,6 @@ class BondorFuturesTimeSeries(object):
 
 
 
-# --------------- DCC ---------------
-# def DCC():
-# #for loop for dates
-
-
-#     #calculate the unconditional mean of each asset
-#     meanMatrix = getMean(log_ret)
 
 
 
@@ -70,13 +58,6 @@ def plotDistribution(log_returns):
     plt.xlabel("Value")
     plt.ylabel("Frequency")
     plt.show()
-
-
-#$def createDiagonalMatrixOfVector(vector):
-
-
-
-
 
 
 
@@ -90,45 +71,46 @@ indexColumns = [0, 0, 0]
 
 #GOLD and OIS-bonds
 dfFuturesData =xlExtract(pathsToData[2],sheets[2],indexColumns[2]) #extract one sheet with index column 0 
-dfBondsData = xlExtract(pathsToData[0],sheets[0],indexColumns[0]) 
+dfBondsData = xlExtract(pathsToData[2],sheets[2],indexColumns[2]) 
+
+#Ta fram bonds for de exakta datum jag har!
+
+dfBondsData = dfBondsData #TODO
 
 
-meansFutures = []
-GARCHVolatilitiesFutures = []
+meansFuts = []
+meanBonds = []
+GARCHVolsFuts = []
+GARCHVolsBonds = []
 
-#BondFutures_pairs = 
 
 #for interest-futures pairs!
-#FUTURES
 #for i in xrange(len(dfFuturesData.columns)):
 for i in xrange(0):
-    dfColumnFutures = dfFuturesData.columns[i]
+    dfColumnFuture = dfFuturesData.columns[i]
+    dfColumnBond = dfFuturesData.columns[i]
 
 
     dfFuturesPrices = xlExtract.extractData(dfFuturesData, dfColumn,'2017-04-21' , entireTS = True, useLinterpDF = True).dropna()
-    #dfBondPrices = xlExtract.extractData(dfBondsData, dfColumn,'2017-04-21' , entireTS = True, useLinterpDF = True).dropna()
+    dfBondPrices = xlExtract.extractData(dfBondsData, dfColumn,'2017-04-21' , entireTS = True, useLinterpDF = True).dropna()
 
-    timeSeriesFutures = BondorFuturesTimeSeries(dfFuturesPrices, dfColumn)
-    meansFutures.append(simpleTimeseries.mean_annualized)
-    GARCHVolatilities.append(simpleTimeseries.GARCHVolatility_annualized)
+    FuturesLogReturns = TimeSeries(dfFuturesPrices, dfColumn)
+    meansFuts.append(FuturesLogReturns.mean_annualized)
+    GARCHVolsFuts.append(FuturesLogReturns.GARCHVolatility_annualized)
 
-
-dfMeansFutures = pd.DataFrame(meansFutures,index = dfFuturesData.index)
-dfGARCHVolatilitiesFutures =pd.DataFrame(GARCHVolatilitiesFutures,index = dfFuturesData.index) 
-
-
-#INTEREST RATES
-
-
-#kolla vilka datum som matchar
-for date in dfFuturesData.index:
-    dfFuturesData.col
+    BondLogReturns = TimeSeries(dfBondPrices, dfColumn)
+    meansBonds.append(FuturesLogReturns.mean_annualized)
+    GARCHVolsBonds.append(FuturesLogReturns.GARCHVolatility_annualized)
 
 
 
-# --------------- DCC ---------------
+    # --------------- DCC ---------------
 
-#create matrix from each individual timestep of each 
+    #create matrix from each individual timestep of each 
+    # #for i in xrange(len(dfFuturesData.index)): #backwards?
+    D = np.diag([GARCHVolsFuts[i],GARCHVolsBonds[i]])
+    print D
+
 
 #plotDistribution(timeSeries.log_returns)
 #print timeSeries.GARCHmu
@@ -141,5 +123,10 @@ for date in dfFuturesData.index:
 #skapa eta
 #hur reda ut Q_tilde? Hur uppskatta alpha och beta
 #skapa Q
+
+
+
+
+
 
 

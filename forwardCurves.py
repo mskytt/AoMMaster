@@ -294,10 +294,10 @@ def run():
     Set bools to choose where to get data from
 """
 readExcel = True # Read from excel
-genForward = True # Generate forward rates matrix
-genZC = True # Generate zero coupon rates matrix
-genForEigs = True # Generate forward eigenvalues
-genZCEigs = True # Generate zero coupon eigenvalues
+genForward = False # Generate forward rates matrix
+genZC = False # Generate zero coupon rates matrix
+genForEigs = False # Generate forward eigenvalues
+genZCEigs = False # Generate zero coupon eigenvalues
 
 """
     Run functions
