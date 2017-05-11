@@ -1,17 +1,24 @@
-from forwardCurves import runGenerateData, runGenZCPCs, runGenForPCs, run
+from forwardCurves import runGenerateData, runGenZCPCs, runGenForPCs, runGenMatlab, run
+from h5pyStorage import loadFromHDF5
+
 """
     Set bools to choose where to get data from
 """
-readExcel = False # Read from excel
-genForward = False # Generate forward rates matrix
-genZC = False # Generate zero coupon rates matrix
-genForEigs = False # Generate forward eigenvalues
-genZCEigs = False # Generate zero coupon eigenvalues
+readExcel = True # Read from excel
+genForward = True # Generate forward rates matrix
+genZC = True # Generate zero coupon rates matrix
+genForEigs = True # Generate forward eigenvalues
+genZCEigs = True # Generate zero coupon eigenvalues
+genMatlab = True
+genMatlabEigs = True
 
 """
     Run functions
 """
-runGenerateData(readExcel, genForward, genZC)
-runGenZCPCs(genZCEigs)
-runGenForPCs(genForEigs)
-run()
+#runGenerateData(readExcel, genForward, genZC)
+#runGenZCPCs(genZCEigs)
+#runGenForPCs(genForEigs)
+#runGenMatlab(genMatlab, genMatlabEigs)
+#run()
+
+

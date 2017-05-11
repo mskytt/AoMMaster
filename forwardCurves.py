@@ -2,7 +2,7 @@
 """
     - OIS data processing 
     - Building forward interest rate curves
-    
+    - Computing eigenvectors and principal components
 
     v0.1 - Mans Skytt
 """
@@ -163,11 +163,12 @@ def runGenerateData(readExcel, genForward, genZC):
         Read from excel or from .hdf5 file
     """
     if readExcel:
-        OISdata = xlExtract('Data/OIS_data.xlsx','EONIA_BID',0)
+        OISdata = xlExtract('Data/OIS_data.xlsx','EONIA_ASK',0)
         OISdataDF = OISdata.dflinterp # type: pandas.core.frame.DataFrame
         OISdataInd = OISdata.index # type: pandas.tseries.index.DatetimeIndex
         OISdataCol = OISdata.columns # type: pandas.indexes.base.Index
         OISdataMat = OISdataDF.values/100 # type: numpy.ndarray
+        OISdataMat = OISdataMat[:,0:len(EONIAmatDates)]
         print 'Extracted data using xlExtract.'
         storeToHDF5('EONIAask.hdf5', 'OISdataMat', OISdataMat)
         print 'Stored OIS data matrix to file.'
@@ -208,6 +209,39 @@ def runGenerateData(readExcel, genForward, genZC):
 
     return
 
+def runGenMatlab(genMatlab, genMatlabEigs):
+    if genMatlab:
+        MATLABForwardMat = loadFromHDF5('MatlabEONIAforward2.hdf5','MATLABFordataMat')
+        MATLABForwardMat = MATLABForwardMat[0:3643,:]
+        MATLABForwardMat = np.flipud(MATLABForwardMat.T)
+        MATLABForMatDiff = -1*np.diff(MATLABForwardMat, axis = 0)
+        print 'Generated Matlab forward matrices.'
+        storeToHDF5('EONIAask.hdf5', 'MATLABforMatDiff', MATLABForMatDiff)
+        storeToHDF5('EONIAask.hdf5', 'MATLABForwardMat', MATLABForwardMat)
+        print 'Stored Matlab forward matrices to file'
+    else:
+        MATLABForwardMat = loadFromHDF5('EONIAask.hdf5','MATLABForwardMat')
+        MATLABForMatDiff = loadFromHDF5('EONIAask.hdf5', 'MATLABForMatDiff')
+        print 'Read Matlab forward matrices from file.'
+    
+    if genMatlabEigs:
+        MATLABForEigVals, MATLABForEigVecs, MATLABForEigPerc = genEigs(MATLABForMatDiff)
+        print 'Generated Matlab eigen values.'
+        storeToHDF5('EONIAask.hdf5', 'MATLABForEigVals', MATLABForEigVals)
+        storeToHDF5('EONIAask.hdf5', 'MATLABForEigVecs', MATLABForEigVecs)
+        storeToHDF5('EONIAask.hdf5', 'MATLABForEigPerc', MATLABForEigPerc)
+        print 'Generated Matlab eigen values to file.'
+    else:
+        MATLABForEigVals = loadFromHDF5('EONIAask.hdf5','MATLABForEigVals')
+        MATLABForEigVecs = loadFromHDF5('EONIAask.hdf5','MATLABForEigVecs')
+        MATLABForEigPerc = loadFromHDF5('EONIAask.hdf5','MATLABForEigPerc')
+        print 'Read Matlab eigen values from file.'
+
+    MATLABForPCs, MATLABForNumbFactors = genPCs(MATLABForEigVals, MATLABForEigVecs, MATLABForEigPerc, 0.999)
+    print MATLABForNumbFactors
+    print 'Generated Matlab forward PCs.'
+    storeToHDF5('EONIAask.hdf5', 'MATLABForPCs', MATLABForPCs)
+    print 'Stored Matlab forward PCs.'
 
 def runGenZCPCs(genZCEigs):
     print 'Started runGenZCPCs.'
@@ -275,14 +309,19 @@ def runGenForPCs(genForEigs):
 def run():
     EONIAmatDates = [1/52, 2/52,3/52,1/12,2/12,3/12,4/12,5/12,6/12,7/12,8/12,9/12,10/12,11/12,1,15/12,18/12,21/12,2,3,4,5,6,7,8,9,10] #,12,15,20,30,40,50]
     times = loadFromHDF5('EONIAask.hdf5','times')
-    forPCs = loadFromHDF5('EONIAask.hdf5','forPCs')
-    ZCPCs = loadFromHDF5('EONIAask.hdf5','ZCPCs')
+    #forPCs = loadFromHDF5('EONIAask.hdf5','forPCs')
+    #ZCPCs = loadFromHDF5('EONIAask.hdf5','ZCPCs')
     forwardMat = loadFromHDF5('EONIAask.hdf5','forwardMat')
+    MATLABForwardMat = loadFromHDF5('EONIAask.hdf5','MATLABForwardMat')
     OISdataMat = loadFromHDF5('EONIAask.hdf5','OISdataMat')
-    plt.plot(times,forPCs[:,0:3])
-    # plt.plot(times,forMatDiff[0,:])
-    plt.show()
-    # runSurfPlot(forwardMat[975:1000,:], times)
+    MATLABForEigVals = loadFromHDF5('EONIAask.hdf5','MATLABForEigVals')
+    MATLABForEigVecs = loadFromHDF5('EONIAask.hdf5','MATLABForEigVecs')
+    MATLABForEigPerc = loadFromHDF5('EONIAask.hdf5','MATLABForEigPerc')
+    #plt.plot(times,forPCs[:,0:3])
+    #plt.plot(times,MATLABForEigVecs[:,0:3])
+    #plt.show()
+    #print OISdataMat
+    #runSurfPlot(MATLABForwardMat[0:3000,:], times)
 
     # startRow = 975
     # endRow = 1000
