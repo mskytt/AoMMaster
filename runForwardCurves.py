@@ -19,6 +19,6 @@ genMatlabEigs = True
 #runGenZCPCs(genZCEigs)
 #runGenForPCs(genForEigs)
 #runGenMatlab(genMatlab, genMatlabEigs)
-#run()
+run()
 
 

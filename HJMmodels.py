@@ -96,7 +96,7 @@ def PCHJM(initVec, endTime, PCsMat):
 	dt = 1/365 # time horizion time step 
 	simdt = 1/365 # simulation timestep
 	T = 10
-	numbFactors = MATLABForPCs.shape[1]
+	numbFactors = PCsMat.shape[1]
 	horizonTimesteps = initVec.shape[0] # Timesteps in horizon
 	simTimesteps = checkTimesteps(endTime/simdt) # Timesteps for simulation
 	if checkTimesteps:
@@ -119,8 +119,10 @@ MATLABForwardVec = MATLABForwardMat[0,:]
 times = loadFromHDF5('EONIAask.hdf5','times')
 MATLABForPCs = loadFromHDF5('EONIAask.hdf5', 'MATLABForPCs')
 phi = PCHJM(MATLABForwardVec, 5, MATLABForPCs)
+plt.plot(MATLABForPCs)
+plt.show()
 #phi = twoFactorHJM(forwardVec, 8)
-runSurfPlot(phi, times)
+#runSurfPlot(phi, times)
 
 
 
