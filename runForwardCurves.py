@@ -15,10 +15,10 @@ genMatlabEigs = True
 """
     Run functions
 """
-#runGenerateData(readExcel, genForward, genZC)
-#runGenZCPCs(genZCEigs)
-#runGenForPCs(genForEigs)
-#runGenMatlab(genMatlab, genMatlabEigs)
-#run()
+runGenerateData(readExcel, genForward, genZC)
+runGenZCPCs(genZCEigs)
+runGenForPCs(genForEigs)
+runGenMatlab(genMatlab, genMatlabEigs)
+# run()
 
 
