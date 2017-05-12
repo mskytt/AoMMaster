@@ -87,6 +87,7 @@ i = 0
 # ----- FUTURES -----
 dfColumnFuture = dfFuturesData.columns[i]
 dfFuturesPrices = xlExtract.extractData(dfFuturesData, dfColumnFuture,'2017-04-21' , entireTS = True, useLinterpDF = True).dropna()
+print dfFuturesPrices.index
 FuturesLogReturns = TimeSeries(dfFuturesPrices, dfColumnFuture)
 meanFuts.append(FuturesLogReturns.mean_annualized)
 GARCHVolsFuts.append(FuturesLogReturns.GARCHVolatility_annualized)
