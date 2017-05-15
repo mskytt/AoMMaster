@@ -35,7 +35,7 @@ class xlExtract(object):
                 self.df = pd.read_excel(xlpath)
 
             self.columns = self.df.columns.astype(str) # Convert columns to strings 
-            self.dflinterp = self.df.apply(pd.Series.interpolate) # Linear interpolated Data frame
+            self.dflinterp = self.df.interpolate(method = 'index')#self.df.apply(pd.Series.interpolate) # Linear interpolated Data frame
             self.df.dropna(how = 'all') #drop rows with all nan-values
         else:
             raise IOError(

@@ -83,16 +83,6 @@ def OISMatToZCMat(OISdataMat, matDates):
     _, _, _, _, times = runCubicInterp(OISdataMat[0,:], matDates)
     return ZCMat, times
 
-def runInterpTest():
-    matDatesTest = [0.083333333, 0.166666667, 0.25, 0.5, 0.75, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    OISTest = [-0.00361, -0.00403, -0.00414, -0.00404, -0.00401, -0.00394, -0.00264, -0.00097, 0.00101, 0.00315, 0.0054, 0.008125, 0.009875, 0.01065, 0.0129]    
-    ZCrates = OIStoZeroCoupon(matDatesTest,OISTest)
-    forwardRates = ZeroCoupontoForward(matDatesTest,ZCrates)
-    cs = CubicSpline(matDatesTest,forwardRates)
-    times = np.arange(min(matDatesTest), max(matDatesTest), 1/365)
-    print forwardRates
-    return    
-
 def runPlotLoop(endRow, startRow, matDates, OISdataMat):
     plt.axis([min(matDates),max(matDates),-0.4,1.7]) # lock axis
     plt.ion()
@@ -143,12 +133,12 @@ def genPCs(eigVals, eigVecs, eigPerc, percExpl):
         PC[:,i] = eigVecs[:,i]*np.sqrt(eigVals[i])
         cumPerc += eigPerc[i]
         i += 1
-    print cumPerc
     return PC[:,:i-1], i
 
-
-
-def runGenerateData(readExcel, genForward, genZC):
+def runGenerateData(readExcel, genForward, genZC, sheetName, storageFile):
+    """
+        sheetName : Name of sheet
+    """
     print 'Started.'
 
     """
@@ -156,175 +146,184 @@ def runGenerateData(readExcel, genForward, genZC):
     """
     EONIAmatDates = [1/52, 2/52,3/52,1/12,2/12,3/12,4/12,5/12,6/12,7/12,8/12,9/12,10/12,11/12,1,15/12,18/12,21/12,2,3,4,5,6,7,8,9,10] #,12,15,20,30,40,50]
     EONIAdataCutoff = 3037 # Number of days with valid data, for EONIA: 3037, from 2005-08-11 and forward
-    FFE2YdataCutoff = 1328
-    FFE1YdataCutoff = 315
+    FFEmatDates = [1/52, 2/52, 3/52, 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 1, 2]
+    FFE2YdataCutoff = 1447
+    FFE1YdataCutoff = 3168
+
+    if sheetName[0:3] == 'EON':
+        matDates = EONIAmatDates
+        dataCutoff = EONIAdataCutoff
+        print 'EONIA dates defined.'
+    elif sheetName[0:3] == 'FFE':
+        matDates = FFEmatDates
+        dataCutoff = FFE2YdataCutoff
+        print 'FFE dates defined.'
 
     """
         Read from excel or from .hdf5 file
     """
     if readExcel:
-        OISdata = xlExtract('Data/OIS_data.xlsx','EONIA_ASK',0)
+        OISdata = xlExtract('Data/OIS_data.xlsx',sheetName,0)
         OISdataDF = OISdata.dflinterp # type: pandas.core.frame.DataFrame
         OISdataInd = OISdata.index # type: pandas.tseries.index.DatetimeIndex
         OISdataCol = OISdata.columns # type: pandas.indexes.base.Index
         OISdataMat = OISdataDF.values/100 # type: numpy.ndarray
-        OISdataMat = OISdataMat[:,0:len(EONIAmatDates)]
+        OISdataMat = OISdataMat[:,0:len(matDates)]
+
         print 'Extracted data using xlExtract.'
-        storeToHDF5('EONIAask.hdf5', 'OISdataMat', OISdataMat)
+        storeToHDF5(storageFile, 'OISdataMat', OISdataMat)
         print 'Stored OIS data matrix to file.'
     else:
-        OISdataMat = loadFromHDF5('EONIAask.hdf5','OISdataMat')
+        OISdataMat = loadFromHDF5(storageFile,'OISdataMat')
         print 'Read matrix from file.'
-
     """
         Generate forward/Zero-coupon matrix
     """
     if genForward:
-        forwardMat, times = OISMatToForwardMat(OISdataMat, EONIAmatDates)
-        forMatDiff = -1*np.diff(forwardMat[:EONIAdataCutoff,:], axis = 0)
+        forwardMat, times = OISMatToForwardMat(OISdataMat, matDates)
+        forMatDiff = -1*np.diff(forwardMat[:dataCutoff,:], axis = 0)
         print 'Generated forward matrices.'
-        storeToHDF5('EONIAask.hdf5', 'forwardMat', forwardMat)
-        storeToHDF5('EONIAask.hdf5', 'forMatDiff', forMatDiff)
-        #storeToHDF5('EONIAask.hdf5', 'times', times)
+        storeToHDF5(storageFile, 'forwardMat', forwardMat)
+        storeToHDF5(storageFile, 'forMatDiff', forMatDiff)
+        #storeToHDF5(storageFile, 'times', times)
         print 'Stored forward matrices to file.'
     else:
-        forwardMat = loadFromHDF5('EONIAask.hdf5','forwardMat')
-        forMatDiff = loadFromHDF5('EONIAask.hdf5','forMatDiff')
-        #times = loadFromHDF5('EONIAask.hdf5','times')
+        forwardMat = loadFromHDF5(storageFile,'forwardMat')
+        forMatDiff = loadFromHDF5(storageFile,'forMatDiff')
+        #times = loadFromHDF5(storageFile,'times')
         print 'Read forward matrices from file.'
 
     if genZC:
-        ZCMat, times = OISMatToZCMat(OISdataMat, EONIAmatDates)
-        ZCMatDiff = -1*np.diff(ZCMat[:EONIAdataCutoff,:], axis = 0)
+        ZCMat, times = OISMatToZCMat(OISdataMat, matDates)
+        ZCMatDiff = -1*np.diff(ZCMat[:dataCutoff,:], axis = 0)
         print 'Generated zero coupon matrices.'
-        storeToHDF5('EONIAask.hdf5', 'ZCMat', ZCMat)
-        storeToHDF5('EONIAask.hdf5', 'ZCMatDiff', ZCMatDiff)
-        storeToHDF5('EONIAask.hdf5', 'times', times)
+        storeToHDF5(storageFile, 'ZCMat', ZCMat)
+        storeToHDF5(storageFile, 'ZCMatDiff', ZCMatDiff)
+        storeToHDF5(storageFile, 'times', times)
         print 'Stored zero coupon matrices to file.'
     else:
-        ZCMat = loadFromHDF5('EONIAask.hdf5','ZCMat')
-        ZCMatDiff = loadFromHDF5('EONIAask.hdf5','ZCMatDiff')
-        times = loadFromHDF5('EONIAask.hdf5','times')
+        ZCMat = loadFromHDF5(storageFile,'ZCMat')
+        ZCMatDiff = loadFromHDF5(storageFile,'ZCMatDiff')
+        times = loadFromHDF5(storageFile,'times')
         print 'Read zero coupon matrices from file.'
 
     return
 
-def runGenMatlab(genMatlab, genMatlabEigs):
+def runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile):
+
+    EONIAdataCutoff = 3037 # Number of days with valid data, for EONIA: 3037, from 2005-08-11 and forward
+    FFE2YdataCutoff = 1447
+    FFE1YdataCutoff = 3168
+
+    if sheetName[0:3] == 'EON':
+        dataCutoff = EONIAdataCutoff
+        print 'EONIA dates defined.'
+    elif sheetName[0:3] == 'FFE':
+        dataCutoff = FFE2YdataCutoff
+        print 'FFE dates defined.'
+
     if genMatlab:
-        MATLABForwardMat = loadFromHDF5('MatlabEONIAforward2.hdf5','MATLABFordataMat')
-        MATLABForwardMat = MATLABForwardMat[0:3643,:]
+        MATLABForwardMat = MATLABForwardMat[0:dataCutoff,:]
         MATLABForwardMat = np.flipud(MATLABForwardMat.T)
         MATLABForMatDiff = -1*np.diff(MATLABForwardMat, axis = 0)
         print 'Generated Matlab forward matrices.'
-        storeToHDF5('EONIAask.hdf5', 'MATLABforMatDiff', MATLABForMatDiff)
-        storeToHDF5('EONIAask.hdf5', 'MATLABForwardMat', MATLABForwardMat)
+        storeToHDF5(storageFile, 'MATLABforMatDiff', MATLABForMatDiff)
+        storeToHDF5(storageFile, 'MATLABForwardMat', MATLABForwardMat)
         print 'Stored Matlab forward matrices to file'
     else:
-        MATLABForwardMat = loadFromHDF5('EONIAask.hdf5','MATLABForwardMat')
-        MATLABForMatDiff = loadFromHDF5('EONIAask.hdf5', 'MATLABForMatDiff')
+        MATLABForwardMat = loadFromHDF5(storageFile,'MATLABForwardMat')
+        MATLABForMatDiff = loadFromHDF5(storageFile, 'MATLABForMatDiff')
         print 'Read Matlab forward matrices from file.'
     
     if genMatlabEigs:
         MATLABForEigVals, MATLABForEigVecs, MATLABForEigPerc = genEigs(MATLABForMatDiff)
         print 'Generated Matlab eigen values.'
-        storeToHDF5('EONIAask.hdf5', 'MATLABForEigVals', MATLABForEigVals)
-        storeToHDF5('EONIAask.hdf5', 'MATLABForEigVecs', MATLABForEigVecs)
-        storeToHDF5('EONIAask.hdf5', 'MATLABForEigPerc', MATLABForEigPerc)
+        storeToHDF5(storageFile, 'MATLABForEigVals', MATLABForEigVals)
+        storeToHDF5(storageFile, 'MATLABForEigVecs', MATLABForEigVecs)
+        storeToHDF5(storageFile, 'MATLABForEigPerc', MATLABForEigPerc)
         print 'Generated Matlab eigen values to file.'
     else:
-        MATLABForEigVals = loadFromHDF5('EONIAask.hdf5','MATLABForEigVals')
-        MATLABForEigVecs = loadFromHDF5('EONIAask.hdf5','MATLABForEigVecs')
-        MATLABForEigPerc = loadFromHDF5('EONIAask.hdf5','MATLABForEigPerc')
+        MATLABForEigVals = loadFromHDF5(storageFile,'MATLABForEigVals')
+        MATLABForEigVecs = loadFromHDF5(storageFile,'MATLABForEigVecs')
+        MATLABForEigPerc = loadFromHDF5(storageFile,'MATLABForEigPerc')
         print 'Read Matlab eigen values from file.'
 
     MATLABForPCs, MATLABForNumbFactors = genPCs(MATLABForEigVals, MATLABForEigVecs, MATLABForEigPerc, 0.999)
-    print MATLABForNumbFactors
     print 'Generated Matlab forward PCs.'
-    storeToHDF5('EONIAask.hdf5', 'MATLABForPCs', MATLABForPCs)
+    storeToHDF5(storageFile, 'MATLABForPCs', MATLABForPCs)
     print 'Stored Matlab forward PCs.'
 
-def runGenZCPCs(genZCEigs):
+def runGenZCPCs(genZCEigs, ZCMatDiff, storageFile):
     print 'Started runGenZCPCs.'
-
-    """
-        Read data needed
-    """
-    ZCMat = loadFromHDF5('EONIAask.hdf5','ZCMat')
-    ZCMatDiff = loadFromHDF5('EONIAask.hdf5','ZCMatDiff')
-    times = loadFromHDF5('EONIAask.hdf5','times')
-    
     """
     #    Generate forward/Zero-coupon eigen values
     """
     if genZCEigs:
         ZCEigVals, ZCEigVecs, ZCEigPerc = genEigs(ZCMatDiff)
         print 'Generated eigen values/vecs from ZC differences'
-        storeToHDF5('EONIAask.hdf5', 'ZCEigVals', ZCEigVals)
-        storeToHDF5('EONIAask.hdf5', 'ZCEigVecs', ZCEigVecs)
-        storeToHDF5('EONIAask.hdf5', 'ZCEigPerc', ZCEigPerc)    
+        storeToHDF5(storageFile, 'ZCEigVals', ZCEigVals)
+        storeToHDF5(storageFile, 'ZCEigVecs', ZCEigVecs)
+        storeToHDF5(storageFile, 'ZCEigPerc', ZCEigPerc)    
         print 'Stored zero coupon eigen values/vecs to file.'
     else:
-        ZCEigVals = loadFromHDF5('EONIAask.hdf5','ZCEigVals')
-        ZCEigVecs = loadFromHDF5('EONIAask.hdf5','ZCEigVecs')
-        ZCEigPerc = loadFromHDF5('EONIAask.hdf5','ZCEigPerc')
+        ZCEigVals = loadFromHDF5(storageFile,'ZCEigVals')
+        ZCEigVecs = loadFromHDF5(storageFile,'ZCEigVecs')
+        ZCEigPerc = loadFromHDF5(storageFile,'ZCEigPerc')
         print 'Read zero coupon eigen values/vecs from file.'
 
     ZCPCs, ZCNumbFactors = genPCs(ZCEigVals, ZCEigVecs, ZCEigPerc, 0.999)
     print 'Generated zero-coupon PCs.'
-    storeToHDF5('EONIAask.hdf5', 'ZCPCs', ZCPCs)
+    storeToHDF5(storageFile, 'ZCPCs', ZCPCs)
     print 'Stored zero-coupon PCs.'
     return
 
-def runGenForPCs(genForEigs):
+def runGenForPCs(genForEigs, forMatDiff, storageFile):
     print 'Started runGenForPCs.'
-    """
-        Read data needed
-    """
-    forwardMat = loadFromHDF5('EONIAask.hdf5','forwardMat')
-    forMatDiff = loadFromHDF5('EONIAask.hdf5','forMatDiff')
-    times = loadFromHDF5('EONIAask.hdf5','times')
-    
     """
     #    Generate forward/Zero-coupon eigen values
     """
     if genForEigs:
         forEigVals, forEigVecs, forEigPerc = genEigs(forMatDiff)
         print 'Generated eigen values/vecs from forward differences.'
-        storeToHDF5('EONIAask.hdf5', 'forEigVals', forEigVals)
-        storeToHDF5('EONIAask.hdf5', 'forEigVecs', forEigVecs)
-        storeToHDF5('EONIAask.hdf5', 'forEigPerc', forEigPerc)
+        storeToHDF5(storageFile, 'forEigVals', forEigVals)
+        storeToHDF5(storageFile, 'forEigVecs', forEigVecs)
+        storeToHDF5(storageFile, 'forEigPerc', forEigPerc)
         print 'Stored forward eigen values/vecs to file.'
     else:
-        forEigVals = loadFromHDF5('EONIAask.hdf5','forEigVals')
-        forEigVecs = loadFromHDF5('EONIAask.hdf5','forEigVecs')
-        forEigPerc = loadFromHDF5('EONIAask.hdf5','forEigPerc')
+        forEigVals = loadFromHDF5(storageFile,'forEigVals')
+        forEigVecs = loadFromHDF5(storageFile,'forEigVecs')
+        forEigPerc = loadFromHDF5(storageFile,'forEigPerc')
         print 'Read forward eigen values/vecs from file.'
 
     forPCs, forNumbFactors = genPCs(forEigVals, forEigVecs, forEigPerc, 0.999)
     print 'Generated forward PCs.'
-    storeToHDF5('EONIAask.hdf5', 'forPCs', forPCs)
+    storeToHDF5(storageFile, 'forPCs', forPCs)
     print 'Stored forward PCs.'
     return
 
-def run():
+def run(storageFile):
     EONIAmatDates = [1/52, 2/52,3/52,1/12,2/12,3/12,4/12,5/12,6/12,7/12,8/12,9/12,10/12,11/12,1,15/12,18/12,21/12,2,3,4,5,6,7,8,9,10] #,12,15,20,30,40,50]
-    times = loadFromHDF5('EONIAask.hdf5','times')
-    #forPCs = loadFromHDF5('EONIAask.hdf5','forPCs')
-    #ZCPCs = loadFromHDF5('EONIAask.hdf5','ZCPCs')
-    forwardMat = loadFromHDF5('EONIAask.hdf5','forwardMat')
-    MATLABForwardMat = loadFromHDF5('EONIAask.hdf5','MATLABForwardMat')
-    OISdataMat = loadFromHDF5('EONIAask.hdf5','OISdataMat')
-    MATLABForEigVals = loadFromHDF5('EONIAask.hdf5','MATLABForEigVals')
-    MATLABForEigVecs = loadFromHDF5('EONIAask.hdf5','MATLABForEigVecs')
-    MATLABForEigPerc = loadFromHDF5('EONIAask.hdf5','MATLABForEigPerc')
-    #plt.plot(times,forPCs[:,0:3])
-    #plt.plot(times,MATLABForEigVecs[:,0:3])
-    #plt.show()
-    #print OISdataMat
-    #runSurfPlot(MATLABForwardMat[0:3000,:], times)
+    FFEmatDates = [1/52, 2/52, 3/52, 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 1, 2]
 
-    # startRow = 975
-    # endRow = 1000
-    # runPlotLoop(endRow, startRow, EONIAmatDates, OISdataMat)
+    times = loadFromHDF5(storageFile,'times')
+    forPCs = loadFromHDF5(storageFile,'forPCs')
+    #ZCPCs = loadFromHDF5(storageFile,'ZCPCs')
+    forwardMat = loadFromHDF5(storageFile,'forwardMat')
+    MATLABForwardMat = loadFromHDF5(storageFile,'MATLABForwardMat')
+    OISdataMat = loadFromHDF5(storageFile,'OISdataMat')
+    MATLABForEigVals = loadFromHDF5(storageFile,'MATLABForEigVals')
+    MATLABForEigVecs = loadFromHDF5(storageFile,'MATLABForEigVecs')
+    MATLABForEigPerc = loadFromHDF5(storageFile,'MATLABForEigPerc') 
+    MATLABForPCs = loadFromHDF5(storageFile,'MATLABForPCs') 
+    #plt.plot(times,forPCs[:,0:3])
+    #plt.plot(forPCs)
+    #plt.plot(OISdataMat[1502,:])
+    #plt.show()
+    print type(MATLABForwardMat), MATLABForwardMat.shape, times.shape
+    runSurfPlot(MATLABForwardMat[:,0:723], times)
+
+    # startRow = 0
+    # endRow = 1447
+    # runPlotLoop(endRow, startRow, FFEmatDates, OISdataMat)
     return
 
