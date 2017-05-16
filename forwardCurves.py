@@ -307,19 +307,22 @@ def run(storageFile):
 
     times = loadFromHDF5(storageFile,'times')
     forPCs = loadFromHDF5(storageFile,'forPCs')
-    #ZCPCs = loadFromHDF5(storageFile,'ZCPCs')
+    ZCPCs = loadFromHDF5(storageFile,'ZCPCs')
     forwardMat = loadFromHDF5(storageFile,'forwardMat')
+    forEigVecs = loadFromHDF5(storageFile, 'forEigVecs')
+    forEigPerc = loadFromHDF5(storageFile,'forEigPerc')
     MATLABForwardMat = loadFromHDF5(storageFile,'MATLABForwardMat')
     OISdataMat = loadFromHDF5(storageFile,'OISdataMat')
     MATLABForEigVals = loadFromHDF5(storageFile,'MATLABForEigVals')
     MATLABForEigVecs = loadFromHDF5(storageFile,'MATLABForEigVecs')
     MATLABForEigPerc = loadFromHDF5(storageFile,'MATLABForEigPerc') 
     MATLABForPCs = loadFromHDF5(storageFile,'MATLABForPCs') 
-    #plt.plot(times,forPCs[:,0:3])
-    #plt.plot(forPCs)
+    print MATLABForEigVecs.shape
+    print MATLABForPCs
+    print MATLABForEigPerc
+    plt.plot(MATLABForEigVecs[:,0:3])
     #plt.plot(OISdataMat[1502,:])
-    #plt.show()
-    print type(MATLABForwardMat), MATLABForwardMat.shape, times.shape
+    plt.show()
     runSurfPlot(MATLABForwardMat[:,0:723], times)
 
     # startRow = 0

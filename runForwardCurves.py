@@ -23,9 +23,9 @@ MATLABstorageFile = 'MATLABFFEmidForward1000.hdf5'
 #runGenZCPCs(genZCEigs, ZCMatDiff, storageFile)
 #forMatDiff = loadFromHDF5(storageFile,'forMatDiff')
 #runGenForPCs(genForEigs, forMatDiff, storageFile)
-MATLABForwardMat = loadFromHDF5(MATLABstorageFile,'MATLABFordataMat')
-runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile)
+#MATLABForwardMat = loadFromHDF5(MATLABstorageFile,'MATLABFordataMat')
+#runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile)
 
-#run(storageFile)
+run(storageFile)
 
 
