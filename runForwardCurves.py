@@ -14,17 +14,18 @@ genMatlabEigs = True
 
 sheetName = 'FFE_MID' # Sheet name
 storageFile = 'FFEmid.hdf5' # Name of file where data is to be/ is currently stored
-MATLABstorageFile = 'MATLABFFEmidForward1000.hdf5'
+MATLABstorageFile = 'MatlabFFE1YmidForward100.hdf5'
 """
     Run functions
 """
-#runGenerateData(readExcel, genForward, genZC, sheetName, storageFile)
-#ZCMatDiff = loadFromHDF5(storageFile,'ZCMatDiff')
-#runGenZCPCs(genZCEigs, ZCMatDiff, storageFile)
-#forMatDiff = loadFromHDF5(storageFile,'forMatDiff')
-#runGenForPCs(genForEigs, forMatDiff, storageFile)
-#MATLABForwardMat = loadFromHDF5(MATLABstorageFile,'MATLABFordataMat')
-#runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile)
+runGenerateData(readExcel, genForward, genZC, sheetName, storageFile)
+ZCMatDiff = loadFromHDF5(storageFile,'ZCMatDiff')
+runGenZCPCs(genZCEigs, ZCMatDiff, storageFile)
+forMatDiff = loadFromHDF5(storageFile,'forMatDiff')
+runGenForPCs(genForEigs, forMatDiff, storageFile)
+MATLABForwardMat = loadFromHDF5(MATLABstorageFile,'MATLABFordataMat')
+print MATLABForwardMat.shape
+runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile)
 
 run(storageFile)
 
