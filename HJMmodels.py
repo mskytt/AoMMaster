@@ -96,7 +96,7 @@ def PCHJM(initVec, endTime, PCsMat):
 	dt = 1/365 # time horizion time step 
 	simdt = 1/365 # simulation timestep
 	T = 10
-	numbFactors = MATLABForPCs.shape[1]
+	numbFactors = PCsMat.shape[1]
 	horizonTimesteps = initVec.shape[0] # Timesteps in horizon
 	simTimesteps = checkTimesteps(endTime/simdt) # Timesteps for simulation
 	if checkTimesteps:
@@ -104,7 +104,6 @@ def PCHJM(initVec, endTime, PCsMat):
 		integratedSigma = np.cumsum(PCsMat, axis=0) # row equal time horizon index, column equal sigma
 		mu = np.sum(integratedSigma*PCsMat, axis=1) # 
 		dW = genXBrownians(endTime, simdt, numbFactors) 
-		
 		# Simulate yield curve progression
 		dphi = np.zeros((simTimesteps,initVec.shape[0]))# Pre allocate dphi array space
 		dphi[0,:] = initVec # Add initial Vector as first
@@ -114,13 +113,18 @@ def PCHJM(initVec, endTime, PCsMat):
 	print dphi.shape
 	return np.cumsum(dphi, axis = 0)
 
-MATLABForwardMat = loadFromHDF5('EONIAask.hdf5','MATLABForwardMat')
+storageFile = 'EONIAmid.hdf5' # Name of file where data is to be/ is currently stored
+
+MATLABForwardMat = loadFromHDF5(storageFile,'MATLABForwardMat')
 MATLABForwardVec = MATLABForwardMat[0,:]
-times = loadFromHDF5('EONIAask.hdf5','times')
-MATLABForPCs = loadFromHDF5('EONIAask.hdf5', 'MATLABForPCs')
+times = loadFromHDF5(storageFile,'times')
+MATLABForPCs = loadFromHDF5(storageFile, 'MATLABForPCs')
 phi = PCHJM(MATLABForwardVec, 5, MATLABForPCs)
-#phi = twoFactorHJM(forwardVec, 8)
-runSurfPlot(phi, times)
+plt.plot(MATLABForPCs)
+plt.show()
+#phi = twoFactorHJM(MATLABForwardVec, 8)
+print phi.shape, times.shape
+runSurfPlot(phi[:,:times.shape[0]], times)
 
 
 
