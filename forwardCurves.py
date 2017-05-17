@@ -148,7 +148,7 @@ def runGenerateData(readExcel, genForward, genZC, sheetName, storageFile):
     EONIAdataCutoff = 3037 # Number of days with valid data, for EONIA: 3037, from 2005-08-11 and forward
     FFEmatDates = [1/52, 2/52, 3/52, 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 1]#, 2]
     FFE2YdataCutoff = 1446
-    FFE1YdataCutoff = 2500
+    FFE1YdataCutoff = 2800
 
     if sheetName[0:3] == 'EON':
         matDates = EONIAmatDates
@@ -182,7 +182,6 @@ def runGenerateData(readExcel, genForward, genZC, sheetName, storageFile):
     if genForward:
         forwardMat, times = OISMatToForwardMat(OISdataMat, matDates)
         forwardMat = forwardMat[:dataCutoff,:]
-        print OISdataMat.shape, forwardMat.shape
         forMatDiff = -1*np.diff(forwardMat, axis = 0)
         print 'Generated forward matrices.'
         storeToHDF5(storageFile, 'forwardMat', forwardMat)
@@ -213,9 +212,9 @@ def runGenerateData(readExcel, genForward, genZC, sheetName, storageFile):
 
 def runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile):
 
-    EONIAdataCutoff = 3037 # Number of days with valid data, for EONIA: 3037, from 2005-08-11 and forward
+    EONIAdataCutoff = 3000 # Number of days with valid data, for EONIA: 3037, from 2005-08-11 and forward
     FFE2YdataCutoff = 1446
-    FFE1YdataCutoff = 2500
+    FFE1YdataCutoff = 2800
 
     if sheetName[0:3] == 'EON':
         dataCutoff = EONIAdataCutoff
@@ -225,10 +224,11 @@ def runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageF
         print 'FFE dates defined.'
 
     if genMatlab:
-        MATLABForwardMat = MATLABForwardMat[:,:dataCutoff]
+        MATLABForwardMat = MATLABForwardMat
         MATLABForwardMat = np.flipud(MATLABForwardMat.T)
+        MATLABForwardMat = MATLABForwardMat[:dataCutoff,:]
         MATLABForMatDiff = -1*np.diff(MATLABForwardMat, axis = 0)
-        print 'Generated Matlab forward matrices.'
+        print 'Generated Matlab forward matrices.', MATLABForwardMat.shape
         storeToHDF5(storageFile, 'MATLABForMatDiff', MATLABForMatDiff)
         storeToHDF5(storageFile, 'MATLABForwardMat', MATLABForwardMat)
         print 'Stored Matlab forward matrices to file'
@@ -250,7 +250,8 @@ def runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageF
         MATLABForEigPerc = loadFromHDF5(storageFile,'MATLABForEigPerc')
         print 'Read Matlab eigen values from file.'
 
-    MATLABForPCs, MATLABForNumbFactors = genPCs(MATLABForEigVals, MATLABForEigVecs, MATLABForEigPerc, 0.999)
+    MATLABForPCs, MATLABForNumbFactors = genPCs(MATLABForEigVals, MATLABForEigVecs, MATLABForEigPerc, 0.99999)
+    print 'Number of factors (MATLAB Forward):', MATLABForNumbFactors
     print 'Generated Matlab forward PCs.'
     storeToHDF5(storageFile, 'MATLABForPCs', MATLABForPCs)
     print 'Stored Matlab forward PCs.'
@@ -273,7 +274,7 @@ def runGenZCPCs(genZCEigs, ZCMatDiff, storageFile):
         ZCEigPerc = loadFromHDF5(storageFile,'ZCEigPerc')
         print 'Read zero coupon eigen values/vecs from file.'
 
-    ZCPCs, ZCNumbFactors = genPCs(ZCEigVals, ZCEigVecs, ZCEigPerc, 0.999)
+    ZCPCs, ZCNumbFactors = genPCs(ZCEigVals, ZCEigVecs, ZCEigPerc, 0.99999)
     print 'Generated zero-coupon PCs.'
     storeToHDF5(storageFile, 'ZCPCs', ZCPCs)
     print 'Stored zero-coupon PCs.'
@@ -297,7 +298,7 @@ def runGenForPCs(genForEigs, forMatDiff, storageFile):
         forEigPerc = loadFromHDF5(storageFile,'forEigPerc')
         print 'Read forward eigen values/vecs from file.'
 
-    forPCs, forNumbFactors = genPCs(forEigVals, forEigVecs, forEigPerc, 0.999)
+    forPCs, forNumbFactors = genPCs(forEigVals, forEigVecs, forEigPerc, 0.99999)
     print 'Generated forward PCs.'
     storeToHDF5(storageFile, 'forPCs', forPCs)
     print 'Stored forward PCs.'
@@ -307,8 +308,9 @@ def run(storageFile):
     EONIAmatDates = [1/52, 2/52,3/52,1/12,2/12,3/12,4/12,5/12,6/12,7/12,8/12,9/12,10/12,11/12,1,15/12,18/12,21/12,2,3,4,5,6,7,8,9,10] #,12,15,20,30,40,50]
     FFEmatDates = [1/52, 2/52, 3/52, 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 1]#, 2]
 
+    EONIAdataCutoff = 3000
     FFE2YdataCutoff = 1446
-    FFE1YdataCutoff = 2500#3168
+    FFE1YdataCutoff = 2800#3168
 
     times = loadFromHDF5(storageFile,'times')
     forPCs = loadFromHDF5(storageFile,'forPCs')
@@ -323,13 +325,13 @@ def run(storageFile):
     MATLABForEigPerc = loadFromHDF5(storageFile,'MATLABForEigPerc') 
     MATLABForPCs = loadFromHDF5(storageFile,'MATLABForPCs') 
     MATLABForMatDiff = loadFromHDF5(storageFile,'MATLABForMatDiff') 
-    print MATLABForwardMat.shape, times.shape, MATLABForMatDiff.shape, MATLABForEigPerc
+    print MATLABForwardMat.shape, times.shape, MATLABForMatDiff.shape
     plt.plot(MATLABForEigVecs[:,0:3])
     plt.show()
-    plt.plot(forEigVecs[:,0:3])
-    plt.show()
-    runSurfPlot(MATLABForwardMat[:,:times.shape[0]], times)
-    runSurfPlot(forwardMat[:,:times.shape[0]], times)
+    # plt.plot(forEigVecs[:,0:3])
+    # plt.show()
+    runSurfPlot(MATLABForwardMat[:EONIAdataCutoff-500,:times.shape[0]], times)
+    runSurfPlot(forwardMat[:EONIAdataCutoff-500,:times.shape[0]], times)
     # [:FFE2YdataCutoff,:times.shape[0]]
     # startRow = 0
     # endRow = 1000

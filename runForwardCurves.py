@@ -12,19 +12,18 @@ genZCEigs = True # Generate zero coupon eigenvalues
 genMatlab = True
 genMatlabEigs = True
 
-sheetName = 'FFE_MID' # Sheet name
-storageFile = 'FFEmid.hdf5' # Name of file where data is to be/ is currently stored
-MATLABstorageFile = 'MatlabFFE1YmidForward100.hdf5'
+sheetName = 'EONIA_MID' # Sheet name
+storageFile = 'EONIAmid.hdf5' # Name of file where data is to be/ is currently stored
+MATLABstorageFile = 'MatlabEONIAmidForward100.hdf5' # 'MatlabFFE1Y05midForward100.hdf5'
 """
     Run functions
 """
-runGenerateData(readExcel, genForward, genZC, sheetName, storageFile)
-ZCMatDiff = loadFromHDF5(storageFile,'ZCMatDiff')
-runGenZCPCs(genZCEigs, ZCMatDiff, storageFile)
-forMatDiff = loadFromHDF5(storageFile,'forMatDiff')
-runGenForPCs(genForEigs, forMatDiff, storageFile)
+# runGenerateData(readExcel, genForward, genZC, sheetName, storageFile)
+# ZCMatDiff = loadFromHDF5(storageFile,'ZCMatDiff')
+# runGenZCPCs(genZCEigs, ZCMatDiff, storageFile)
+# forMatDiff = loadFromHDF5(storageFile,'forMatDiff')
+# runGenForPCs(genForEigs, forMatDiff, storageFile)
 MATLABForwardMat = loadFromHDF5(MATLABstorageFile,'MATLABFordataMat')
-print MATLABForwardMat.shape
 runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile)
 
 run(storageFile)

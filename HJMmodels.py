@@ -113,7 +113,7 @@ def PCHJM(initVec, endTime, PCsMat):
 	print dphi.shape
 	return np.cumsum(dphi, axis = 0)
 
-storageFile = 'FFEmid.hdf5' # Name of file where data is to be/ is currently stored
+storageFile = 'EONIAmid.hdf5' # Name of file where data is to be/ is currently stored
 
 MATLABForwardMat = loadFromHDF5(storageFile,'MATLABForwardMat')
 MATLABForwardVec = MATLABForwardMat[0,:]
