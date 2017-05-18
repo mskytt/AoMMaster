@@ -27,6 +27,13 @@ MATLABstorageFile = 'MatlabEONIA05midForward100.hdf5'
 """
     Run functions
 """
+<<<<<<< HEAD
+runGenerateData(readExcel, genForward, genZC)
+runGenZCPCs(genZCEigs)
+runGenForPCs(genForEigs)
+runGenMatlab(genMatlab, genMatlabEigs)
+# run()
+=======
 # runGenerateData(readExcel, genForward, genZC, sheetName, storageFile)
 # ZCMatDiff = loadFromHDF5(storageFile,'ZCMatDiff')
 # runGenZCPCs(genZCEigs, ZCMatDiff, storageFile)
@@ -35,5 +42,6 @@ MATLABstorageFile = 'MatlabEONIA05midForward100.hdf5'
 MATLABForwardMat = loadFromHDF5(MATLABstorageFile,'MATLABFordataMat')
 runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile)
 run(storageFile)
+>>>>>>> 4cb6df340a4ad8edff7863b05aa7354f2a33904a
 
 

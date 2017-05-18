@@ -21,6 +21,7 @@ def storeToHDF5(filename, datasetName, data_):
 """
 	Load data from file
 """
+
 def loadFromHDF5(filename, datasetName):
 	try:
 		f = h5py.File(filename, 'r')
