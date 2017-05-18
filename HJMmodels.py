@@ -119,10 +119,10 @@ MATLABForwardMat = loadFromHDF5(storageFile,'MATLABForwardMat')
 MATLABForwardVec = MATLABForwardMat[0,:]
 times = loadFromHDF5(storageFile,'times')
 MATLABForPCs = loadFromHDF5(storageFile, 'MATLABForPCs')
-phi = PCHJM(MATLABForwardVec, 5, MATLABForPCs)
+#phi = PCHJM(MATLABForwardVec, 5, MATLABForPCs)
 plt.plot(MATLABForPCs)
 plt.show()
-#phi = twoFactorHJM(MATLABForwardVec, 8)
+phi = twoFactorHJM(MATLABForwardVec, 8)
 print phi.shape, times.shape
 runSurfPlot(phi[:,:times.shape[0]], times)
 
