@@ -146,7 +146,7 @@ def runGenerateData(readExcel, genForward, genZC, sheetName, storageFile):
     """
     EONIAmatDates = [1/52, 2/52,3/52,1/12,2/12,3/12,4/12,5/12,6/12,7/12,8/12,9/12,10/12,11/12,1,15/12,18/12,21/12,2,3,4,5,6,7,8,9,10] #,12,15,20,30,40,50]
     EONIAdataCutoff = 3037 # Number of days with valid data, for EONIA: 3037, from 2005-08-11 and forward
-    FFEmatDates = [1/52, 2/52, 3/52, 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 1]#, 2]
+    FFEmatDates = [1/52, 2/52, 3/52, 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 1, 2]
     FFE2YdataCutoff = 1446
     FFE1YdataCutoff = 2800
 
@@ -156,7 +156,7 @@ def runGenerateData(readExcel, genForward, genZC, sheetName, storageFile):
         print 'EONIA dates defined.'
     elif sheetName[0:3] == 'FFE':
         matDates = FFEmatDates
-        dataCutoff = FFE1YdataCutoff
+        dataCutoff = FFE2YdataCutoff
         print 'FFE dates defined.'
 
     """
@@ -213,14 +213,14 @@ def runGenerateData(readExcel, genForward, genZC, sheetName, storageFile):
 def runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile):
 
     EONIAdataCutoff = 3000 # Number of days with valid data, for EONIA: 3037, from 2005-08-11 and forward
-    FFE2YdataCutoff = 1446
+    FFE2YdataCutoff = 1399
     FFE1YdataCutoff = 2800
 
     if sheetName[0:3] == 'EON':
         dataCutoff = EONIAdataCutoff
         print 'EONIA dates defined.'
     elif sheetName[0:3] == 'FFE':
-        dataCutoff = FFE1YdataCutoff
+        dataCutoff = FFE2YdataCutoff
         print 'FFE dates defined.'
 
     if genMatlab:
@@ -306,10 +306,10 @@ def runGenForPCs(genForEigs, forMatDiff, storageFile):
 
 def run(storageFile):
     EONIAmatDates = [1/52, 2/52,3/52,1/12,2/12,3/12,4/12,5/12,6/12,7/12,8/12,9/12,10/12,11/12,1,15/12,18/12,21/12,2,3,4,5,6,7,8,9,10] #,12,15,20,30,40,50]
-    FFEmatDates = [1/52, 2/52, 3/52, 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 1]#, 2]
+    FFEmatDates = [1/52, 2/52, 3/52, 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 1, 2]
 
     EONIAdataCutoff = 3000
-    FFE2YdataCutoff = 1446
+    FFE2YdataCutoff = 1399
     FFE1YdataCutoff = 2800#3168
 
     times = loadFromHDF5(storageFile,'times')
@@ -325,14 +325,15 @@ def run(storageFile):
     MATLABForEigPerc = loadFromHDF5(storageFile,'MATLABForEigPerc') 
     MATLABForPCs = loadFromHDF5(storageFile,'MATLABForPCs') 
     MATLABForMatDiff = loadFromHDF5(storageFile,'MATLABForMatDiff') 
-    print MATLABForwardMat.shape, times.shape, MATLABForMatDiff.shape
+    
     plt.plot(MATLABForEigVecs[:,0:3])
     plt.show()
-    # plt.plot(forEigVecs[:,0:3])
-    # plt.show()
-    runSurfPlot(MATLABForwardMat[:EONIAdataCutoff-500,:times.shape[0]], times)
-    runSurfPlot(forwardMat[:EONIAdataCutoff-500,:times.shape[0]], times)
-    # [:FFE2YdataCutoff,:times.shape[0]]
+    plt.plot(MATLABForPCs)
+    plt.show()
+    print MATLABForEigPerc
+    runSurfPlot(MATLABForwardMat[:EONIAdataCutoff,:times.shape[0]], times)
+    # runSurfPlot(forwardMat[:FFE2YdataCutoff-500,:times.shape[0]], times)
+    # runSurfPlot(OISdataMat[:FFE2YdataCutoff,:], FFEmatDates)
     # startRow = 0
     # endRow = 1000
     # runPlotLoop(endRow, startRow, EONIAmatDates, MATLABForwardMat)

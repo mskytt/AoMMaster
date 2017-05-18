@@ -14,7 +14,16 @@ genMatlabEigs = True
 
 sheetName = 'EONIA_MID' # Sheet name
 storageFile = 'EONIAmid.hdf5' # Name of file where data is to be/ is currently stored
-MATLABstorageFile = 'MatlabEONIAmidForward100.hdf5' # 'MatlabFFE1Y05midForward100.hdf5'
+MATLABstorageFile = 'MatlabEONIA05midForward100.hdf5' 
+"""
+	'MatlabEONIAmidForward100.hdf5' -
+	'MatlabEONIA05midForward100.hdf5' -
+	'MatlabEONIA05midForward1000.hdf5' -
+	'MatlabFFE2YmidForward100.hdf5' - 
+	'MatlabFFE2Y05midForward100.hdf5' -
+	'MatlabFFE2Y025midForward100.hdf5' -
+	'MatlabFFE2Y025midForward1000.hdf5' - 
+"""
 """
     Run functions
 """
@@ -32,7 +41,6 @@ runGenMatlab(genMatlab, genMatlabEigs)
 # runGenForPCs(genForEigs, forMatDiff, storageFile)
 MATLABForwardMat = loadFromHDF5(MATLABstorageFile,'MATLABFordataMat')
 runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile)
-
 run(storageFile)
 >>>>>>> 4cb6df340a4ad8edff7863b05aa7354f2a33904a
 
