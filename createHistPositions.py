@@ -5,47 +5,36 @@ from h5pyStorage import storeToHDF5, loadFromHDF5
 import os.path
 from pdb import set_trace
 import datetime
-from plot_tools import plot_diffs, plot_prices
+from plot_tools import plot_diffs, plot_prices, plot_value, plot_diffs_in_same
 
 
 class futuresInterestPairs(object):
 
 	def __init__(self,dfFuturesData,ForwarRatesdMat,datesInterest):
-	
 		self.futureNames = dfFuturesData.columns
+		dfFuturesData = dfFuturesData.reindex(index=dfFuturesData.index[::-1]) #inverse dates and data
 
-		for column in dfFuturesData.columns[0:2]: #per future
-			datesFutures = dfFuturesData[column].dropna().index #<class 'pandas.tseries.index.DatetimeIndex'
-			datesFutures = np.array(datesFutures, dtype = 'datetime64[ns]') #<type 'numpy.ndarray'> of <numpy.datetime64'> elements
-			
+		for column in dfFuturesData.columns: #per future
 
+			print "on  " + column 
+			datesFutures = np.array(dfFuturesData[column].dropna().index, dtype = 'datetime64[ns]')  #<type 'numpy.ndarray'> of <numpy.datetime64'> elements
 			self.interestRates = self.getCorrespondingInterestRates(column,datesFutures,ForwarRatesdMat,datesInterest)
+
+
 			if len(self.interestRates) < 10: #no use in doing this if we have very few matching dates for reinvesting
-				print "matching interest rates not found for " + str(len(self._unusedDatesFutures)) + " number of dates"
+				print "matching interest rates not found for " + str(column)
 				print "number of futures dates is " + str(len(datesFutures))
 			else:
-				self.fut_forStartDays_of_position = self._datesFutures[1:]
-				self.fut_forDiffs = []
-				self.fut_forEndDay_of_position = self._datesFutures[0]
+				self.plot_RealisedDiffs_movingStart(dfFuturesData,column)
+				
 
-				endPrice = dfFuturesData[column].loc[self._datesFutures[0]]
-
-				for i in xrange(len(self._datesFutures[1:])): #_datesFutures are those who have a corresponding interest rate position
-					
-					startPrice = dfFuturesData[column].loc[self._datesFutures[i]]
-					forward_long = self.getForwardPosition(startPrice, endPrice)
-					futures_long = self.getFuturesPosition(dfFuturesData[column].loc[self._datesFutures[i:-1]],self.interestRates )
-					self.fut_forDiffs.append(futures_long - forward_long) #TODO
-				#plot_diffs(self.fut_forStartDays_of_position , self.fut_forEndDay_of_position , self.fut_forDiffs, column)
-				plot_prices(self._datesFutures, dfFuturesData[column].loc[self._datesFutures], column)
-	 #----------USAGE --------
-
-	 
+				
+	#----------USAGE --------
 	def getCorrespondingInterestRates(self, column, datesFutures,ForwarRatesdMat,datesInterest):
 		interestRates = []
 		ForwarRatesdMat_index = []
 		self._datesFutures = []
-		self._unusedDatesFutures = []
+		_unusedDatesFutures = []
 		timeToMats = []
 		timeToMat = len(datesFutures)
 		print "finding corresponding interest rates for future " + column
@@ -59,9 +48,27 @@ class futuresInterestPairs(object):
 				self._datesFutures.append(date) #only save those who have a corresponding interest rate date
 				timeToMats.append(timeToMat - i) 
 			else: 
-				 self._unusedDatesFutures.append(datesInterest[datesInterest['dates'].values == date].index.tolist())
-
+				 _unusedDatesFutures.append(datesInterest[datesInterest['dates'].values == date].index.tolist())
+		print "found corresponding interest rates for future " + column
 		return ForwarRatesdMat[ForwarRatesdMat_index,timeToMat]
+
+
+
+	def plot_RealisedDiffs_movingStart(self,dfFuturesData,column):
+		fut_forDiffs = []
+		futuresPositions = []
+		endPrice = dfFuturesData[column].loc[self._datesFutures[-1]]
+		for i in xrange(len(self._datesFutures)): #_datesFutures are those who have a corresponding interest rate position
+
+			startPrice = dfFuturesData[column].loc[self._datesFutures[i]]
+			forward_long = self.getForwardPosition(startPrice, endPrice)
+			futures_long = self.getFuturesPosition(dfFuturesData[column].loc[self._datesFutures[i:]],self.interestRates)
+			fut_forDiffs.append(futures_long - forward_long) #TODO
+			futuresPositions.append(futures_long)
+		plot_diffs_in_same(self._datesFutures ,self._datesFutures[-1] , fut_forDiffs, column)
+		#plot_value(self._datesFutures,futuresPositions, column)
+		#plot_diffs(self._datesFutures ,self._datesFutures[-1] , fut_forDiffs, column)
+		#plot_prices(self._datesFutures, dfFuturesData[column].loc[self._datesFutures], column)
 
 
 
@@ -69,9 +76,9 @@ class futuresInterestPairs(object):
 		return  maturityPrice - strikePrice
 
 	def getFuturesPosition(self, futurePrices,interestRates):
-		strike = futurePrices.values[0]
+		strike = futurePrices.values[-1]
 		futuresPosition = 0
-		for i in xrange(len(futurePrices)):
+		for i in xrange(1,len(futurePrices)):
 			futuresPosition += (futurePrices.values[i] - strike)*interestRates[i]
 		return futuresPosition
 
@@ -117,12 +124,13 @@ if GOLD:
 	sheets = ['ReutersCOMEXGoldTS1', 'ReutersCOMEXGoldTS2', 'ReutersCOMEXGoldTS3']
 	indexColumn = 0
 	dfFuturesData = pd.DataFrame()
-	for sheet in sheets[0:1]:
-		xlsFuturesData = xlExtract(pathToData,sheet,indexColumn)
-		dfFuturesData = xlExtract.extractData(xlsFuturesData, xlsFuturesData.columns,'2017-04-21',  entireTS = True, useLinterpDF = True).dropna(how = 'all')
-		print "sheet " + str(sheet) + " extracted"	
-		gold_futures_realisation = futuresInterestPairs(dfFuturesData,ForwarRatesdMat,datesInterest)
-		
+	#for sheet in sheets[0:1]:
+	sheet = sheets[0]
+	xlsFuturesData = xlExtract(pathToData,sheet,indexColumn)
+	dfFuturesData = xlExtract.extractData(xlsFuturesData, xlsFuturesData.columns,'2017-04-21',  entireTS = True, useLinterpDF = False).dropna(how = 'all')
+	print "sheet " + str(sheet) + " extracted"	
+	gold_futures_realisation = futuresInterestPairs(dfFuturesData,ForwarRatesdMat,datesInterest)
+	
 
 if ALU:
 	pass

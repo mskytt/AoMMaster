@@ -9,3 +9,6 @@
 
 # Data files generated
 *.hdf5
+
+# Plots generated
+*.png
