@@ -331,7 +331,7 @@ def run(storageFile):
     plt.plot(MATLABForPCs)
     plt.show()
     print MATLABForEigPerc
-    runSurfPlot(MATLABForwardMat[:EONIAdataCutoff,:times.shape[0]], times)
+    runSurfPlot(MATLABForwardMat[:EONIAdataCutoff-500,:times.shape[0]], times)
     # runSurfPlot(forwardMat[:FFE2YdataCutoff-500,:times.shape[0]], times)
     # runSurfPlot(OISdataMat[:FFE2YdataCutoff,:], FFEmatDates)
     # startRow = 0
