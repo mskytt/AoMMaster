@@ -113,8 +113,7 @@ class futuresInterestPairs(object):
 
 	def do_OneSummaryPlot(self,fut_for_diffs,prices, maturities_days, startDates): 
 
-			#self.surfPlot_diffs(fut_for_diffs,maturities_days, startDates)
-			self._2dPlot_diffs(fut_for_diffs,maturities_days, startDates)
+			#self.surfPlot_diffs(fut_for_diffs,maturities_days, startDates			self._2dPlot_diffs(fut_for_diffs,maturities_days, startDates)
 
 
 
