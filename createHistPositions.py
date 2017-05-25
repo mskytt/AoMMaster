@@ -5,7 +5,7 @@ from h5pyStorage import storeToHDF5, loadFromHDF5
 import os.path
 from pdb import set_trace
 import datetime
-from plot_tools import plot_diffs, plot_prices, plot_value, plot_diffs_in_same
+from plot_tools import plot_diffs, plot_prices, plot_value, plot_diffs_in_same, surfPlot,plot_diffs_sameStart,plot_diffs_mat
 
 
 class futuresInterestPairs(object):
@@ -13,10 +13,14 @@ class futuresInterestPairs(object):
 	def __init__(self,dfFuturesData,ForwarRatesdMat,datesInterest):
 		self.futureNames = dfFuturesData.columns
 		dfFuturesData = dfFuturesData.reindex(index=dfFuturesData.index[::-1]) #inverse dates and data
+		fut_for_diffs = []
+		maturities_days = []
+		startDates = []
 
-		for column in dfFuturesData.columns: #per future
 
-			print "on  " + column 
+		for column in dfFuturesData.columns[0:1]: #per future
+
+			#print "on  " + column 
 			datesFutures = np.array(dfFuturesData[column].dropna().index, dtype = 'datetime64[ns]')  #<type 'numpy.ndarray'> of <numpy.datetime64'> elements
 			self.interestRates = self.getCorrespondingInterestRates(column,datesFutures,ForwarRatesdMat,datesInterest)
 
@@ -26,18 +30,28 @@ class futuresInterestPairs(object):
 				print "number of futures dates is " + str(len(datesFutures))
 			else:
 				self.plot_RealisedDiffs_movingStart(dfFuturesData,column)
-				
+				startPrice = dfFuturesData[column].loc[self._datesFutures[0]]
+				endPrice = dfFuturesData[column].loc[self._datesFutures[-1]]
+
+				futures_long = self.getFuturesPosition(dfFuturesData[column].loc[self._datesFutures],self.interestRates)
+				forwards_short = -1*self.getForwardPosition(startPrice, endPrice)
+				fut_for_diffs.append(forwards_short + futures_long)
+				maturities_days.append(len(dfFuturesData[column]))
+				startDates.append(self._datesFutures[0])
+		#self.surfPlot_diffs(fut_for_diffs,maturities_days, startDates)
+		self._2dPlot_diffs(fut_for_diffs,maturities_days, startDates)
+
+
 
 				
 	#----------USAGE --------
-	def getCorrespondingInterestRates(self, column, datesFutures,ForwarRatesdMat,datesInterest):
+	def getCorrespondingInterestRates(self, column, datesFutures,ForwarRatesMat,datesInterest):
 		interestRates = []
 		ForwarRatesdMat_index = []
 		self._datesFutures = []
 		_unusedDatesFutures = []
 		timeToMats = []
 		timeToMat = len(datesFutures)
-		print "finding corresponding interest rates for future " + column
 		i = 0
 		for date in datesFutures:
 			i += 1
@@ -49,8 +63,8 @@ class futuresInterestPairs(object):
 				timeToMats.append(timeToMat - i) 
 			else: 
 				 _unusedDatesFutures.append(datesInterest[datesInterest['dates'].values == date].index.tolist())
-		print "found corresponding interest rates for future " + column
-		return ForwarRatesdMat[ForwarRatesdMat_index,timeToMat]
+		#print "found corresponding interest rates for future " + column
+		return ForwarRatesMat[ForwarRatesdMat_index,timeToMat]
 
 
 
@@ -65,21 +79,31 @@ class futuresInterestPairs(object):
 			futures_long = self.getFuturesPosition(dfFuturesData[column].loc[self._datesFutures[i:]],self.interestRates)
 			fut_forDiffs.append(futures_long - forward_long) #TODO
 			futuresPositions.append(futures_long)
-		plot_diffs_in_same(self._datesFutures ,self._datesFutures[-1] , fut_forDiffs, column)
-		#plot_value(self._datesFutures,futuresPositions, column)
-		#plot_diffs(self._datesFutures ,self._datesFutures[-1] , fut_forDiffs, column)
-		#plot_prices(self._datesFutures, dfFuturesData[column].loc[self._datesFutures], column)
 
+		#plot_diffs_in_same(self._datesFutures ,self._datesFutures[-1] , fut_forDiffs, column)
+		plot_value(self._datesFutures,futuresPositions, column)
+		plot_diffs(self._datesFutures ,self._datesFutures[-1] , fut_forDiffs, column)
+		plot_prices(self._datesFutures, dfFuturesData[column].loc[self._datesFutures], column)
+
+	def surfPlot_diffs(self, fut_for_diffs,maturities_days, startDates):
+		#sort on maturities?
+
+		matrix = [[]]
+		surfPlot(matrix, startDates )
+
+	def _2dPlot_diffs(self,fut_for_diffs,maturities_days, startDates):
+		plot_diffs_sameStart(startDates,fut_for_diffs)
+		plot_diffs_mat(fut_for_diffs,maturities_days)
 
 
 	def getForwardPosition(self, strikePrice, maturityPrice):
 		return  maturityPrice - strikePrice
 
 	def getFuturesPosition(self, futurePrices,interestRates):
-		strike = futurePrices.values[-1]
 		futuresPosition = 0
 		for i in xrange(1,len(futurePrices)):
-			futuresPosition += (futurePrices.values[i] - strike)*interestRates[i]
+			futuresPosition += (futurePrices.values[i] -futurePrices.values[i-1])*np.exp(interestRates[i])
+
 		return futuresPosition
 
 
@@ -110,7 +134,7 @@ def getInterestRateDates(EONIA = True, FFE = False):
 		print "no interest rate choosen"
 
 def getInterestRates():
-	return loadFromHDF5('EONIAask.hdf5','MATLABForwardMat') #interest rates data, type
+	return loadFromHDF5('EONIAask.hdf5','ZCMat') #interest rates data, type
 
 
 
