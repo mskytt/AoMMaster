@@ -6,7 +6,29 @@ matplotlib.interactive(True)
 import numpy as np
 
 
-def plot_diffs(startDates, endDate, diffs, nameOfFuture):
+def onePlotPerFuture(dates, diffs, values, prices, nameOfFuture):
+	plot_diffs(dates, diffs, nameOfFuture)
+	plot_prices(dates, prices, nameOfFuture)
+	plot_values(dates, values, nameOfFuture)
+
+
+
+
+
+def summaryPlot(startDates, diffs, maturities, namesOfFutures):
+	pass
+
+
+
+
+
+
+
+# ----------------- onePlotPerFuture ------------------------
+
+
+
+def plot_diffs(startDates, diffs, nameOfFuture):
 	fig1 = plt.figure()
 	plt.plot(startDates,diffs, label = nameOfFuture)
 	titleString = "Realised moving difference between futures and forwards (futures long - forward long)"
@@ -31,10 +53,10 @@ def plot_prices(dates, prices, nameOfFuture):
 	plt.savefig(saveString)
 
 
-def plot_value(dates, prices, nameOfFuture):
+def plot_values(dates, prices, nameOfFuture):
 	fig3 = plt.figure()
 	plt.plot(dates,prices, label = nameOfFuture)
-	titleString = "Futures contract value" 
+	titleString = "Futures contract position over the life time of the future " +  str(nameOfFuture)
 	saveString = "Plots/value_" + str(nameOfFuture) + ".png"
 	plt.title(titleString)
 	plt.xlabel("Time")
@@ -42,6 +64,9 @@ def plot_value(dates, prices, nameOfFuture):
 	plt.legend(loc='upper left')
 	plt.gcf().autofmt_xdate() 	# beautify the x-labels
 	plt.savefig(saveString)
+
+
+# ----------------- summaryPlot ------------------------
 
 def plot_diffs_in_same(startDates, endDate, diffs, nameOfFuture):
 	plt.plot(startDates,diffs, label = nameOfFuture)
@@ -54,6 +79,7 @@ def plot_diffs_in_same(startDates, endDate, diffs, nameOfFuture):
 	plt.gcf().autofmt_xdate() 	# beautify the x-labels
 	plt.hold(True)
 	plt.savefig(saveString)
+
 
 
 def plot_diffs_mat(diffs,maturities_days):
