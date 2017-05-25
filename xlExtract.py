@@ -29,6 +29,7 @@ class xlExtract(object):
                 if indexcolumn != None:
                     self.df = pd.read_excel(xlpath,sheetname,0,0,0,indexcolumn)
                     self.index = self.df.index.to_pydatetime()
+                else:
                     self.df = pd.read_excel(xlpath,sheetname)
 
             else:
