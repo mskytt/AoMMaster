@@ -43,19 +43,12 @@ class TimeSeries(object):
         print np.std(self.logReturns)*sqrt(252)
 
 
-
-
-
-
 def plotDistribution(log_returns):
     plt.hist(log_returns)
     plt.title("Histogram")
     plt.xlabel("Value")
     plt.ylabel("Frequency")
     plt.show()
-
-
-
 
 # --------------- start program ---------------
 
@@ -66,12 +59,11 @@ indexColumns = [0, 0, 0]
 
 #GOLD and OIS-bonds
 dfFuturesData =xlExtract(pathsToData[2],sheets[2],indexColumns[2]) #extract one sheet with index column 0 
-dfBondsData = xlExtract(pathsToData[2],sheets[2],indexColumns[2]) 
+dfBondsData = xlExtract(pathsToData[0],sheets[0],indexColumns[0]) 
 
 #Ta fram bonds for de exakta datum jag har!
 
 dfBondsData = dfBondsData #TODO
-
 
 meanFuts = []
 meanBonds = []

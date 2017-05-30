@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
+from datetime import timedelta
 import numpy as np
 import pandas as pd
 
@@ -135,12 +136,21 @@ def genPCs(eigVals, eigVecs, eigPerc, percExpl):
         i += 1
     return PC[:,:i-1], i
 
+def genTimeDelta(dataInd):
+    """
+        # Compute the time difference, in days, between dates in dataframe Index. 
+        # First value = difference between most recent two days.
+    """
+    timeDeltas = -1*np.diff(dataInd, axis = 0)
+    helper = np.vectorize(lambda x: x.days) # Helper function to exctract timedelta days as int 
+    timeDeltas = helper(timeDeltas)
+    return timeDeltas
+
 def runGenerateData(readExcel, genForward, genZC, sheetName, storageFile):
     """
         sheetName : Name of sheet
     """
     print 'Started.'
-
     """
         Define some data based parameters
     """
@@ -165,16 +175,18 @@ def runGenerateData(readExcel, genForward, genZC, sheetName, storageFile):
     if readExcel:
         OISdata = xlExtract('Data/OIS_data.xlsx',sheetName,0)
         OISdataDF = OISdata.dflinterp # type: pandas.core.frame.DataFrame
-        OISdataInd = OISdata.index # type: pandas.tseries.index.DatetimeIndex
+        OISdataInd = OISdata.index # type: pandas.tseries.index.DatetimeIndex or nump.ndarray
         OISdataCol = OISdata.columns # type: pandas.indexes.base.Index
         OISdataMat = OISdataDF.values/100 # type: numpy.ndarray
         OISdataMat = OISdataMat[:,0:len(matDates)]
-
+        OISTimeDelta = genTimeDelta(OISdataInd)
         print 'Extracted data using xlExtract.'
         storeToHDF5(storageFile, 'OISdataMat', OISdataMat)
+        storeToHDF5(storageFile, 'OISTimeDelta', OISTimeDelta)
         print 'Stored OIS data matrix to file.'
     else:
         OISdataMat = loadFromHDF5(storageFile,'OISdataMat')
+        OISTimeDelta = loadFromHDF5(storageFile, 'OISTimeDelta')
         print 'Read matrix from file.'
     """
         Generate forward/Zero-coupon matrix
@@ -209,6 +221,46 @@ def runGenerateData(readExcel, genForward, genZC, sheetName, storageFile):
         print 'Read zero coupon matrices from file.'
 
     return
+
+def genZCBondPrices(ZCMat,times):
+    ZCBondPriceMat = np.exp(-ZCMat*times)
+    return ZCBondPriceMat
+
+def genZCBondTS(ZCBondPriceMat,timeDeltas, topDate, startRow, startCol):
+    """
+    #   Extract the time series for one artificiall zero-coupon bond by utilising:
+            - days to maturity = startCol
+            - as seen from date corresponding to *startRow* 
+        return: 
+            - numpy.array with prices from start row until death
+            - numpy.array with corresponding dates
+    # NOTE: elements in returned arrays are in chronical order with earlies at 0 and most recent at -1
+    #       i.e opposite to extracted data
+    """
+    currCol = startCol
+    currRow = startRow
+
+    # Date management
+    startDate = topDate - timedelta(days=np.sum(timeDeltas[:startRow])) # get start date
+    dateVec = np.array([startDate]) # add start date to vector with all dates
+
+    # Value initialization
+    ZCBondPriceVec = ZCBondPriceMat[currRow:currRow+1,currCol] # Initialize by setting first value as np.array
+    cumTimeDeltas = timeDeltas[currRow] # add timedeltas to later extract end date
+    currCol -= timeDeltas[currRow] 
+    currRow -= 1
+
+    # Go forward until bond matures or at last available date
+    while currCol >= 0 and currRow >= 0:
+        ZCBondPriceVec = np.append(ZCBondPriceVec, ZCBondPriceMat[currRow:currRow+1,currCol]) # Add correct bondprice
+        
+        dateVec = np.append(dateVec, dateVec[-1]+timedelta(days=timeDeltas[currRow]))
+        currCol -= timeDeltas[currRow] # time to maturity is shortened by timeDelta
+        currRow -= 1 # Row is decreased by one = move to next timestep
+
+    ZCBondLogReturns = np.diff(np.log(ZCBondPriceVec)) # Computing log returns
+
+    return ZCBondPriceVec, ZCBondLogReturns, dateVec
 
 def runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile):
 
@@ -304,10 +356,11 @@ def runGenForPCs(genForEigs, forMatDiff, storageFile):
     print 'Stored forward PCs.'
     return
 
-def run(storageFile):
+def run(storageFile, sheetName):
     EONIAmatDates = [1/52, 2/52,3/52,1/12,2/12,3/12,4/12,5/12,6/12,7/12,8/12,9/12,10/12,11/12,1,15/12,18/12,21/12,2,3,4,5,6,7,8,9,10] #,12,15,20,30,40,50]
     FFEmatDates = [1/52, 2/52, 3/52, 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 1, 2]
-
+    OISTopDate = pd.to_datetime('2017-04-20') # Most recent available date
+    
     EONIAdataCutoff = 3000
     FFE2YdataCutoff = 1399
     FFE1YdataCutoff = 2800#3168
@@ -315,27 +368,38 @@ def run(storageFile):
     times = loadFromHDF5(storageFile,'times')
     forPCs = loadFromHDF5(storageFile,'forPCs')
     ZCPCs = loadFromHDF5(storageFile,'ZCPCs')
-    forwardMat = loadFromHDF5(storageFile,'forwardMat')
-    forEigVecs = loadFromHDF5(storageFile, 'forEigVecs')
-    forEigPerc = loadFromHDF5(storageFile,'forEigPerc')
-    MATLABForwardMat = loadFromHDF5(storageFile,'MATLABForwardMat')
-    OISdataMat = loadFromHDF5(storageFile,'OISdataMat')
-    MATLABForEigVals = loadFromHDF5(storageFile,'MATLABForEigVals')
-    MATLABForEigVecs = loadFromHDF5(storageFile,'MATLABForEigVecs')
-    MATLABForEigPerc = loadFromHDF5(storageFile,'MATLABForEigPerc') 
-    MATLABForPCs = loadFromHDF5(storageFile,'MATLABForPCs') 
-    MATLABForMatDiff = loadFromHDF5(storageFile,'MATLABForMatDiff') 
+    ZCMat = loadFromHDF5(storageFile,'ZCMat')
+    OISTimeDelta = loadFromHDF5(storageFile,'OISTimeDelta')
+
+    startRow = 800
+    startCol = 365
+    ZCBondPriceMat = genZCBondPrices(ZCMat, times)
+    bondPV, bondLogReturns, dateVec = genZCBondTS(ZCBondPriceMat, OISTimeDelta, OISTopDate, startRow, startCol)
+    # plt.plot(dateVec, bondPV)
+    # plt.show()
+    # plt.plot(dateVec[1:], bondLogReturns)
+    # plt.show()
+
+    # forwardMat = loadFromHDF5(storageFile,'forwardMat')
+    # forEigVecs = loadFromHDF5(storageFile, 'forEigVecs')
+    # forEigPerc = loadFromHDF5(storageFile,'forEigPerc')
+    # MATLABForwardMat = loadFromHDF5(storageFile,'MATLABForwardMat')
+    # OISdataMat = loadFromHDF5(storageFile,'OISdataMat')
+    # MATLABForEigVals = loadFromHDF5(storageFile,'MATLABForEigVals')
+    # MATLABForEigVecs = loadFromHDF5(storageFile,'MATLABForEigVecs')
+    # MATLABForEigPerc = loadFromHDF5(storageFile,'MATLABForEigPerc') 
+    # MATLABForPCs = loadFromHDF5(storageFile,'MATLABForPCs') 
+    # MATLABForMatDiff = loadFromHDF5(storageFile,'MATLABForMatDiff') 
     
-    plt.plot(MATLABForEigVecs[:,0:3])
-    plt.show()
-    plt.plot(MATLABForPCs)
-    plt.show()
-    print MATLABForEigPerc
-    runSurfPlot(MATLABForwardMat[:EONIAdataCutoff-500,:times.shape[0]], times)
-    # runSurfPlot(forwardMat[:FFE2YdataCutoff-500,:times.shape[0]], times)
+    # plt.plot(MATLABForEigVecs[:,0:3])
+    # plt.show()
+    # plt.plot(MATLABForPCs)
+    # plt.show()
+    # print MATLABForEigPerc
+    # runSurfPlot(MATLABForwardMat[:EONIAdataCutoff-1000,:times.shape[0]], times)
+    # runSurfPlot(ZCBondPriceMat[:EONIAdataCutoff,:times.shape[0]], times)
     # runSurfPlot(OISdataMat[:FFE2YdataCutoff,:], FFEmatDates)
     # startRow = 0
     # endRow = 1000
     # runPlotLoop(endRow, startRow, EONIAmatDates, MATLABForwardMat)
     return
-
