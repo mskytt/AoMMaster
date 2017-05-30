@@ -11,8 +11,8 @@ from plot_tools import onePlotPerFuture, summaryPlot
 # --------------- start program ---------------
 
 #define what you want to plot 
-ONE_PLOT_PER_FUTURE = True #this gives a lot of plots, beware
-SUMMARY_PLOTS = False
+ONE_PLOT_PER_FUTURE = False #this gives a lot of plots, beware
+SUMMARY_PLOTS = True
 
 if not ONE_PLOT_PER_FUTURE and not SUMMARY_PLOTS:
 	print "plotting is off"
@@ -35,42 +35,48 @@ class futuresInterestPairs(object):
 		fut_for_diffs = []
 		maturities_days = []
 		startDates = []
+		nameOfFutures = []
 
 
-		for column in dfFuturesData.columns[0:2]: #per future
+		for column in dfFuturesData.columns: #per future
 
 			#print "on  " + column 
-			datesFutures = np.array(dfFuturesData[column].dropna().index, dtype = 'datetime64[ns]')  #<type 'numpy.ndarray'> of <numpy.datetime64'> elements
-			self.interestRates = self.getCorrespondingInterestRates(column,datesFutures,ForwarRatesdMat,datesInterest)
+			futuresData = dfFuturesData[column].dropna()
+			datesFutures = np.array(futuresData.index, dtype = 'datetime64[ns]')  #<type 'numpy.ndarray'> of <numpy.datetime64'> elements
 
+			self.interestRates = self.getCorrespondingInterestRates(column,datesFutures,ForwarRatesdMat,datesInterest)
 
 			if len(self.interestRates) < 10: #no use in doing this if we have very few matching dates for reinvesting
 				print "matching interest rates not found for " + str(column)
 				print "number of futures dates is " + str(len(datesFutures))
 			else:
 				if ONE_PLOT_PER_FUTURE:
-					self.do_OnePlotPerFuture(dfFuturesData, self._datesFutures, self.interestRates,column)
+					self.do_OnePlotPerFuture(futuresData, self._datesFutures, self.interestRates,column)
+				else:
+					nameOfFutures.append(column)
+					startPrice = futuresData.loc[self._datesFutures[0]]
+					endPrice = futuresData.loc[self._datesFutures[-1]]
 
-				startPrice = dfFuturesData[column].loc[self._datesFutures[0]]
-				endPrice = dfFuturesData[column].loc[self._datesFutures[-1]]
-
-				futures_long = self.getFuturesPosition(dfFuturesData[column].loc[self._datesFutures],self.interestRates)
-				forwards_short = -1*self.getForwardPosition(startPrice, endPrice)
-				fut_for_diffs.append(forwards_short + futures_long)
-				maturities_days.append(len(dfFuturesData[column]))
-				startDates.append(self._datesFutures[0])
+					futures_long = self.getFuturesPosition(futuresData.loc[self._datesFutures],self.interestRates)
+					forwards_short = -1*self.getForwardPosition(startPrice, endPrice)
+					fut_for_diffs.append(forwards_short + futures_long[-1])
+					maturities_days.append(len(futuresData))
+					startDates.append(self._datesFutures[0])
 
 		if SUMMARY_PLOTS:
-			self.do_OneSummaryPlot(fut_for_diffs,maturities_days, startDates)
+			print maturities_days
+			print type(maturities_days[0])
+			print type(fut_for_diffs[0])
+			self.do_OneSummaryPlot(fut_for_diffs,maturities_days, startDates,nameOfFutures)
 	
 
 				
 	#----------USAGE --------
 	def getCorrespondingInterestRates(self, column, datesFutures,ForwarRatesMat,datesInterest):
-		interestRates = []
 		ForwarRatesdMat_index = []
 		self._datesFutures = []
 		_unusedDatesFutures = []
+		interestRates =[]
 		timeToMats = []
 		timeToMat = len(datesFutures)
 		i = 0
@@ -84,13 +90,36 @@ class futuresInterestPairs(object):
 				timeToMats.append(timeToMat - i) 
 			else: 
 				 _unusedDatesFutures.append(datesInterest[datesInterest['dates'].values == date].index.tolist())
-		#print "found corresponding interest rates for future " + column
-		return ForwarRatesMat[ForwarRatesdMat_index,timeToMat]
+
+
+		return ForwarRatesMat[ForwarRatesdMat_index,timeToMats]	#interestRates is now a matrix of all possible spot rates for the correct dates.
+		
 
 
 
+	def getForwardPosition(self, strikePrice, maturityPrice): #returns one value
+		return  maturityPrice - strikePrice
+
+
+	def getFuturesPosition(self, futurePrices,interestRates): #returns list
+		futuresPositions = [0]
+		futuresPosition = 0
+		for i in xrange(1,len(futurePrices)): #change back
+			maturity = (float(len(futurePrices) - i))/365
+			futuresPosition += (futurePrices.values[i] -futurePrices.values[i-1])*np.exp(interestRates[i]*maturity)
+
+
+			# print "\n" + "futuresPosition = " + str(futuresPosition)
+			# print "futurePrices.values[i] -futurePrices.values[i-1] = "  + str(futurePrices.values[i] -futurePrices.values[i-1])
+			# print "np.exp(interestRates[i]*maturity) = " + str(np.exp(interestRates[i]*maturity))
+			# print "maturity" + str(maturity)
+			futuresPositions.append(futuresPosition)
+		return futuresPositions
+
+
+		# -------------plots --------------------
 	def do_OnePlotPerFuture(self,dfFuturesData, _datesFutures, interestRates, column):
-		#how much the futures position is worth over time
+		#how much the futures position is worth over time when you buy at starttime
 		futures_pos_over_time = self.getFuturesPosition(dfFuturesData[column].loc[_datesFutures], interestRates) #list
 
 		#the result when you enter the positions at day 1, day 2 etc
@@ -103,43 +132,15 @@ class futuresInterestPairs(object):
 	 		futures_long = self.getFuturesPosition(dfFuturesData[column].loc[_datesFutures[i:]], interestRates)
 	 		fut_forDiffs.append(futures_long[-1] - forward_long) 
 
-
-
 		#startDates, diffs, prices, nameOfFuture
 		onePlotPerFuture(_datesFutures,fut_forDiffs, futures_pos_over_time, dfFuturesData[column].loc[_datesFutures], column)  
 		
 
 
 
-	def do_OneSummaryPlot(self,fut_for_diffs,prices, maturities_days, startDates): 
-
-			#self.surfPlot_diffs(fut_for_diffs,maturities_days, startDates			self._2dPlot_diffs(fut_for_diffs,maturities_days, startDates)
-
-
-
-
-
-
-	def surfPlot_diffs(self, fut_for_diffs,maturities_days, startDates):
-		#sort on maturities?
-
-		matrix = [[]]
-		surfPlot(matrix, startDates )
-
-	def _2dPlot_diffs(self,fut_for_diffs,maturities_days, startDates):
-		plot_diffs_sameStart(startDates,fut_for_diffs)
-		plot_diffs_mat(fut_for_diffs,maturities_days)
-
-
-	def getForwardPosition(self, strikePrice, maturityPrice): #returns one value
-		return  maturityPrice - strikePrice
-
-	def getFuturesPosition(self, futurePrices,interestRates): #returns list
-		futuresPosition = [0]
-		for i in xrange(1,len(futurePrices)):
-			futuresPosition.append((futuresPosition[i-1] + futurePrices.values[i] -futurePrices.values[i-1])*np.exp(interestRates[i]))
-
-		return futuresPosition
+	def do_OneSummaryPlot(self,fut_for_diffs, maturities_days, startDates, columns): 
+		summaryPlot(startDates, fut_for_diffs, maturities_days, columns)
+		
 
 
 

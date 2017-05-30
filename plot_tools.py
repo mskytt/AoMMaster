@@ -15,8 +15,14 @@ def onePlotPerFuture(dates, diffs, values, prices, nameOfFuture):
 
 
 
-def summaryPlot(startDates, diffs, maturities, namesOfFutures):
-	pass
+def summaryPlot(startDates, diffs, maturities_days, namesOfFutures):
+
+
+
+	plot_diffs_summary_mat(diffs,maturities_days)
+	#plot_diffs_summary_dates()
+
+
 
 
 
@@ -68,31 +74,20 @@ def plot_values(dates, prices, nameOfFuture):
 
 # ----------------- summaryPlot ------------------------
 
-def plot_diffs_in_same(startDates, endDate, diffs, nameOfFuture):
-	plt.plot(startDates,diffs, label = nameOfFuture)
-	titleString = "Realised moving difference between futures and forwards (futures long - forward long)"
-	saveString = "Plots/diffs.png"
-	plt.title(titleString)
-	plt.xlabel("Time of entering contracts")
-	plt.ylabel("Difference in USD")
-	plt.legend(loc='upper left')
-	plt.gcf().autofmt_xdate() 	# beautify the x-labels
-	plt.hold(True)
-	plt.savefig(saveString)
 
 
 
-def plot_diffs_mat(diffs,maturities_days):
+def plot_diffs_summary_mat(diffs,maturities_days):
 	fig5 = plt.figure()
 	plt.plot(maturities_days,diffs)
-	titleString = "Realised difference between futures and forwards (futures long - forward_short) if entering both contracts at startdates"
+	titleString = "Realised (futures long - forward_short) if entering both contracts at startdates"
 	saveString = "Plots/diffs_mat.png"
 	plt.title(titleString)
 	plt.xlabel("Maturity in days")
 	plt.ylabel("Difference in USD")
 	plt.savefig(saveString)
 
-def plot_diffs_sameStart(startDates, diffs):
+def plot_diffs_summary_dates(startDates, diffs):
 	fig1 = plt.figure()
 	plt.plot(startDates,diffs)
 	titleString = "Realised moving difference between futures and forwards (futures long - forward short)"
