@@ -86,6 +86,9 @@ def twoFactorHJM(initVec, endTime):
 			dphi[i,:] = mu*dt + sigmaf1*dW1[i] + sigmaf2*dW2[i]
 		return np.cumsum(dphi, axis=0) 
 
+"""
+#	PC-based HJM
+"""
 def PCHJM(initVec, endTime, PCsMat):
 	"""
 	endTime : Time until stop of simulation, in years

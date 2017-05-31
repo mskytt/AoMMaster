@@ -34,7 +34,7 @@ forMatDiff = loadFromHDF5(storageFile,'forMatDiff')
 runGenForPCs(genForEigs, forMatDiff, storageFile)
 MATLABForwardMat = loadFromHDF5(MATLABstorageFile,'MATLABFordataMat')
 runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile)
-run(storageFile)
+run(storageFile, sheetName)
 
 
 
