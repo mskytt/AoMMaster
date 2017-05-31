@@ -5,7 +5,7 @@ from h5pyStorage import storeToHDF5, loadFromHDF5
 import os.path
 from pdb import set_trace
 import datetime
-from plot_tools import onePlotPerFuture, summaryPlot
+from plot_tools import _onePlotPerFuture, _summaryPlot
 
 
 # --------------- start program ---------------
@@ -29,6 +29,9 @@ POWER = False
 
 class futuresInterestPairs(object):
 
+
+
+# ------------- run through the data from excel column per coumn--------------------
 	def __init__(self,dfFuturesData,ForwarRatesdMat,datesInterest):
 		self.futureNames = dfFuturesData.columns
 		dfFuturesData = dfFuturesData.reindex(index=dfFuturesData.index[::-1]) #inverse dates and data
@@ -46,10 +49,10 @@ class futuresInterestPairs(object):
 
 			self.interestRates = self.getCorrespondingInterestRates(column,datesFutures,ForwarRatesdMat,datesInterest)
 
-			if len(self.interestRates) < 10: #no use in doing this if we have very few matching dates for reinvesting
-				print "matching interest rates not found for " + str(column)
-				print "number of futures dates is " + str(len(datesFutures))
-			else:
+			if len(self.interestRates) > 10: #no use in doing this if we have very few matching dates for reinvesting
+				# print "matching interest rates not found for " + str(column)
+				# print "number of futures dates is " + str(len(datesFutures))
+	
 				if ONE_PLOT_PER_FUTURE:
 					self.do_OnePlotPerFuture(futuresData, self._datesFutures, self.interestRates,column)
 				else:
@@ -64,14 +67,10 @@ class futuresInterestPairs(object):
 					startDates.append(self._datesFutures[0])
 
 		if SUMMARY_PLOTS:
-			print maturities_days
-			print type(maturities_days[0])
-			print type(fut_for_diffs[0])
-			self.do_OneSummaryPlot(fut_for_diffs,maturities_days, startDates,nameOfFutures)
+			self.saveArgsForSummaryPlot(fut_for_diffs,maturities_days, startDates,nameOfFutures)
 	
 
-				
-	#----------USAGE --------
+# ------------- matching interest rates to futures prices--------------------
 	def getCorrespondingInterestRates(self, column, datesFutures,ForwarRatesMat,datesInterest):
 		ForwarRatesdMat_index = []
 		self._datesFutures = []
@@ -97,6 +96,9 @@ class futuresInterestPairs(object):
 
 
 
+# ------------- future and forward position--------------------
+
+
 	def getForwardPosition(self, strikePrice, maturityPrice): #returns one value
 		return  maturityPrice - strikePrice
 
@@ -107,17 +109,11 @@ class futuresInterestPairs(object):
 		for i in xrange(1,len(futurePrices)): #change back
 			maturity = (float(len(futurePrices) - i))/365
 			futuresPosition += (futurePrices.values[i] -futurePrices.values[i-1])*np.exp(interestRates[i]*maturity)
-
-
-			# print "\n" + "futuresPosition = " + str(futuresPosition)
-			# print "futurePrices.values[i] -futurePrices.values[i-1] = "  + str(futurePrices.values[i] -futurePrices.values[i-1])
-			# print "np.exp(interestRates[i]*maturity) = " + str(np.exp(interestRates[i]*maturity))
-			# print "maturity" + str(maturity)
 			futuresPositions.append(futuresPosition)
 		return futuresPositions
 
 
-		# -------------plots --------------------
+# -------------one plot per future --------------------
 	def do_OnePlotPerFuture(self,dfFuturesData, _datesFutures, interestRates, column):
 		#how much the futures position is worth over time when you buy at starttime
 		futures_pos_over_time = self.getFuturesPosition(dfFuturesData[column].loc[_datesFutures], interestRates) #list
@@ -133,19 +129,51 @@ class futuresInterestPairs(object):
 	 		fut_forDiffs.append(futures_long[-1] - forward_long) 
 
 		#startDates, diffs, prices, nameOfFuture
-		onePlotPerFuture(_datesFutures,fut_forDiffs, futures_pos_over_time, dfFuturesData[column].loc[_datesFutures], column)  
+		_onePlotPerFuture(_datesFutures,fut_forDiffs, futures_pos_over_time, dfFuturesData[column].loc[_datesFutures], column)  
+		
+	# -------------for usage of arguments aoutside of class -------------------
+
+	def saveArgsForSummaryPlot(self,fut_for_diffs, maturities_days, startDates, columns):
+		self.fut_for_diffs = fut_for_diffs
+		self.maturities_days = maturities_days
+		self.startDates = startDates
+		self.columns = columns
+
+
+# ------------------Plotting summaries-----------------------------
+
+def summaryPlot(futures_realisation):
+	print futures_realisation
+	fut_for_diffs = []
+	maturities_days = [] 
+	startDates = []
+	columns = []
+
+
+	for i in xrange(len(futures_realisation)):
+		print "len(futures_realisation[i].fut_for_diffs) = " + str(len(futures_realisation[i].fut_for_diffs))
+		fut_for_diffs.append(futures_realisation[i].fut_for_diffs)
+		maturities_days.append(futures_realisation[i].maturities_days)
+		startDates.append(futures_realisation[i].startDates)
+		columns.append(futures_realisation[i].columns)
+
+
+
+
+	doSummaryPlot(fut_for_diffs, maturities_days, startDates, columns)
+
+
+
+def doSummaryPlot(fut_for_diffs, maturities_days, startDates, columns): 
+	#sort the maturities and fut_for_diffs accordingly, unzip
+	maturities_days, fut_for_diffs = zip(*sorted(zip(maturities_days,fut_for_diffs)))
+	print len(fut_for_diffs) == len(maturities_days)
+	_summaryPlot(startDates, fut_for_diffs, maturities_days, columns)
 		
 
 
 
-	def do_OneSummaryPlot(self,fut_for_diffs, maturities_days, startDates, columns): 
-		summaryPlot(startDates, fut_for_diffs, maturities_days, columns)
-		
-
-
-
-
-# ------------------Getting data-----------------------------
+# ------------------For getting interest rate data-----------------------------
 
 def getInterestRateDates(EONIA = True, FFE = False):
 	if EONIA:
@@ -166,6 +194,7 @@ def getInterestRates():
 	return loadFromHDF5('EONIAask.hdf5','ZCMat') #interest rates data, type
 
 
+# ------------------Getting data-----------------------------
 
 if GOLD:
 	#interest rate dates and data
@@ -177,42 +206,62 @@ if GOLD:
 	sheets = ['ReutersCOMEXGoldTS1', 'ReutersCOMEXGoldTS2', 'ReutersCOMEXGoldTS3']
 	indexColumn = 0
 	dfFuturesData = pd.DataFrame()
-	#for sheet in sheets[0:1]:
-	sheet = sheets[0]
-	xlsFuturesData = xlExtract(pathToData,sheet,indexColumn)
-	dfFuturesData = xlExtract.extractData(xlsFuturesData, xlsFuturesData.columns,'2017-04-21',  entireTS = True, useLinterpDF = False).dropna(how = 'all')
-	print "sheet " + str(sheet) + " extracted"	
-	gold_futures_realisation = futuresInterestPairs(dfFuturesData,ForwarRatesdMat,datesInterest)
+	gold_futures_realisation = []
+	for sheet in sheets:
+		xlsFuturesData = xlExtract(pathToData,sheet,indexColumn)
+		dfFuturesData = xlExtract.extractData(xlsFuturesData, xlsFuturesData.columns,'2017-04-21',  entireTS = True, useLinterpDF = False).dropna(how = 'all')
+		print "sheet " + str(sheet) + " extracted"	
+		gold_futures_realisation.append( futuresInterestPairs(dfFuturesData,ForwarRatesdMat,datesInterest))
 	
+
+
+	summaryPlot(gold_futures_realisation)
 
 if ALU:
 	pass
 
 if OIL:
+	#interest rate dates and data
+	datesInterest = getInterestRateDates(EONIA = True, FFE = False)
+	ForwarRatesdMat = getInterestRates()
+
+
 	pathToData = 'Data/OilFutures.xlsx'
 	sheet = 'ReutersICEBCTS'
 	indexColumn = 0 
 	xlsFuturesData =xlExtract(pathToData,sheet,indexColumn) 
-	dfFuturesData = xlExtract.extractData(xlsFuturesData, xlsFuturesData.columns,'2017-04-21',  entireTS = True, useLinterpDF = True).dropna()
-	print "sheet " + str(sheet) + " extracted"
+	dfFuturesData = xlExtract.extractData(xlsFuturesData, xlsFuturesData.columns,'2017-04-21',  entireTS = True, useLinterpDF = False).dropna()
+	
+	oil_futures_realisation = futuresInterestPairs(dfFuturesData,ForwarRatesdMat,datesInterest)
+
+	summaryPlot(oil_futures_realisation)
 
 if POWER:
 
+	#interest rate dates and data
+	datesInterest = getInterestRateDates(EONIA = True, FFE = False)
+	ForwarRatesdMat = getInterestRates()
+
 	pathToData = 'Data/PowerFutures.xlsx'
 	sheets = ['ReutersNordpoolPowerTS_1','ReutersNordpoolPowerTS_2']
+	power_futures_realisation = []
 	indexColumn = 0
-	print "reading sheet  " + str(sheet)
+	for sheet in sheets:
+		xlsFuturesData = xlExtract(pathToData,sheet,indexColumn)
+		dfFuturesData = xlExtract.extractData(xlsFuturesData, xlsFuturesData.columns,'24-03-2017',  entireTS = True, useLinterpDF = False).dropna(how = 'all')
+		print "sheet " + str(sheet) + " extracted"	
+		power_futures_realisation.append( futuresInterestPairs(dfFuturesData,ForwarRatesdMat,datesInterest))
 
-	dfFuturesData = xlExtract.extractData(xlExtract(pathToData,sheet[0],indexColumn), xlsFuturesData.columns,'24-03-2017',  entireTS = True, useLinterpDF = True)
-	dfFuturesData = dfFuturesData.join(xlExtract.extractData(xlExtract(pathToData,sheet[1],indexColumn), xlsFuturesData.columns,'24-03-2017',  entireTS = True, useLinterpDF = True))
-	storeToHDF5('PowerFutures.hdf5','PowerFutures', dfFuturesData)		
+	summaryPlot(power_futures_realisation)
+
+
+
 	EONIA = True
 
 
 
 
-	# 	#plot_diffs_in_same(self._datesFutures ,self._datesFutures[-1] , fut_forDiffs, column)
-	# 	plot_value(_datesFutures,futuresPositions_movingStartDates, column) #moving startDate
-	# 	plot_diffs(_datesFutures ,_datesFutures[-1] , fut_forDiffs, column)
-	# 	plot_prices(_datesFutures, dfFuturesData[column].loc[_datesFutures], column)
+
+
+
 

@@ -6,7 +6,7 @@ matplotlib.interactive(True)
 import numpy as np
 
 
-def onePlotPerFuture(dates, diffs, values, prices, nameOfFuture):
+def _onePlotPerFuture(dates, diffs, values, prices, nameOfFuture):
 	plot_diffs(dates, diffs, nameOfFuture)
 	plot_prices(dates, prices, nameOfFuture)
 	plot_values(dates, values, nameOfFuture)
@@ -15,7 +15,7 @@ def onePlotPerFuture(dates, diffs, values, prices, nameOfFuture):
 
 
 
-def summaryPlot(startDates, diffs, maturities_days, namesOfFutures):
+def _summaryPlot(startDates, diffs, maturities_days, namesOfFutures):
 
 
 
