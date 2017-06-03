@@ -152,10 +152,10 @@ def summaryPlot(futures_realisation):
 
 	for i in xrange(len(futures_realisation)):
 		print "len(futures_realisation[i].fut_for_diffs) = " + str(len(futures_realisation[i].fut_for_diffs))
-		fut_for_diffs.append(futures_realisation[i].fut_for_diffs)
-		maturities_days.append(futures_realisation[i].maturities_days)
-		startDates.append(futures_realisation[i].startDates)
-		columns.append(futures_realisation[i].columns)
+		fut_for_diffs.extend(futures_realisation[i].fut_for_diffs)
+		maturities_days.extend(futures_realisation[i].maturities_days)
+		startDates.extend(futures_realisation[i].startDates)
+		columns.extend(futures_realisation[i].columns)
 
 
 
@@ -164,13 +164,66 @@ def summaryPlot(futures_realisation):
 
 
 
+
+
 def doSummaryPlot(fut_for_diffs, maturities_days, startDates, columns): 
+	
+
 	#sort the maturities and fut_for_diffs accordingly, unzip
-	maturities_days, fut_for_diffs = zip(*sorted(zip(maturities_days,fut_for_diffs)))
-	print len(fut_for_diffs) == len(maturities_days)
+	maturities_days ,fut_for_diffs, columns = zip(*sorted(zip(maturities_days,fut_for_diffs, columns)))
+	print maturities_days
+	print fut_for_diffs
+	print columns
+	
+	unique_maturities_days, mean_fut_for_diffs  = takeMeanOfAllEqualMaturitiesDiffs(maturities_days, fut_for_diffs)
+
 	_summaryPlot(startDates, fut_for_diffs, maturities_days, columns)
 		
+def takeMeanOfAllEqualMaturitiesDiffs(maturities_days, fut_for_diffs):
 
+
+	#convert arrays into np arrays in order to use specific np function
+	maturities_days_temp = np.asarray(maturities_days)
+	fut_for_diffs_temp = np.asarray(fut_for_diffs)
+
+
+	maturities_days = []
+	fut_for_diffs = []
+	i = 0
+	print "before mean summing"
+	print maturities_days_temp
+	print fut_for_diffs_temp
+	while i  < len(maturities_days_temp):
+
+		mean_numbers = 0 
+		print "i  before mean summing= " + str(i)
+
+		#if the number is a duplicate, take the mean of all and save it in list of maturities
+		if len(np.where(maturities_days_temp == maturities_days_temp[i])[0]) >1:
+			print "entering mean summing if, i = " + str(i)
+			mean_index = np.where(maturities_days_temp == maturities_days_temp[i])[0]
+
+			diffs = [fut_for_diffs_temp[j] for j in mean_index]
+			meanDiffs = float(sum(diffs))/len(mean_index)
+
+
+
+			fut_for_diffs.append(meanDiffs)
+			maturities_days.append(maturities_days_temp[i])
+		
+			i +=len(mean_index)
+			print "i +=len(mean_index) = " + str(i)
+			print maturities_days_temp[i]
+	
+		else: #value is unique, save it in list of maturities
+			fut_for_diffs.append(fut_for_diffs_temp[i])
+			maturities_days.append(maturities_days_temp[i])
+			i += 1
+
+
+	print "after mean summing" 
+	print maturities_days
+	return zip(*zip(maturities_days,fut_for_diffs))
 
 
 # ------------------For getting interest rate data-----------------------------
@@ -207,7 +260,7 @@ if GOLD:
 	indexColumn = 0
 	dfFuturesData = pd.DataFrame()
 	gold_futures_realisation = []
-	for sheet in sheets:
+	for sheet in sheets[0:1]:
 		xlsFuturesData = xlExtract(pathToData,sheet,indexColumn)
 		dfFuturesData = xlExtract.extractData(xlsFuturesData, xlsFuturesData.columns,'2017-04-21',  entireTS = True, useLinterpDF = False).dropna(how = 'all')
 		print "sheet " + str(sheet) + " extracted"	

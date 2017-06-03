@@ -16,9 +16,7 @@ def _onePlotPerFuture(dates, diffs, values, prices, nameOfFuture):
 
 
 def _summaryPlot(startDates, diffs, maturities_days, namesOfFutures):
-
-
-
+	print "in plot tools"
 	plot_diffs_summary_mat(diffs,maturities_days)
 	#plot_diffs_summary_dates()
 
@@ -78,6 +76,7 @@ def plot_values(dates, prices, nameOfFuture):
 
 
 def plot_diffs_summary_mat(diffs,maturities_days):
+
 	fig5 = plt.figure()
 	plt.plot(maturities_days,diffs)
 	titleString = "Realised (futures long - forward_short) if entering both contracts at startdates"
