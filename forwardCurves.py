@@ -18,6 +18,7 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 from datetime import timedelta
 import numpy as np
 import pandas as pd
+import gc
 
 def OIStoZeroCoupon(maturityDates, OISrates):
     ZCrates = np.zeros((1,len(maturityDates))) # Construct array for resulting bootstrapped zero coupon rates
@@ -146,6 +147,65 @@ def genTimeDelta(dataInd):
     timeDeltas = helper(timeDeltas)
     return timeDeltas
 
+def genOISData(readExcel, sheetName, storageFile, matDates, dataCutoff):
+    if readExcel:
+        OISdata = xlExtract('Data/OIS_data.xlsx',sheetName,0)
+        OISdataDF = OISdata.dflinterp # type: pandas.core.frame.DataFrame
+        OISdataInd = OISdata.index # type: pandas.tseries.index.DatetimeIndex or nump.ndarray
+        OISdataCol = OISdata.columns # type: pandas.indexes.base.Index
+        OISdataMat = OISdataDF.values/100 # type: numpy.ndarray
+        OISdataMat = OISdataMat[:,0:len(matDates)]
+        OISTimeDelta = genTimeDelta(OISdataInd)
+        print 'Extracted data using xlExtract.'
+        storeToHDF5(storageFile, 'OISdataMat', OISdataMat)
+        storeToHDF5(storageFile, 'OISTimeDelta', OISTimeDelta)
+        print 'Stored OIS data matrix to file.'
+    else:
+        OISdataMat = loadFromHDF5(storageFile,'OISdataMat')
+        OISTimeDelta = loadFromHDF5(storageFile, 'OISTimeDelta')
+        print 'Read matrix from file.'
+    return
+
+def genForwardData(genForward, sheetName, storageFile, matDates, dataCutoff):
+    
+    OISdataMat = loadFromHDF5(storageFile,'OISdataMat')
+
+    if genForward:
+        forwardMat, times = OISMatToForwardMat(OISdataMat, matDates)
+        forwardMat = forwardMat[:dataCutoff,:]
+        forMatDiff = -1*np.diff(forwardMat, axis = 0)
+        print 'Generated forward matrices.'
+        storeToHDF5(storageFile, 'forwardMat', forwardMat)
+        storeToHDF5(storageFile, 'forMatDiff', forMatDiff)
+        #storeToHDF5(storageFile, 'times', times)
+        print 'Stored forward matrices to file.'
+    else:
+        forwardMat = loadFromHDF5(storageFile,'forwardMat')
+        forMatDiff = loadFromHDF5(storageFile,'forMatDiff')
+        #times = loadFromHDF5(storageFile,'times')
+        print 'Read forward matrices from file.'
+    return
+
+def genZCData(genZC, sheetName, storageFile, matDates, dataCutoff):
+    
+    OISdataMat = loadFromHDF5(storageFile,'OISdataMat')
+
+    if genZC:
+        ZCMat, times = OISMatToZCMat(OISdataMat, matDates)
+        ZCMat = ZCMat [:dataCutoff,:]
+        ZCMatDiff = -1*np.diff(ZCMat[:dataCutoff,:], axis = 0)
+        print 'Generated zero coupon matrices.'
+        storeToHDF5(storageFile, 'ZCMat', ZCMat)
+        storeToHDF5(storageFile, 'ZCMatDiff', ZCMatDiff)
+        storeToHDF5(storageFile, 'times', times)
+        print 'Stored zero coupon matrices to file.'
+    else:
+        ZCMat = loadFromHDF5(storageFile,'ZCMat')
+        ZCMatDiff = loadFromHDF5(storageFile,'ZCMatDiff')
+        times = loadFromHDF5(storageFile,'times')
+        print 'Read zero coupon matrices from file.'
+    return
+
 def runGenerateData(readExcel, genForward, genZC, sheetName, storageFile):
     """
         sheetName : Name of sheet
@@ -172,54 +232,14 @@ def runGenerateData(readExcel, genForward, genZC, sheetName, storageFile):
     """
         Read from excel or from .hdf5 file
     """
-    if readExcel:
-        OISdata = xlExtract('Data/OIS_data.xlsx',sheetName,0)
-        OISdataDF = OISdata.dflinterp # type: pandas.core.frame.DataFrame
-        OISdataInd = OISdata.index # type: pandas.tseries.index.DatetimeIndex or nump.ndarray
-        OISdataCol = OISdata.columns # type: pandas.indexes.base.Index
-        OISdataMat = OISdataDF.values/100 # type: numpy.ndarray
-        OISdataMat = OISdataMat[:,0:len(matDates)]
-        OISTimeDelta = genTimeDelta(OISdataInd)
-        print 'Extracted data using xlExtract.'
-        storeToHDF5(storageFile, 'OISdataMat', OISdataMat)
-        storeToHDF5(storageFile, 'OISTimeDelta', OISTimeDelta)
-        print 'Stored OIS data matrix to file.'
-    else:
-        OISdataMat = loadFromHDF5(storageFile,'OISdataMat')
-        OISTimeDelta = loadFromHDF5(storageFile, 'OISTimeDelta')
-        print 'Read matrix from file.'
+    genOISData(readExcel, sheetName, storageFile, matDates, dataCutoff)
+    
     """
         Generate forward/Zero-coupon matrix
     """
-    if genForward:
-        forwardMat, times = OISMatToForwardMat(OISdataMat, matDates)
-        forwardMat = forwardMat[:dataCutoff,:]
-        forMatDiff = -1*np.diff(forwardMat, axis = 0)
-        print 'Generated forward matrices.'
-        storeToHDF5(storageFile, 'forwardMat', forwardMat)
-        storeToHDF5(storageFile, 'forMatDiff', forMatDiff)
-        #storeToHDF5(storageFile, 'times', times)
-        print 'Stored forward matrices to file.'
-    else:
-        forwardMat = loadFromHDF5(storageFile,'forwardMat')
-        forMatDiff = loadFromHDF5(storageFile,'forMatDiff')
-        #times = loadFromHDF5(storageFile,'times')
-        print 'Read forward matrices from file.'
-
-    if genZC:
-        ZCMat, times = OISMatToZCMat(OISdataMat, matDates)
-        ZCMatDiff = -1*np.diff(ZCMat[:dataCutoff,:], axis = 0)
-        print 'Generated zero coupon matrices.'
-        storeToHDF5(storageFile, 'ZCMat', ZCMat)
-        storeToHDF5(storageFile, 'ZCMatDiff', ZCMatDiff)
-        storeToHDF5(storageFile, 'times', times)
-        print 'Stored zero coupon matrices to file.'
-    else:
-        ZCMat = loadFromHDF5(storageFile,'ZCMat')
-        ZCMatDiff = loadFromHDF5(storageFile,'ZCMatDiff')
-        times = loadFromHDF5(storageFile,'times')
-        print 'Read zero coupon matrices from file.'
-
+    genForwardData(genForward, sheetName, storageFile, matDates, dataCutoff)
+    genZCData(genZC, sheetName, storageFile, matDates, dataCutoff)
+    
     return
 
 def genZCBondPrices(ZCMat,times):
@@ -262,33 +282,21 @@ def genZCBondTS(ZCBondPriceMat,timeDeltas, topDate, startRow, startCol):
 
     return ZCBondPriceVec, ZCBondLogReturns, dateVec
 
-def runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile):
-
-    EONIAdataCutoff = 3000 # Number of days with valid data, for EONIA: 3037, from 2005-08-11 and forward
-    FFE2YdataCutoff = 1399
-    FFE1YdataCutoff = 2800
-
-    if sheetName[0:3] == 'EON':
-        dataCutoff = EONIAdataCutoff
-        print 'EONIA dates defined.'
-    elif sheetName[0:3] == 'FFE':
-        dataCutoff = FFE2YdataCutoff
-        print 'FFE dates defined.'
-
-    if genMatlab:
-        MATLABForwardMat = MATLABForwardMat
-        MATLABForwardMat = np.flipud(MATLABForwardMat.T)
-        MATLABForwardMat = MATLABForwardMat[:dataCutoff,:]
-        MATLABForMatDiff = -1*np.diff(MATLABForwardMat, axis = 0)
-        print 'Generated Matlab forward matrices.', MATLABForwardMat.shape
-        storeToHDF5(storageFile, 'MATLABForMatDiff', MATLABForMatDiff)
-        storeToHDF5(storageFile, 'MATLABForwardMat', MATLABForwardMat)
-        print 'Stored Matlab forward matrices to file'
+def genPandaSeries(dataVec, dateVec):
+    """
+    #   Taskes dataVec and makes it a panda.Series with dateVec
+    """
+    if dataVec.shape == dateVec.shape:
+        _series = pd.DataFrame(data=dataVec, index=dateVec)
+        return _series
     else:
-        MATLABForwardMat = loadFromHDF5(storageFile,'MATLABForwardMat')
-        MATLABForMatDiff = loadFromHDF5(storageFile, 'MATLABForMatDiff')
-        print 'Read Matlab forward matrices from file.'
+        print 'Matrices are of unequal shape \n dataVec: ', dataVec.shape, '\n dateVec: ', dateVec.shape
+        return False
+
+def runGenMatlabEigs(genMatlabEigs, storageFile):
     
+    MATLABForMatDiff = loadFromHDF5(storageFile, 'MATLABForMatDiff')
+
     if genMatlabEigs:
         MATLABForEigVals, MATLABForEigVecs, MATLABForEigPerc = genEigs(MATLABForMatDiff)
         print 'Generated Matlab eigen values.'
@@ -307,6 +315,38 @@ def runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageF
     print 'Generated Matlab forward PCs.'
     storeToHDF5(storageFile, 'MATLABForPCs', MATLABForPCs)
     print 'Stored Matlab forward PCs.'
+
+    return
+
+def runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile):
+
+    EONIAdataCutoff = 3000 # Number of days with valid data, for EONIA: 3037, from 2005-08-11 and forward
+    FFE2YdataCutoff = 1399
+    FFE1YdataCutoff = 2800
+
+    if sheetName[0:3] == 'EON':
+        dataCutoff = EONIAdataCutoff
+        print 'EONIA dates defined.'
+    elif sheetName[0:3] == 'FFE':
+        dataCutoff = FFE2YdataCutoff
+        print 'FFE dates defined.'
+
+    if genMatlab:
+        MATLABForwardMat = np.flipud(MATLABForwardMat.T)
+        MATLABForwardMat = MATLABForwardMat[:dataCutoff,:]
+        MATLABForMatDiff = -1*np.diff(MATLABForwardMat, axis = 0)
+        print 'Generated Matlab forward matrices.', MATLABForwardMat.shape
+        storeToHDF5(storageFile, 'MATLABForMatDiff', MATLABForMatDiff)
+        storeToHDF5(storageFile, 'MATLABForwardMat', MATLABForwardMat)
+        print 'Stored Matlab forward matrices to file'
+    else:
+        MATLABForwardMat = loadFromHDF5(storageFile,'MATLABForwardMat')
+        MATLABForMatDiff = loadFromHDF5(storageFile, 'MATLABForMatDiff')
+        print 'Read Matlab forward matrices from file.'
+    
+    runGenMatlabEigs(genMatlabEigs, storageFile)
+
+    return
 
 def runGenZCPCs(genZCEigs, ZCMatDiff, storageFile):
     print 'Started runGenZCPCs.'
@@ -375,6 +415,7 @@ def run(storageFile, sheetName):
     startCol = 365
     ZCBondPriceMat = genZCBondPrices(ZCMat, times)
     bondPV, bondLogReturns, dateVec = genZCBondTS(ZCBondPriceMat, OISTimeDelta, OISTopDate, startRow, startCol)
+
     # plt.plot(dateVec, bondPV)
     # plt.show()
     # plt.plot(dateVec[1:], bondLogReturns)
@@ -390,11 +431,12 @@ def run(storageFile, sheetName):
     # MATLABForEigPerc = loadFromHDF5(storageFile,'MATLABForEigPerc') 
     # MATLABForPCs = loadFromHDF5(storageFile,'MATLABForPCs') 
     # MATLABForMatDiff = loadFromHDF5(storageFile,'MATLABForMatDiff') 
-    
+
     # plt.plot(MATLABForEigVecs[:,0:3])
     # plt.show()
     # plt.plot(MATLABForPCs)
     # plt.show()
+
     # print MATLABForEigPerc
     # runSurfPlot(MATLABForwardMat[:EONIAdataCutoff-1000,:times.shape[0]], times)
     # runSurfPlot(ZCBondPriceMat[:EONIAdataCutoff,:times.shape[0]], times)

@@ -1,6 +1,6 @@
 from forwardCurves import runGenerateData, runGenZCPCs, runGenForPCs, runGenMatlab, run
 from h5pyStorage import loadFromHDF5
-
+import gc
 """
     Set bools to choose where to get data from
 """
@@ -27,13 +27,14 @@ MATLABstorageFile = 'MatlabEONIA05midForward100.hdf5'
 """
     Run functions
 """
-runGenerateData(readExcel, genForward, genZC, sheetName, storageFile)
-ZCMatDiff = loadFromHDF5(storageFile,'ZCMatDiff')
-runGenZCPCs(genZCEigs, ZCMatDiff, storageFile)
-forMatDiff = loadFromHDF5(storageFile,'forMatDiff')
-runGenForPCs(genForEigs, forMatDiff, storageFile)
-MATLABForwardMat = loadFromHDF5(MATLABstorageFile,'MATLABFordataMat')
-runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile)
+
+# runGenerateData(readExcel, genForward, genZC, sheetName, storageFile)
+# ZCMatDiff = loadFromHDF5(storageFile,'ZCMatDiff')
+# runGenZCPCs(genZCEigs, ZCMatDiff, storageFile)
+# forMatDiff = loadFromHDF5(storageFile,'forMatDiff')
+# runGenForPCs(genForEigs, forMatDiff, storageFile)
+# MATLABForwardMat = loadFromHDF5(MATLABstorageFile,'MATLABFordataMat')
+# runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile)
 run(storageFile, sheetName)
 
 
