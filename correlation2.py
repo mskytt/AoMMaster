@@ -13,7 +13,8 @@ import scipy
 from h5pyStorage import storeToHDF5, loadFromHDF5
 import matplotlib.pyplot as plt
 from forwardCurves import runSurfPlot, OIStoZeroCoupon, genZCBondPrices, genPandaSeries, genTimeDelta
-import math
+import matplotlib.mlab as mlab
+
 def matchIndexes(df1, df2):
     """
     # Match indexes in two dataframes, only keep intersection of rows
@@ -61,7 +62,7 @@ def genStats(pathToSaveFile, activeCommodity):
     pathsToData = ['Data/OIS_data.xlsx', 'Data/OilFutures.xlsx', 'Data/GoldFutures.xlsx', 'Data/PowerFutures.xlsx' ] 
     
 
-    OISsheets = ['EONIA_MID', 'FFE_MID']
+    OISsheets = ['EONIA_MID', 'FFE_MID', 'USGG_MID']
     oilSheets = ['ReutersICEBCTS'] 
     goldSheets = ['ReutersCOMEXGoldTS1', 'ReutersCOMEXGoldTS2', 'ReutersCOMEXGoldTS3']
     powerSheets = ['ReutersNordpoolPowerTS_1', 'ReutersNordpoolPowerTS_2']
@@ -71,7 +72,7 @@ def genStats(pathToSaveFile, activeCommodity):
     # Have to cut data to only use ''
     EONIAdataCutoff = 3000
     FFE2YdataCutoff = 1399
-
+    USGGdataCutoff = 4100
     # Select correct paths and other jibberish
     if commodityNumb == 3: # Only power use EONIA
         storageFile = 'EONIAmid.hdf5' # Name of file where data is to be/ is currently stored
@@ -79,10 +80,10 @@ def genStats(pathToSaveFile, activeCommodity):
         OISsheet = OISsheets[0]
         dataCutoff = EONIAdataCutoff
     else:
-        storageFile = 'FFEmid.hdf5' # Name of file where data is to be/ is currently stored
-        activOIS = 'FFE'
-        OISsheet = OISsheets[1]
-        dataCutoff = FFE2YdataCutoff
+        storageFile = 'USGGmid.hdf5' # Name of file where data is to be/ is currently stored
+        activOIS = 'USGG'
+        OISsheet = OISsheets[2]
+        dataCutoff = USGGdataCutoff
 
     print 'Storage file: ', storageFile
     print 'Commodity type:', activeCommodity,' with path: ', pathsToData[commodityNumb]
@@ -105,14 +106,22 @@ def genStats(pathToSaveFile, activeCommodity):
         print 'In sheet: ', sheet_
         futuresDataMat = xlExtract(pathsToData[commodityNumb], sheet_, 0) #extract one sheet with index column 0 
         dfFuturesData = futuresDataMat.df
-        ZCData = xlExtract(pathsToData[0],OISsheet, 0) # Load from data frame to get indexes and columns
+        ZCData = xlExtract(pathsToData[0], OISsheet, 0) # Load from data frame to get indexes and columns
         dfZCData = ZCData.dflinterp[:dataCutoff]
+        
         # Load data to input into dataframe of bonds
-        ZCMat = loadFromHDF5(storageFile,'ZCMat')
-        times = loadFromHDF5(storageFile,'times')
+        originalZCMat = loadFromHDF5(storageFile,'ZCMat')
+        oiriginalTimes = loadFromHDF5(storageFile,'times')
+        # Extend to include all times down to 1 day
+        extraTimes = np.arange(1/365,oiriginalTimes[0]-1/365,1/365)
+        times = np.append(extraTimes, oiriginalTimes)
+        
+        extraSteps = extraTimes.shape[0]
+        extendedZCMat = np.repeat(originalZCMat[:,0:1],extraSteps, axis=1)
+        ZCMat = np.column_stack((extendedZCMat, originalZCMat))
 
         dfZCMat = pd.DataFrame(data=ZCMat[:dataCutoff,:], index=ZCData.index[:dataCutoff], columns=times) # Dataframe of ZC matrix to use for date-matching
-        i = 0
+
         for column in dfFuturesData.columns:
             #print 'At instrument: ', column, ' (', sheet_, ')'
             dfFutureTS = xlExtract.extractData(futuresDataMat, column, '', entireTS = True, useLinterpDF = False).dropna()
@@ -127,7 +136,6 @@ def genStats(pathToSaveFile, activeCommodity):
                 continue
 
             matchedDfZCMat, matchedDfFutureTS  = matchIndexes(dfZCMat, dfFutureTS) # Matching data at index
-    
             # If time series are not overlapping, skip iteration
             if matchedDfZCMat.empty:
                 print 'No overlapping dates, ', column, ' (', sheet_, ')'
@@ -197,21 +205,65 @@ def genStats(pathToSaveFile, activeCommodity):
     print 'Number of instruments evaluated:', numbInstruments
     return
 
+def meansInBins()
+
 
 pathToSaveFile = 'stats.hdf5'
-activeCommodity = 'Power'
-# genStats(pathToSaveFile, activeCommodity)
+activeCommodity = 'Gold'
+doPlott = False
+genStats(pathToSaveFile, activeCommodity)
 
-# stackedLogReturns = loadFromHDF5(pathToSaveFile, activeCommodity+'StackedLogReturns')
-# plt.scatter(stackedLogReturns[:,0], stackedLogReturns[:,1], marker='o', alpha=0.3)
-# plt.show()
-# indexesZeroElements = np.where(stackedLogReturns[:,0] == 0)[0]
 maturityVec = loadFromHDF5(pathToSaveFile, activeCommodity+'MaturityVec')
 covEntireTSVec = loadFromHDF5(pathToSaveFile, activeCommodity+'CovEntireTSVec')
 corrCoefPearsonVec = loadFromHDF5(pathToSaveFile, activeCommodity+'CorrCoefPearsonVec')
 corrCoefSpearmanVec = loadFromHDF5(pathToSaveFile, activeCommodity+'CorrCoefSpearmanVec')
 instrumentVec = loadFromHDF5(pathToSaveFile, activeCommodity+'InstrumentVec')
+stackedLogReturns = loadFromHDF5(pathToSaveFile, activeCommodity+'StackedLogReturns')
 
+uniqueMaturities = np.unique(maturityVec) 
+statArray = np.vstack((covEntireTSVec, corrCoefPearsonVec, corrCoefSpearmanVec))
+statName = np.array(['Covariance', 'Pearson Correlation', 'Spearman Correlation'])
+for stat, name in zip(statArray, statName):
+    covMean = np.array([])
+    covMedian = np.array([])
+    spearmanMean = np.array([])
+    spearmanMedian = np.array([])
+    pearsonMean = np.array([])
+    pearsonMedian = np.array([])
+    numbWithMaturity = np.array([])
+    for maturity in uniqueMaturities:
+        tempCovariances = stat[np.where(maturityVec == maturity)]
+        tempNumb = tempCovariances.size 
+        covMean = np.append(covMean, tempCovariances.mean()) # Extract covariances for the corresponding maturity and store mean
+        covMedian = np.append(covMedian, np.median(tempCovariances)) # Extract covariances for the corresponding maturity and store median
+        numbWithMaturity = np.append(numbWithMaturity, tempNumb) # Keep track of amout of instruments with the maturity
+
+    """
+    #   Plot mania
+    """
+    if doPlott:
+        fig, ax1 = plt.subplots()
+        ax1.bar(left=uniqueMaturities+np.append(np.diff(uniqueMaturities),1)/2, height=numbWithMaturity, width=np.append(np.diff(uniqueMaturities), 1), color='g', label='Number of instruments with maturity')
+        #ax1.plot(uniqueMaturities, numbWithMaturity, 'g-', label='Number of instruments with maturity')
+        ax1.set_ylabel('Amount', color='g')
+        ax1.tick_params('y', colors='g')
+
+        ax2 = ax1.twinx()
+        ax2.plot(uniqueMaturities, covMean, 'b^', label='Mean '+ name +' for maturity')
+        ax2.plot(uniqueMaturities, covMedian, 'rv', label='Median '+ name +' for maturity')
+        ax2.set_xlabel('Maturity (days)')
+        ax2.set_ylabel(name)
+
+        h1, l1 = ax1.get_legend_handles_labels()
+        h2, l2 = ax2.get_legend_handles_labels()
+        ax1.legend(h1+h2, l1+l2, loc=1)
+        fig.tight_layout()
+        plt.title(name+' ('+activeCommodity+')')
+if doPlott:
+    plt.show()
+
+# plt.plot(uniqueMaturities, covMean, uniqueMaturities, covMedian)
+# plt.show()
 
 # fig, ax = plt.subplots()
 # ax.set_xticks(range(0,instrumentVec.shape[0]))
@@ -228,9 +280,18 @@ instrumentVec = loadFromHDF5(pathToSaveFile, activeCommodity+'InstrumentVec')
 # corrCoefSpearmanVec = loadFromHDF5(pathToSaveFile, 'corrCoefSpearmanVec')
 # pValSpearmanVec = loadFromHDF5(pathToSaveFile, 'pValSpearmanVec')
 
+plt.figure(1)
+plt.hist(stackedLogReturns[:,0], bins=100, normed=True)
+plt.xlim((min(stackedLogReturns[:,0]), max(stackedLogReturns[:,0])))
 
-# plt.hist(corrCoefPearsonVec, bins=50)
-# plt.show()  
+mean = np.mean(stackedLogReturns[:,0])
+variance = np.var(stackedLogReturns[:,0])
+sigma = np.sqrt(variance)
+x = np.linspace(min(stackedLogReturns[:,0]), max(stackedLogReturns[:,0]), 100)
+plt.plot(x, mlab.normpdf(x, mean, sigma))
+
+plt.show()
+
 # plt.hist(corrCoefSpearmanVec, bins=50)
 # plt.show()
 # plt.hist(covEntireTSVec, bins=50)

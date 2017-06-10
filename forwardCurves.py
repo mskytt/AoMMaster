@@ -192,7 +192,40 @@ def genZCData(genZC, sheetName, storageFile, matDates, dataCutoff):
 
     if genZC:
         ZCMat, times = OISMatToZCMat(OISdataMat, matDates)
-        ZCMat = ZCMat [:dataCutoff,:]
+        ZCMat = ZCMat[:dataCutoff,:]
+        ZCMatDiff = -1*np.diff(ZCMat[:dataCutoff,:], axis = 0)
+        print 'Generated zero coupon matrices.'
+        storeToHDF5(storageFile, 'ZCMat', ZCMat)
+        storeToHDF5(storageFile, 'ZCMatDiff', ZCMatDiff)
+        storeToHDF5(storageFile, 'times', times)
+        print 'Stored zero coupon matrices to file.'
+    else:
+        ZCMat = loadFromHDF5(storageFile,'ZCMat')
+        ZCMatDiff = loadFromHDF5(storageFile,'ZCMatDiff')
+        times = loadFromHDF5(storageFile,'times')
+        print 'Read zero coupon matrices from file.'
+    return
+
+def interpUSG(dataMat, matDates, outputTimes):
+    # Interpolate with cubic spline given maturity dates and data as a 1D numpy array
+
+    ZCRates = dataMat # Get zero coupon rates
+    cs = CubicSpline(matDates, ZCRates)
+    times = np.arange(min(matDates), max(matDates), 1/365)
+    csZCRates = cs(times) # Splined rates
+    if outputTimes:
+        return csZCRates, times
+    else:
+        return csZCRates
+
+def genUSGGData(genZC, sheetName, storageFile, matDates, dataCutoff):
+    OISdataMat = loadFromHDF5(storageFile,'OISdataMat')
+
+    if genZC:
+        ZCMat = np.apply_along_axis(interpUSG, 1, OISdataMat, matDates, False)
+        _, times = interpUSG(OISdataMat[0,:], matDates, True)
+        
+        ZCMat = ZCMat[:dataCutoff,:]
         ZCMatDiff = -1*np.diff(ZCMat[:dataCutoff,:], axis = 0)
         print 'Generated zero coupon matrices.'
         storeToHDF5(storageFile, 'ZCMat', ZCMat)
@@ -216,6 +249,8 @@ def runGenerateData(readExcel, genForward, genZC, sheetName, storageFile):
     """
     EONIAmatDates = [1/52, 2/52,3/52,1/12,2/12,3/12,4/12,5/12,6/12,7/12,8/12,9/12,10/12,11/12,1,15/12,18/12,21/12,2,3,4,5,6,7,8,9,10] #,12,15,20,30,40,50]
     EONIAdataCutoff = 3037 # Number of days with valid data, for EONIA: 3037, from 2005-08-11 and forward
+    USGGmatDates = [1/12, 3/12, 6/12, 1, 2, 5, 7, 10]
+    USGGdataCutoff = 4100
     FFEmatDates = [1/52, 2/52, 3/52, 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 1, 2]
     FFE2YdataCutoff = 1446
     FFE1YdataCutoff = 2800
@@ -228,18 +263,23 @@ def runGenerateData(readExcel, genForward, genZC, sheetName, storageFile):
         matDates = FFEmatDates
         dataCutoff = FFE2YdataCutoff
         print 'FFE dates defined.'
+    elif sheetName[0:3] == 'USG':
+        matDates = USGGmatDates
+        dataCutoff = USGGdataCutoff
+        print 'USGG dates defined.'
 
     """
-        Read from excel or from .hdf5 file
+       Read from excel or from .hdf5 file
     """
     genOISData(readExcel, sheetName, storageFile, matDates, dataCutoff)
-    
     """
         Generate forward/Zero-coupon matrix
     """
-    genForwardData(genForward, sheetName, storageFile, matDates, dataCutoff)
-    genZCData(genZC, sheetName, storageFile, matDates, dataCutoff)
-    
+    if sheetName[0:3] != 'USG':
+        genForwardData(genForward, sheetName, storageFile, matDates, dataCutoff)
+        genZCData(genZC, sheetName, storageFile, matDates, dataCutoff)
+    elif sheetName[0:3] == 'USG':
+        genUSGGData(genZC, sheetName, storageFile, matDates, dataCutoff)
     return
 
 def genZCBondPrices(ZCMat,times):
@@ -399,8 +439,10 @@ def runGenForPCs(genForEigs, forMatDiff, storageFile):
 def run(storageFile, sheetName):
     EONIAmatDates = [1/52, 2/52,3/52,1/12,2/12,3/12,4/12,5/12,6/12,7/12,8/12,9/12,10/12,11/12,1,15/12,18/12,21/12,2,3,4,5,6,7,8,9,10] #,12,15,20,30,40,50]
     FFEmatDates = [1/52, 2/52, 3/52, 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 1, 2]
+    USGGmatDates = [1/12, 3/12, 6/12, 1, 2, 5, 7, 10]
     OISTopDate = pd.to_datetime('2017-04-20') # Most recent available date
     
+    USGGdataCutoff = 4100
     EONIAdataCutoff = 3000
     FFE2YdataCutoff = 1399
     FFE1YdataCutoff = 2800#3168
@@ -415,7 +457,8 @@ def run(storageFile, sheetName):
     startCol = 365
     ZCBondPriceMat = genZCBondPrices(ZCMat, times)
     bondPV, bondLogReturns, dateVec = genZCBondTS(ZCBondPriceMat, OISTimeDelta, OISTopDate, startRow, startCol)
-
+    runSurfPlot(ZCBondPriceMat[0:2000,:], times)
+    runSurfPlot(ZCMat[0:2000,:], times)
     # plt.plot(dateVec, bondPV)
     # plt.show()
     # plt.plot(dateVec[1:], bondLogReturns)
