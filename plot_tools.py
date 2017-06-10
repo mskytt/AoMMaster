@@ -1,31 +1,51 @@
 import matplotlib 
 import matplotlib.pyplot as plt
-import scipy.interpolate as interp
-from mpl_toolkits.mplot3d import Axes3D
 matplotlib.interactive(True)
 import numpy as np
 
 
-def _onePlotPerFuture(dates, diffs, values, prices, nameOfFuture):
-	plot_diffs(dates, diffs, nameOfFuture)
-	plot_prices(dates, prices, nameOfFuture)
-	plot_values(dates, values, nameOfFuture)
+def _onePlotPerFuture(dates, diffs, values, prices, forward_value, interestRates, nameOfFuture):
+
+
+	#plot_diffs(dates, diffs, nameOfFuture)
+	save_diff(dates, values, forward_value, nameOfFuture)
+	#plot_prices(dates, prices, nameOfFuture)
+	plot_summary_per_future(dates, values, forward_value, interestRates, prices, nameOfFuture)
+
+
+
+
+def _summaryPlot(titleString,saveString, startDates, diffs, maturities_days,interestRates_at_startDates):
+	print "Plotting summary plot"
+	#plot_diffs_summary_mat(titleString,saveString, diffs,maturities_days)
+	plot_diffs_per_mat_group_dates(titleString, saveString, startDates,diffs,interestRates_at_startDates)
 
 
 
 
 
-def _summaryPlot(startDates, diffs, maturities_days, namesOfFutures):
-	print "in plot tools"
-	plot_diffs_summary_mat(diffs,maturities_days)
-	#plot_diffs_summary_dates()
 
 
+#--------------------------------------------------------------
 
 
+def save_diff(dates, futureValues, forwardValues, nameOfFuture):
+	startDate = dates[0]
+	endDate = dates[-1]
+	name = nameOfFuture
+	fut_forDiffs = [float(fut_i) - float(for_i) for fut_i, for_i in zip(futureValues, forwardValues)]
+
+	final_diff = futureValues[-1] - forwardValues[-1]
 
 
+	#print futureValues
+	print "---------------------Final Diff--------------------------"
 
+	print " \n" + str(name) + "\n"
+	print  str(futureValues[-1]) + " - " + str(forwardValues[-1])  + " = " + str(final_diff)
+	print "\n"
+
+	print "----------------------------------------------------------"
 
 
 # ----------------- onePlotPerFuture ------------------------
@@ -35,7 +55,7 @@ def _summaryPlot(startDates, diffs, maturities_days, namesOfFutures):
 def plot_diffs(startDates, diffs, nameOfFuture):
 	fig1 = plt.figure()
 	plt.plot(startDates,diffs, label = nameOfFuture)
-	titleString = "Realised moving difference between futures and forwards (futures long - forward long)"
+	titleString = "Realised moving difference between futures and forwards (futures long - forward long) \n depending when contract was entered "
 	saveString = "Plots/diffs_" + str(nameOfFuture) + ".png"
 	plt.title(titleString)
 	plt.xlabel("Time of entering contracts")
@@ -57,34 +77,105 @@ def plot_prices(dates, prices, nameOfFuture):
 	plt.savefig(saveString)
 
 
-def plot_values(dates, prices, nameOfFuture):
+
+
+
+
+
+def plot_summary_per_future(dates, futureValues, forwardValues, interestRates, prices, nameOfFuture):
+	#define fig and axises
 	fig3 = plt.figure()
-	plt.plot(dates,prices, label = nameOfFuture)
-	titleString = "Futures contract position over the life time of the future " +  str(nameOfFuture)
-	saveString = "Plots/value_" + str(nameOfFuture) + ".png"
+	ax_left = plt.gca()
+	ax_right = ax_left.twinx()
+	#ax_right.set_ylim([min(interestRates),max(interestRates)])
+
+
+
+	titleString =  str(nameOfFuture)
 	plt.title(titleString)
-	plt.xlabel("Time")
-	plt.ylabel("Value in USD")
-	plt.legend(loc='upper left')
-	plt.gcf().autofmt_xdate() 	# beautify the x-labels
+
+	#plot with legends
+	ax_left.plot(dates,futureValues, label = 'futures position')
+	ax_left.plot(dates, forwardValues,  label = 'forward position')
+	#ax_left.plot(dates, prices,'r', label = "Futures price")
+		
+	ax_right.plot(dates,interestRates, 'g', label = 'interest rate')
+
+
+	#Axises
+	ax_left.set_xlabel("Time")
+	ax_left.set_ylabel("Value in USD")
+	ax_right.set_ylabel("Zero coupon rate")
+
+	ax_left.legend(loc='upper center')
+	ax_right.legend(loc='upper right')
+	# beautify the x-labels
+	plt.gcf().autofmt_xdate() 	
+
+
+	saveString = "Plots/summary_" + str(nameOfFuture) + ".png"
 	plt.savefig(saveString)
 
 
-# ----------------- summaryPlot ------------------------
+
+
+# ----------------- summaryPlots ------------------------
 
 
 
-
-def plot_diffs_summary_mat(diffs,maturities_days):
+def plot_diffs_summary_mat(titleString,saveString, diffs,maturities_days):
 
 	fig5 = plt.figure()
-	plt.plot(maturities_days,diffs)
-	titleString = "Realised (futures long - forward_short) if entering both contracts at startdates"
-	saveString = "Plots/diffs_mat.png"
+	ax = plt.gca()
+	plt.scatter(maturities_days,diffs)
+	#plt.xticks(np.arange(min(maturities_days), max(maturities_days)+1, 1.0))
+	plt.xticks(maturities_days)
+	ax.set_xticks(maturities_days, minor=True)
+
 	plt.title(titleString)
 	plt.xlabel("Maturity in days")
 	plt.ylabel("Difference in USD")
 	plt.savefig(saveString)
+
+
+
+def plot_diffs_per_mat_group_dates(titleString, saveString, startDates,diffs, interestRates_at_startDates):
+	print "inside plot_diffs_per_mat_group_dates"
+	fig6 = plt.figure()
+	ax_left = plt.gca()
+	ax_right = ax_left.twinx()
+	
+####
+
+	ax_left.plot(startDates,diffs, 'bo', label = 'short forward short + long future')
+	ax_right.plot(startDates, interestRates_at_startDates, 'r^', label = 'FFE rate with equal maturity')
+	
+	#x axis
+	ax_left.set_xticks(startDates, minor=True)
+	ax_left.set_xlabel("StartDates")
+	ax_left.set_ylabel("Differences in % of total price change")
+	ax_right.set_ylabel("FFE Rate")
+	ax_left.grid(True)
+
+	#ax_left.legend(loc='upper center')
+	#ax_right.legend(loc='upper right')
+
+
+	# beautify the x-labels
+	plt.gcf().autofmt_xdate() 	
+
+
+	#title and save
+	plt.title(titleString)	
+	plt.savefig(saveString)
+
+
+
+
+
+
+
+
 
 def plot_diffs_summary_dates(startDates, diffs):
 	fig1 = plt.figure()
