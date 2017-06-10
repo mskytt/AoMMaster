@@ -28,7 +28,7 @@ MATLABstorageFile = 'MatlabEONIA05midForward100.hdf5'
     Run functions
 """
 
-# runGenerateData(readExcel, genForward, genZC, sheetName, storageFile)
+runGenerateData(readExcel, genForward, genZC, sheetName, storageFile)
 # ZCMatUSGG = loadFromHDF5(storageFile,'ZCMat')
 # ZCMatFFE = loadFromHDF5('FFEmid.hdf5','ZCMat' )
 # ZCMat = loadFromHDF5(storageFile,'ZCMat')

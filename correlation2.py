@@ -205,7 +205,13 @@ def genStats(pathToSaveFile, activeCommodity):
     print 'Number of instruments evaluated:', numbInstruments
     return
 
-def meansInBins()
+def meansInBins(valuesVec, numbOfEach, bins):
+    valuesInEachBin = np.
+
+    for i in range(bins):
+
+
+    return newValuesVec, newNumbofEach
 
 
 pathToSaveFile = 'stats.hdf5'
