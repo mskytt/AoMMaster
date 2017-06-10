@@ -155,7 +155,7 @@ def plot_diffs_per_mat_group_dates(titleString, saveString, startDates,diffs, in
 	ax_left.set_xlabel("StartDates")
 	ax_left.set_ylabel("Differences in % of total price change")
 	ax_right.set_ylabel("FFE Rate")
-	ax_left.grid(True)
+	ax_lefthe.grid(True)
 
 	#ax_left.legend(loc='upper center')
 	#ax_right.legend(loc='upper right')
