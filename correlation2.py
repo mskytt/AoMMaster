@@ -24,6 +24,7 @@ def matchIndexes(df1, df2):
     df2new = df2.reindex(intersectIndex)
     return df1new, df2new
 
+
 def genBondTSfromDf(BondDf):
     """
     #   Extract the time series for one artificiall zero-coupon bond. 
@@ -51,6 +52,18 @@ def genBondTSfromDf(BondDf):
     logReturns = -1*np.diff(np.log(bondTS)) # Computing log returns
     return bondTS, logReturns
 
+
+def genRowMeanFromDF(df):
+    """
+    # Compute mean at each time step and how many data points used
+    """
+    newDf = pd.DataFrame() 
+    newDf['meanVal'] = df.mean(axis=1, skipna=True)
+    newDf['amount'] = df.count(axis=1)
+    newDf['rollingMean30'] = newDf['meanVal'].rolling(30).mean()
+    newDf['rollingMean200'] = newDf['meanVal'].rolling(200).mean()
+    print newDf
+    return newDf
 
 #Data extraction parameters
 def genStats(pathToSaveFile, activeCommodity):
@@ -102,26 +115,32 @@ def genStats(pathToSaveFile, activeCommodity):
     maturityVec = np.array([])
     numbInstruments = 0
 
+    ZCData = xlExtract(pathsToData[0], OISsheet, 0) # Load from data frame to get indexes and columns
+    dfZCData = ZCData.dflinterp[:dataCutoff]
+    
+    # Load data to input into dataframe of bonds
+    originalZCMat = loadFromHDF5(storageFile,'ZCMat')
+    originalTimes = loadFromHDF5(storageFile,'times')
+    
+    # Extend to include all times down to 1 day
+    extraTimes = np.arange(1/365,originalTimes[0]-1/365,1/365)
+    times = np.append(extraTimes, originalTimes)
+    extraSteps = extraTimes.shape[0]
+    extendedZCMat = np.repeat(originalZCMat[:,0:1],extraSteps, axis=1)
+    ZCMat = np.column_stack((extendedZCMat, originalZCMat))
+
+    # Initialize data frames used in loops
+    dfZCMat = pd.DataFrame(data=ZCMat[:dataCutoff,:], index=ZCData.index[:dataCutoff], columns=times) # Dataframe of ZC matrix to use for date-matching
+    dfAllEWMCov = pd.DataFrame() # Create frame for EWMA covariance data frame
+    dfAllEWMCorr = pd.DataFrame() # Create frame for EWMA covariance data frame
+    
+    # Loop through sheets defined above
     for sheet_ in sheets[commodityNumb]:
         print 'In sheet: ', sheet_
         futuresDataMat = xlExtract(pathsToData[commodityNumb], sheet_, 0) #extract one sheet with index column 0 
         dfFuturesData = futuresDataMat.df
-        ZCData = xlExtract(pathsToData[0], OISsheet, 0) # Load from data frame to get indexes and columns
-        dfZCData = ZCData.dflinterp[:dataCutoff]
         
-        # Load data to input into dataframe of bonds
-        originalZCMat = loadFromHDF5(storageFile,'ZCMat')
-        oiriginalTimes = loadFromHDF5(storageFile,'times')
-        # Extend to include all times down to 1 day
-        extraTimes = np.arange(1/365,oiriginalTimes[0]-1/365,1/365)
-        times = np.append(extraTimes, oiriginalTimes)
-        
-        extraSteps = extraTimes.shape[0]
-        extendedZCMat = np.repeat(originalZCMat[:,0:1],extraSteps, axis=1)
-        ZCMat = np.column_stack((extendedZCMat, originalZCMat))
-
-        dfZCMat = pd.DataFrame(data=ZCMat[:dataCutoff,:], index=ZCData.index[:dataCutoff], columns=times) # Dataframe of ZC matrix to use for date-matching
-
+        # Loop through instruments (=column) in sheets
         for column in dfFuturesData.columns:
             #print 'At instrument: ', column, ' (', sheet_, ')'
             dfFutureTS = xlExtract.extractData(futuresDataMat, column, '', entireTS = True, useLinterpDF = False).dropna()
@@ -171,13 +190,25 @@ def genStats(pathToSaveFile, activeCommodity):
             maturity = matchedDfFutureTS.index[0] - matchedDfFutureTS.index[-1]
 
             """ 
-            #   Compute EWMA covariance. alpha = 1-lambda, given risk metrics recommendation (lambda=0.94) alpha is set to 0.06 
+            #   Compute EWM covariance. alpha = 1-lambda, given risk metrics recommendation (lambda=0.94) alpha is set to 0.06 
             """
             ewmCovDF = futureLogReturnsDF.ewm(alpha=0.06,min_periods=0,adjust=True).cov(bias=False,other=ZCBondLogReturnsDF,pairwise=False)
-            EWMAcovData = ewmCovDF.values
-            EWMAcovDates = ewmCovDF.index
+            ewmCovDF.columns = [column]
+            EWMACovData = ewmCovDF.values
+            EWMACovDates = ewmCovDF.index
+
+            ewmCorrDF = futureLogReturnsDF.ewm(alpha=0.06,min_periods=0,adjust=True).corr(bias=False,other=ZCBondLogReturnsDF,pairwise=False)
+            ewmCorrDF.columns = [column]
+            EWMACorrData = ewmCorrDF.values
+            EWMACorrDates = ewmCorrDF.index
             
-            storeToHDF5(pathToSaveFile, 'EWMAcovData'+column, EWMAcovData)
+            # Store in one large DF
+            #uniounIndex = ewmCovDF.index.union(dfAllEWMCov.index) # Union of indices, not used in this configuration
+            dfAllEWMCov = pd.concat([dfAllEWMCov,ewmCovDF], axis=1) # Add most recent instrument
+            dfAllEWMCorr = pd.concat([dfAllEWMCorr,ewmCorrDF], axis=1) # Add most recent instrument
+
+            # Store to file 
+            storeToHDF5(pathToSaveFile, 'EWMACovData'+column, EWMACovData) # Store every TS to unique path
 
             # Correlation and covariance
             covMatEntireTS = np.cov(logReturnMatRows)*252 # takes covariance with variables on rows, return covariance matrix
@@ -190,10 +221,31 @@ def genStats(pathToSaveFile, activeCommodity):
             pValSpearmanVec = np.append(pValSpearmanVec, pValSpearman)
             instrumentVec = np.append(instrumentVec, column.encode('ascii','ignore')) 
             maturityVec = np.append(maturityVec, maturity.days)
+
             numbInstruments += 1 
             if np.abs(np.amax(futureLogReturns)) > 2:
                 print column, 'has abnormal log-returns (abs > 200%).'
             # print covMatEntireTS, '\n', corrCoefPearson, '\n', corrCoefSpearman, pValSpearman
+
+
+    meanCovDF = genRowMeanFromDF(dfAllEWMCov)
+    meanCorrDF = genRowMeanFromDF(dfAllEWMCorr)
+    
+    fig1, ax1 = plt.subplots()
+    ax2 = ax1.twinx()
+    meanCovDF.amount.plot(ax=ax1, style='g-')
+    meanCovDF.meanVal.plot(ax=ax2, style='b-')
+    meanCovDF.rollingMean30.plot(ax=ax2, style='r-')
+    meanCovDF.rollingMean200.plot(ax=ax2, style='k-')
+    plt.show()
+
+    fig1, ax1 = plt.subplots()
+    ax2 = ax1.twinx()
+    meanCorrDF.amount.plot(ax=ax1, style='g-')
+    meanCorrDF.meanVal.plot(ax=ax2, style='b-')
+    meanCorrDF.rollingMean30.plot(ax=ax2, style='r-')
+    meanCorrDF.rollingMean200.plot(ax=ax2, style='k-')
+    plt.show()
 
     storeToHDF5(pathToSaveFile, activeCommodity+'InstrumentVec', instrumentVec)
     storeToHDF5(pathToSaveFile, activeCommodity+'MaturityVec', maturityVec)
@@ -205,52 +257,110 @@ def genStats(pathToSaveFile, activeCommodity):
     print 'Number of instruments evaluated:', numbInstruments
     return
 
-def meansInBins(valuesVec, numbOfEach, bins):
-    valuesInEachBin = np.
-
-    for i in range(bins):
-
-
-    return newValuesVec, newNumbofEach
-
-
-pathToSaveFile = 'stats.hdf5'
-activeCommodity = 'Gold'
-doPlott = False
-genStats(pathToSaveFile, activeCommodity)
-
-maturityVec = loadFromHDF5(pathToSaveFile, activeCommodity+'MaturityVec')
-covEntireTSVec = loadFromHDF5(pathToSaveFile, activeCommodity+'CovEntireTSVec')
-corrCoefPearsonVec = loadFromHDF5(pathToSaveFile, activeCommodity+'CorrCoefPearsonVec')
-corrCoefSpearmanVec = loadFromHDF5(pathToSaveFile, activeCommodity+'CorrCoefSpearmanVec')
-instrumentVec = loadFromHDF5(pathToSaveFile, activeCommodity+'InstrumentVec')
-stackedLogReturns = loadFromHDF5(pathToSaveFile, activeCommodity+'StackedLogReturns')
-
-uniqueMaturities = np.unique(maturityVec) 
-statArray = np.vstack((covEntireTSVec, corrCoefPearsonVec, corrCoefSpearmanVec))
-statName = np.array(['Covariance', 'Pearson Correlation', 'Spearman Correlation'])
-for stat, name in zip(statArray, statName):
-    covMean = np.array([])
-    covMedian = np.array([])
-    spearmanMean = np.array([])
-    spearmanMedian = np.array([])
-    pearsonMean = np.array([])
-    pearsonMedian = np.array([])
-    numbWithMaturity = np.array([])
-    for maturity in uniqueMaturities:
-        tempCovariances = stat[np.where(maturityVec == maturity)]
-        tempNumb = tempCovariances.size 
-        covMean = np.append(covMean, tempCovariances.mean()) # Extract covariances for the corresponding maturity and store mean
-        covMedian = np.append(covMedian, np.median(tempCovariances)) # Extract covariances for the corresponding maturity and store median
-        numbWithMaturity = np.append(numbWithMaturity, tempNumb) # Keep track of amout of instruments with the maturity
-
+def genBinLimitsFromMats(matVec, bins):
     """
-    #   Plot mania
+    #   Return left bin limits: binLimitVec
     """
-    if doPlott:
+    matsPerBin = int(matVec.shape[0]/(bins-2))
+    binLimitVec = np.append(0, matVec[0::matsPerBin])
+    return binLimitVec
+
+def genEqDistBins(matVec, bins):
+    """
+    #   Return left bin limits: binLimitVec
+    """
+    timeDelta = (matVec[-1] - matVec[0])/bins
+    binLimitVec = np.zeros((bins,))
+    currTime = 0
+    for idx, binLimit in enumerate(binLimitVec):
+        binLimitVec[idx] = currTime
+        currTime += timeDelta
+    return binLimitVec
+
+def plotMeansInBins(valuesVec, numbOfEach, bins):
+    maturityVec = loadFromHDF5(pathToSaveFile, activeCommodity+'MaturityVec')
+    covEntireTSVec = loadFromHDF5(pathToSaveFile, activeCommodity+'CovEntireTSVec')
+    corrCoefPearsonVec = loadFromHDF5(pathToSaveFile, activeCommodity+'CorrCoefPearsonVec')
+    corrCoefSpearmanVec = loadFromHDF5(pathToSaveFile, activeCommodity+'CorrCoefSpearmanVec')
+    instrumentVec = loadFromHDF5(pathToSaveFile, activeCommodity+'InstrumentVec')
+
+    uniqueMaturities = np.unique(maturityVec) 
+    statArray = np.vstack((covEntireTSVec, corrCoefPearsonVec, corrCoefSpearmanVec))
+    statName = np.array(['Covariance', 'Pearson Correlation', 'Spearman Correlation'])
+    
+    binLimitVec = genEqDistBins(uniqueMaturities, bins) # left limits of bins
+    #binVec = genBinLimitsFromMats(uniqueMaturities, bins)
+
+    for stat, name in zip(statArray, statName):
+        covMean = np.array([])
+        covMedian = np.array([])
+        spearmanMean = np.array([])
+        spearmanMedian = np.array([])
+        pearsonMean = np.array([])
+        pearsonMedian = np.array([])
+        numbWithMaturity = np.array([])
+        for lowerBinLim, upperBinLim in zip(binLimitVec[:], np.append(binLimitVec[1:], 999999)):
+            tempCovariances = stat[(maturityVec >= lowerBinLim) & (maturityVec <= upperBinLim)]
+            tempNumb = tempCovariances.size 
+            covMean = np.append(covMean, tempCovariances.mean()) # Extract covariances for the corresponding maturity and store mean
+            covMedian = np.append(covMedian, np.median(tempCovariances)) # Extract covariances for the corresponding maturity and store median
+            numbWithMaturity = np.append(numbWithMaturity, tempNumb) # Keep track of amout of instruments with the maturity
+        """
+        #   Plot mania
+        """
+        fig, ax1 = plt.subplots()
+        ax1.bar(left=binLimitVec, height=numbWithMaturity, width=np.append(np.diff(binLimitVec),binLimitVec[1]-binLimitVec[0]), color='0.5', label='Number of instruments with maturity')
+        #ax1.plot(uniqueMaturities, numbWithMaturity, 'g-', label='Number of instruments with maturity')
+        ax1.set_ylabel('Amount', color='0.5')
+        ax1.tick_params('y', colors='0.5')
+
+        ax2 = ax1.twinx()
+        ax2.plot(binLimitVec, covMean, 'b^', label='Mean '+ name +' for maturity')
+        ax2.plot(binLimitVec, covMedian, 'rv', label='Median '+ name +' for maturity')
+        ax2.set_xlabel('Maturity (days)')
+        ax2.set_ylabel(name)
+
+        h1, l1 = ax1.get_legend_handles_labels()
+        h2, l2 = ax2.get_legend_handles_labels()
+        ax1.legend(h1+h2, l1+l2, loc='best')
+        fig.tight_layout()
+        plt.title(name+' ('+ activeCommodity +')')
+    plt.show()
+    return 
+
+def plotMeanCovCorr(pathToSaveFile, activeCommodity):
+
+    maturityVec = loadFromHDF5(pathToSaveFile, activeCommodity+'MaturityVec')
+    covEntireTSVec = loadFromHDF5(pathToSaveFile, activeCommodity+'CovEntireTSVec')
+    corrCoefPearsonVec = loadFromHDF5(pathToSaveFile, activeCommodity+'CorrCoefPearsonVec')
+    corrCoefSpearmanVec = loadFromHDF5(pathToSaveFile, activeCommodity+'CorrCoefSpearmanVec')
+    instrumentVec = loadFromHDF5(pathToSaveFile, activeCommodity+'InstrumentVec')
+
+    uniqueMaturities = np.unique(maturityVec) 
+    statArray = np.vstack((covEntireTSVec, corrCoefPearsonVec, corrCoefSpearmanVec))
+    statName = np.array(['Covariance', 'Pearson Correlation', 'Spearman Correlation'])
+    for stat, name in zip(statArray, statName):
+        covMean = np.array([])
+        covMedian = np.array([])
+        spearmanMean = np.array([])
+        spearmanMedian = np.array([])
+        pearsonMean = np.array([])
+        pearsonMedian = np.array([])
+        numbWithMaturity = np.array([])
+        for maturity in uniqueMaturities:
+            tempCovariances = stat[np.where(maturityVec == maturity)]
+            tempNumb = tempCovariances.size 
+            covMean = np.append(covMean, tempCovariances.mean()) # Extract covariances for the corresponding maturity and store mean
+            covMedian = np.append(covMedian, np.median(tempCovariances)) # Extract covariances for the corresponding maturity and store median
+            numbWithMaturity = np.append(numbWithMaturity, tempNumb) # Keep track of amout of instruments with the maturity
+
+        """
+        #   Plot mania
+        """
         fig, ax1 = plt.subplots()
         ax1.bar(left=uniqueMaturities+np.append(np.diff(uniqueMaturities),1)/2, height=numbWithMaturity, width=np.append(np.diff(uniqueMaturities), 1), color='g', label='Number of instruments with maturity')
         #ax1.plot(uniqueMaturities, numbWithMaturity, 'g-', label='Number of instruments with maturity')
+        ax1.set_xlabel('Maturity (days)')
         ax1.set_ylabel('Amount', color='g')
         ax1.tick_params('y', colors='g')
 
@@ -262,11 +372,34 @@ for stat, name in zip(statArray, statName):
 
         h1, l1 = ax1.get_legend_handles_labels()
         h2, l2 = ax2.get_legend_handles_labels()
-        ax1.legend(h1+h2, l1+l2, loc=1)
+        ax1.legend(h1+h2, l1+l2, loc='best')
         fig.tight_layout()
-        plt.title(name+' ('+activeCommodity+')')
-if doPlott:
+        plt.title(name+' ('+ activeCommodity +')')
     plt.show()
+    return
+
+def plotLogReturnHist(pathToSaveFile, activeCommodity):
+    stackedLogReturns = loadFromHDF5(pathToSaveFile, activeCommodity+'StackedLogReturns')
+
+    plt.hist(stackedLogReturns[:,0], bins=100, normed=True)
+    plt.xlim((min(stackedLogReturns[:,0]), max(stackedLogReturns[:,0])))
+
+    mean = np.mean(stackedLogReturns[:,0])
+    variance = np.var(stackedLogReturns[:,0])
+    sigma = np.sqrt(variance)
+    x = np.linspace(min(stackedLogReturns[:,0]), max(stackedLogReturns[:,0]), 100)
+    plt.plot(x, mlab.normpdf(x, mean, sigma))
+
+    plt.show()
+    return
+
+pathToSaveFile = 'stats.hdf5'
+activeCommodity = 'Gold'
+genStats(pathToSaveFile, activeCommodity)
+# plotMeansInBins(pathToSaveFile, activeCommodity, 10)
+# plotMeanCovCorr(pathToSaveFile, activeCommodity)
+# plotLogReturnHist(pathToSaveFile, activeCommodity)
+
 
 # plt.plot(uniqueMaturities, covMean, uniqueMaturities, covMedian)
 # plt.show()
@@ -285,18 +418,6 @@ if doPlott:
 # corrCoefPearsonVec = loadFromHDF5(pathToSaveFile, 'corrCoefPearsonVec')
 # corrCoefSpearmanVec = loadFromHDF5(pathToSaveFile, 'corrCoefSpearmanVec')
 # pValSpearmanVec = loadFromHDF5(pathToSaveFile, 'pValSpearmanVec')
-
-plt.figure(1)
-plt.hist(stackedLogReturns[:,0], bins=100, normed=True)
-plt.xlim((min(stackedLogReturns[:,0]), max(stackedLogReturns[:,0])))
-
-mean = np.mean(stackedLogReturns[:,0])
-variance = np.var(stackedLogReturns[:,0])
-sigma = np.sqrt(variance)
-x = np.linspace(min(stackedLogReturns[:,0]), max(stackedLogReturns[:,0]), 100)
-plt.plot(x, mlab.normpdf(x, mean, sigma))
-
-plt.show()
 
 # plt.hist(corrCoefSpearmanVec, bins=50)
 # plt.show()
