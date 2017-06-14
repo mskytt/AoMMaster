@@ -1,0 +1,11 @@
+originalZCMat = loadFromHDF5(storageFile,'ZCMat')
+        oiriginalTimes = loadFromHDF5(storageFile,'times')
+        # Extend to include all times down to 1 day
+        extraTimes = np.arange(1/365,oiriginalTimes[0]-1/365,1/365)
+        times = np.append(extraTimes, oiriginalTimes)
+        
+        extraSteps = extraTimes.shape[0]
+        extendedZCMat = np.repeat(originalZCMat[:,0:1],extraSteps, axis=1)
+        ZCMat = np.column_stack((extendedZCMat, originalZCMat))
+
+        dfZCMat = pd.DataFrame(data=ZCMat[:dataCutoff,:], index=ZCData.index[:dataCutoff], columns=times) # Dataframe of ZC matrix to use for date-matching

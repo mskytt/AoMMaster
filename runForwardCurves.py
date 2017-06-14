@@ -15,6 +15,13 @@ genMatlabEigs = True
 sheetName = 'USGG_MID' # Sheet name
 storageFile = 'USGGmid.hdf5' # Name of file where data is to be/ is currently stored
 MATLABstorageFile = 'MatlabEONIA05midForward100.hdf5' 
+
+
+
+# sheetName = 'FFE_MID' # Sheet name
+# storageFile = 'FFEmid.hdf5' # Name of file where data is to be/ is currently stored
+# MATLABstorageFile = 'MatlabEONIA05midForward100.hdf5' 
+
 """
 	'MatlabEONIAmidForward100.hdf5' -
 	'MatlabEONIA05midForward100.hdf5' -
@@ -30,7 +37,7 @@ MATLABstorageFile = 'MatlabEONIA05midForward100.hdf5'
 
 runGenerateData(readExcel, genForward, genZC, sheetName, storageFile)
 # ZCMatUSGG = loadFromHDF5(storageFile,'ZCMat')
-# ZCMatFFE = loadFromHDF5('FFEmid.hdf5','ZCMat' )
+# ZCMatFFE = loadFromHDF5('FFEmid.hdf5','ZCMat')
 # ZCMat = loadFromHDF5(storageFile,'ZCMat')
 # print ZCMatFFE.shape, ZCMatUSGG.shape
 # combined = np.column_stack((ZCMatFFE[:100,:23],ZCMatUSGG[:100,:100]))
