@@ -13,7 +13,7 @@ from plot_tools import _onePlotPerFuture, _summaryPlot
 # --------------- start program ---------------
 
 #define what you want to plot 
-ONE_PLOT_PER_FUTURE = False #this gives a lot of plots, beware
+ONE_PLOT_PER_FUTURE = False  #this gives a lot of plots, beware
 SUMMARY_PLOTS = True
 
 if not ONE_PLOT_PER_FUTURE and not SUMMARY_PLOTS:
@@ -258,84 +258,6 @@ def sortDataOnMaturityDays( maturities_days, fut_for_diffs, startDates, interest
 
 
 
-		
-def takeMeanOfAllEqualMaturitiesDiffs(maturities_days, fut_for_diffs):
-
-
-	#convert arrays into np arrays in order to use specific np function
-	maturities_days_temp = np.asarray(maturities_days)
-	fut_for_diffs_temp = np.asarray(fut_for_diffs)
-
-
-	maturities_days = []
-	fut_for_diffs = []
-	i = 0
-	while i  < len(maturities_days_temp):
-
-		mean_numbers = 0 
-
-		#if the number is a duplicate, take the mean of all and save it in list of maturities
-		if len(np.where(maturities_days_temp == maturities_days_temp[i])[0]) >1:
-			mean_index = np.where(maturities_days_temp == maturities_days_temp[i])[0]
-
-			diffs = [fut_for_diffs_temp[j] for j in mean_index]
-			meanDiffs = float(sum(diffs))/len(mean_index)
-
-
-
-			fut_for_diffs.append(meanDiffs)
-			maturities_days.append(maturities_days_temp[i])
-		
-			i +=len(mean_index)
-
-	
-		else: #value is unique, save it in list of maturities
-			fut_for_diffs.append(fut_for_diffs_temp[i])
-			maturities_days.append(maturities_days_temp[i])
-			i += 1
-
-
-	return zip(*zip(maturities_days,fut_for_diffs))
-
-
-def takeMeanofSameDateDiffs(startdates, fut_for_diffs):
-
-
-	#convert arrays into np arrays in order to use specific np function
-	startdates_temp = np.asarray(startdates)
-	fut_for_diffs_temp = np.asarray(fut_for_diffs)
-
-
-	startdates = []
-	fut_for_diffs = []
-	i = 0
-	while i  < len(maturities_days_temp):
-
-		mean_numbers = 0 
-
-		#if the number is a duplicate, take the mean of all and save it in list of maturities
-		if len(np.where(maturities_days_temp == maturities_days_temp[i])[0]) >1:
-			mean_index = np.where(maturities_days_temp == maturities_days_temp[i])[0]
-
-			diffs = [fut_for_diffs_temp[j] for j in mean_index]
-			meanDiffs = float(sum(diffs))/len(mean_index)
-
-
-
-			fut_for_diffs.append(meanDiffs)
-			maturities_days.append(maturities_days_temp[i])
-		
-			i +=len(mean_index)
-
-
-		else: #value is unique, save it in list of maturities
-			fut_for_diffs.append(fut_for_diffs_temp[i])
-			maturities_days.append(maturities_days_temp[i])
-			i += 1
-
-
-	return zip(*zip(maturities_days,fut_for_diffs))
-
 
 
 
@@ -424,16 +346,9 @@ if GOLD:
 	if len(ZeroCouponMat) != len(datesInterest): #if they are not the same length, bad data has been cut of
 		datesInterest = datesInterest.iloc[0:len(ZeroCouponMat)]
 
-	print "ZeroCouponMat.shape = " + str(ZeroCouponMat.shape)
-	print "type(ZeroCouponMat) = " + str(type(ZeroCouponMat))
-	#print  "ZeroCouponMat.iloc[0] = " + str(ZeroCouponMat.iloc[0])
-	print "type(ZeroCouponMat[0,0]) = " + str(type(ZeroCouponMat[0,0]))
-	print "datesInterest.shape = " + str(datesInterest.shape)
-
-
 	#futures dates and data
 	pathToData =  'Data/GoldFutures.xlsx'
-	sheets = ['ReutersCOMEXGoldTS1', 'ReutersCOMEXGoldTS2', 'ReutersCOMEXGoldTS3']
+	sheets = ['ReutersCOMEXGoldTS1'] #, 'ReutersCOMEXGoldTS2', 'ReutersCOMEXGoldTS3']
 	indexColumn = 0
 	dfFuturesData = pd.DataFrame()
 	gold_futures_realisation = []

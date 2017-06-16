@@ -2,34 +2,138 @@ import matplotlib
 import matplotlib.pyplot as plt
 matplotlib.interactive(True)
 import numpy as np
+from pdb import set_trace
 
+# -------------------------------------------------------------
+#
+#        Main
+#
+# ---------------------------------------------------------------
 
 def _onePlotPerFuture(dates, diffs, values, prices, forward_value, interestRates, nameOfFuture):
 
 
 	#plot_diffs(dates, diffs, nameOfFuture)
-	save_diff(dates, values, forward_value, nameOfFuture)
+	save_diff(dates, values, forward_value, interestRates, prices, nameOfFuture)
 	#plot_prices(dates, prices, nameOfFuture)
-	plot_summary_per_future(dates, values, forward_value, interestRates, prices, nameOfFuture)
-
-
+	#plot_summary_per_future(dates, values, forward_value, interestRates, prices, nameOfFuture)
 
 
 def _summaryPlot(titleString,saveString, startDates, diffs, maturities_days,interestRates_at_startDates):
-	
-	print saveString[-12:]
-
 
 	if saveString[-12:] == "all_mats.png": #ALL DATA
 		print "Plotting summary plot for all data"
+		saveString_mean = saveString[:-12] + "mean" + saveString[-12:]
+		#take mean of diffs over maturities
+		maturities_days_mean, diffs_mean = takeMeanOfAllEqualMaturitiesDiffs(maturities_days, diffs)
+		plot_mean_diffs_summary_mat(titleString,saveString, diffs_mean,maturities_days_mean,  maturities_days)
 
-		plot_diffs_summary_mat(titleString,saveString, diffs,maturities_days)
 
 	else:
+		startDates_mean, diffs_mean = takeMeanofSameDateDiffs(startDates,diffs)
 		print "Plotting summary plot for all maturity group"
 		plot_diffs_per_mat_group_dates(titleString, saveString, startDates,diffs,interestRates_at_startDates)
 
 
+
+# -------------------------------------------------------------
+#
+#        Modify data for plotting
+#
+# ---------------------------------------------------------------
+
+		
+def takeMeanOfAllEqualMaturitiesDiffs(maturities_days, fut_for_diffs):
+
+
+	#convert arrays into np arrays in order to use specific np function
+	maturities_days_temp = np.asarray(maturities_days)
+	fut_for_diffs_temp = np.asarray(fut_for_diffs)
+
+
+	maturities_days = []
+	fut_for_diffs = []
+	fut_for_diffs_std = []
+
+	i = 0
+	while i  < len(maturities_days_temp):
+
+		mean_numbers = 0 
+
+		#if the number is a duplicate, take the mean of all and save it in list of maturities
+		if len(np.where(maturities_days_temp == maturities_days_temp[i])[0]) >1:
+			mean_index = np.where(maturities_days_temp == maturities_days_temp[i])[0]
+
+			diffs = [fut_for_diffs_temp[j] for j in mean_index]
+			meanDiffs = np.mean(diffs)
+			stdDiffs = np.std(diffs)
+
+
+
+			fut_for_diffs.append(meanDiffs)
+			fut_for_diffs_std.append(volDiffs)
+			maturities_days.append(maturities_days_temp[i])
+		
+			i +=len(mean_index)
+
+	
+		else: #value is unique, save it in list of maturities
+			fut_for_diffs.append(fut_for_diffs_temp[i])
+			maturities_days.append(maturities_days_temp[i])
+
+			i += 1
+
+
+	return zip(*zip(maturities_days,fut_for_diffs))
+
+
+def takeMeanofSameDateDiffs(startdates, fut_for_diffs):
+	print "inside takeMeanofSameDateDiffs"
+
+	#convert arrays into np arrays in order to use specific np function
+	startdates_temp = np.asarray(startdates)
+	fut_for_diffs_temp = np.asarray(fut_for_diffs)
+
+
+	startdates = []
+	fut_for_diffs = []
+	i = 0
+	while i  < len(startdates_temp):
+
+		mean_numbers = 0 
+		timeDelta = abs(startdates_temp - startdates_temp[i])
+		timeDelta = timeDelta.astype('timedelta64[D]').astype(int)
+
+		#if the date is very near another date, take the mean of that value 
+		if len(timeDelta[timeDelta < 63]) > 1:
+			print len(timeDelta[timeDelta < 63])
+
+			mean_index = np.where(timeDelta[timeDelta < 63])
+			print mean_index
+
+
+			diffs = [fut_for_diffs_temp[j] for j in mean_index]
+			print diffs
+			meanDiffs = np.mean(diffs)
+			print meanDiffs
+
+
+
+
+			fut_for_diffs.append(meanDiffs)
+			startdates.append(startdates_temp[i])
+		
+			i +=len(mean_index)
+
+
+		else: #value is unique, save it in list of maturities
+			fut_for_diffs.append(fut_for_diffs_temp[i])
+			startdates.append(startdates_temp[i])
+			i += 1
+
+
+
+	return zip(*zip(startdates,fut_for_diffs))
 
 
 
@@ -38,23 +142,30 @@ def _summaryPlot(titleString,saveString, startDates, diffs, maturities_days,inte
 #--------------------------------------------------------------
 
 
-def save_diff(dates, futureValues, forwardValues, nameOfFuture):
+def save_diff(dates, values, forward_value, interestRates, prices, nameOfFuture):
 	startDate = dates[0]
 	endDate = dates[-1]
 	name = nameOfFuture
-	fut_forDiffs = [float(fut_i) - float(for_i) for fut_i, for_i in zip(futureValues, forwardValues)]
 
+	#diff
+	fut_forDiffs = [float(fut_i) - float(for_i) for fut_i, for_i in zip(futureValues, forwardValues)]
 	final_diff = futureValues[-1] - forwardValues[-1]
 
+	#interest rates
+	interestRate_mean = np.mean(interestRates)
+	interestRate_mean = np.mean(interestRates)
+	interestRates_std = np.std(interestRates)
 
-	#print futureValues
-	print "---------------------Final Diff--------------------------"
+	futuresPrice_mean = np.mean(prices)
+	futuresPrice_std = np.std(prices)
 
-	print " \n" + str(name) + "\n"
-	print  str(futureValues[-1]) + " - " + str(forwardValues[-1])  + " = " + str(final_diff)
-	print "\n"
 
-	print "----------------------------------------------------------"
+	textString = str(nameOfFuture) + " :Diff: " +  str(final_diff) + " Mean Interest rate: " + str(interestRate_mean) + "Vol Interest rate: " + str(interestRate_std) + "Mean futures price: " + str(futuresPrice_mean) + "Vol futures price: " + str(futuresPrice_std) 
+				
+
+ 	with open('Data/Details_per_futurePos.txt', 'a') as file:
+		file.write(textString)
+
 
 
 # ----------------- onePlotPerFuture ------------------------
@@ -70,7 +181,9 @@ def plot_diffs_summary_mat(titleString,saveString, diffs,maturities_days):
 	fig5 = plt.figure()
 	ax_left = plt.gca()
 	ax_right = ax_left.twinx()
-	ax_right.hist(maturities_days)
+
+
+
 	ax_left.set_ylim(min(diffs), max(diffs))
 	ax_left.plot(maturities_days,diffs,'ro')
 
@@ -85,6 +198,31 @@ def plot_diffs_summary_mat(titleString,saveString, diffs,maturities_days):
 
 
 
+def plot_mean_diffs_summary_mat(titleString,saveString, diffs_mean,maturities_days_mean,  maturities_days):
+
+	fig5 = plt.figure()
+	ax_left = plt.gca()
+	ax_right = ax_left.twinx()
+
+	bins = [maturities_days_mean]
+	ax_right.hist(maturities_days)
+
+	ax_left.set_ylim(min(diffs), max(diffs))
+	ax_left.plot(maturities_days_mean,diffs_mean,'ro')
+
+
+
+	#plt.xticks(np.arange(min(maturities_days), max(maturities_days)+1, 1.0))
+	#plt.xticks(maturities_days)
+	#ax_right.set_xticks(maturities_days, minor=True)
+	
+	plt.title(titleString)
+	ax_left.set_xlabel("Maturity in days")
+	ax_left.set_ylabel("Mean difference in % from forwardprice")
+	ax_right.set_ylabel("Number of contracts")
+	plt.savefig(saveString)
+
+
 def plot_diffs_per_mat_group_dates(titleString, saveString, startDates,diffs, interestRates_at_startDates):
 	print "inside plot_diffs_per_mat_group_dates"
 	fig6 = plt.figure()
@@ -95,7 +233,7 @@ def plot_diffs_per_mat_group_dates(titleString, saveString, startDates,diffs, in
 
 	ax_left.plot(startDates,diffs, 'bo', label = 'short forward short + long future')
 	ax_right.plot(startDates, interestRates_at_startDates, 'r^', label = 'USSG rate with equal maturity')
-	plt()
+
 
 	#x axis
 	ax_left.set_xticks(startDates, minor=True)
