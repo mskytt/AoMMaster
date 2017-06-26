@@ -63,10 +63,9 @@ class futuresInterestPairs(object):
 			
 			if len(self.interestRates) > 10: #no use in doing this if we have very few matching dates for reinvesting
 
-
 				if ONE_PLOT_PER_FUTURE:
 					self.do_OnePlotPerFuture(futuresData.loc[self._datesFutures], self._datesFutures, self.interestRates, column)
-				else:
+				if SUMMARY_PLOTS:
 					interestRates_at_startDates.append(self.interestRates[0])
 					nameOfFutures.append(column)
 					startPrice = futuresData.loc[self._datesFutures[0]]
@@ -78,7 +77,6 @@ class futuresInterestPairs(object):
 
 					
 					if forwards_short != 0: #in power, the price will not have moved at all, yeilding forward = 0
-					
 						fut_for_diffs.append((forwards_short + futures_long[-1])/abs(forwards_short))
 						#fut_for_diffs.append((forwards_short + futures_long[-1]))
 						maturities_days.append(len(futuresData))
@@ -96,14 +94,20 @@ class futuresInterestPairs(object):
 						# print "fut_for_diffs = " + str(fut_for_diffs[-1])
 						
 					
-			else:
-				pass
-				#print "matching interest rates not found for " + str(column)
-				#print "number of futures dates is " + str(len(self.interestRates))
+			else:	
+				pass			
+				# print "matching interest rates not found for " + str(column)
+				# print "number of futures dates is " + str(len(self.interestRates))
 
 
 
 		if SUMMARY_PLOTS:
+			print "summarizing all futures"
+
+			print "len(maturities_days) = "  + str(len(maturities_days))
+			print "len(fut_for_diffs) = "  + str(len(fut_for_diffs))
+			print "len(startDates) = "  + str(len(startDates))
+			print "len(interestRates_at_startDates) = "  + str(len(interestRates_at_startDates))
 			self.saveArgsForSummaryPlot(fut_for_diffs,maturities_days, startDates,nameOfFutures,interestRates_at_startDates)
 		
 
@@ -161,9 +165,7 @@ class futuresInterestPairs(object):
 	def do_OnePlotPerFuture(self,futuresPrices, _datesFutures, interestRates, column):
 		
 		endPrice = futuresPrices.loc[_datesFutures[-1]]
-		print "endPrice = " + str(endPrice)
 	 	startPrice = futuresPrices.loc[self._datesFutures[0]]
-	 	print "startPrice = " + str(startPrice)
 		#how much the futures position is worth over time when you buy at startti
 		futures_pos_over_time = self.getFuturesPosition(futuresPrices, interestRates) #list
 		# futures_value_over_time = self.getFuturesValue()
@@ -199,6 +201,8 @@ def summaryPlot(futures_realisation):
 	columns = []
 	interestRates_at_startDates = []
 
+	print "len(futures_realisation) = "  + str(len(futures_realisation))
+
 	for i in xrange(len(futures_realisation)):
 		#print "len(futures_realisation[i].fut_for_diffs) = " + str(len(futures_realisation[i].fut_for_diffs))
 		fut_for_diffs.extend(futures_realisation[i].fut_for_diffs)
@@ -206,6 +210,11 @@ def summaryPlot(futures_realisation):
 		startDates.extend(futures_realisation[i].startDates)
 		columns.extend(futures_realisation[i].columns)
 		interestRates_at_startDates.extend(futures_realisation[i].interestRates_at_startDates)
+
+	print "len(maturities_days) = "  + str(len(maturities_days))
+	print "len(fut_for_diffs) = "  + str(len(fut_for_diffs))
+	print "len(startDates) = "  + str(len(startDates))
+	print "len(interestRates_at_startDates) = "  + str(len(interestRates_at_startDates))
 
 	maturities_days, fut_for_diffs, startDates, interestRates_at_startDates = sortDataOnMaturityDays(maturities_days, fut_for_diffs, startDates, interestRates_at_startDates)		
 
@@ -348,7 +357,7 @@ if GOLD:
 
 	#futures dates and data
 	pathToData =  'Data/GoldFutures.xlsx'
-	sheets = ['ReutersCOMEXGoldTS1'] #, 'ReutersCOMEXGoldTS2', 'ReutersCOMEXGoldTS3']
+	sheets = ['ReutersCOMEXGoldTS1', 'ReutersCOMEXGoldTS2', 'ReutersCOMEXGoldTS3']
 	indexColumn = 0
 	dfFuturesData = pd.DataFrame()
 	gold_futures_realisation = []

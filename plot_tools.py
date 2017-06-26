@@ -25,12 +25,13 @@ def _summaryPlot(titleString,saveString, startDates, diffs, maturities_days,inte
 		print "Plotting summary plot for all data"
 		saveString_mean = saveString[:-12] + "mean" + saveString[-12:]
 		#take mean of diffs over maturities
-		maturities_days_mean, diffs_mean = takeMeanOfAllEqualMaturitiesDiffs(maturities_days, diffs)
-		plot_mean_diffs_summary_mat(titleString,saveString, diffs_mean,maturities_days_mean,  maturities_days)
+		#maturities_days_mean, diffs_mean = takeMeanOfAllEqualMaturitiesDiffs(maturities_days, diffs)
+		#plot_mean_diffs_summary_mat(titleString,saveString, diffs_mean,maturities_days_mean,  maturities_days)
 
 
 	else:
-		startDates_mean, diffs_mean = takeMeanofSameDateDiffs(startDates,diffs)
+		#saveSummary_maturityGroup()
+		#startDates_mean, diffs_mean = takeMeanofSameDateDiffs(startDates,diffs)
 		print "Plotting summary plot for all maturity group"
 		plot_diffs_per_mat_group_dates(titleString, saveString, startDates,diffs,interestRates_at_startDates)
 
@@ -142,7 +143,7 @@ def takeMeanofSameDateDiffs(startdates, fut_for_diffs):
 #--------------------------------------------------------------
 
 
-def save_diff(dates, values, forward_value, interestRates, prices, nameOfFuture):
+def save_diff(dates, futureValues, forwardValues, interestRates, prices, nameOfFuture):
 	startDate = dates[0]
 	endDate = dates[-1]
 	name = nameOfFuture
@@ -154,13 +155,13 @@ def save_diff(dates, values, forward_value, interestRates, prices, nameOfFuture)
 	#interest rates
 	interestRate_mean = np.mean(interestRates)
 	interestRate_mean = np.mean(interestRates)
-	interestRates_std = np.std(interestRates)
+	interestRate_std = np.std(interestRates)
 
 	futuresPrice_mean = np.mean(prices)
 	futuresPrice_std = np.std(prices)
 
 
-	textString = str(nameOfFuture) + " :Diff: " +  str(final_diff) + " Mean Interest rate: " + str(interestRate_mean) + "Vol Interest rate: " + str(interestRate_std) + "Mean futures price: " + str(futuresPrice_mean) + "Vol futures price: " + str(futuresPrice_std) 
+	textString = str(nameOfFuture) + " :Diff: " +  str(final_diff) + " Mean Interest rate: " + str(interestRate_mean) + " Vol Interest rate: " + str(interestRate_std) + " Mean futures price: " + str(futuresPrice_mean) + " Vol futures price: " + str(futuresPrice_std)  + "\n \n"
 				
 
  	with open('Data/Details_per_futurePos.txt', 'a') as file:
