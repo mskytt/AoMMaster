@@ -1,3 +1,5 @@
+
+from __future__ import division
 from xlExtract import xlExtract
 import pandas as pd
 import numpy as np
@@ -11,7 +13,7 @@ from plot_tools import _onePlotPerFuture, _summaryPlot
 # --------------- start program ---------------
 
 #define what you want to plot 
-ONE_PLOT_PER_FUTURE = False #this gives a lot of plots, beware
+ONE_PLOT_PER_FUTURE = False  #this gives a lot of plots, beware
 SUMMARY_PLOTS = True
 
 if not ONE_PLOT_PER_FUTURE and not SUMMARY_PLOTS:
@@ -25,8 +27,11 @@ ALU= False
 OIL = False
 POWER = False
 
-# --------------- doing things with the data---------------
-
+#-------------------------------------------------------------
+#
+#        Creating futures and forwards position from the data
+#
+# ---------------------------------------------------------------
 class futuresInterestPairs(object):
 
 
@@ -46,17 +51,21 @@ class futuresInterestPairs(object):
 		for column in dfFuturesData.columns: #per future
 
 			futuresData = dfFuturesData[column].dropna()	
+
+			#make sure dates of futures and interest rates are of the same type
 			datesFutures = np.array(futuresData.index, dtype = 'datetime64[ns]')  #<type 'numpy.ndarray'> of <numpy.datetime64'> elements
+			#datesInterest = np.array(datesInterest, dtype = 'datetime64[ns]') #<type 'numpy.ndarray'> of <numpy.datetime64'> elements
+
+
 
 			self.interestRates = self.getCorrespondingInterestRates(column,datesFutures,ZeroCouponMat,datesInterest)
 			
 			
 			if len(self.interestRates) > 10: #no use in doing this if we have very few matching dates for reinvesting
 
-
 				if ONE_PLOT_PER_FUTURE:
 					self.do_OnePlotPerFuture(futuresData.loc[self._datesFutures], self._datesFutures, self.interestRates, column)
-				else:
+				if SUMMARY_PLOTS:
 					interestRates_at_startDates.append(self.interestRates[0])
 					nameOfFutures.append(column)
 					startPrice = futuresData.loc[self._datesFutures[0]]
@@ -64,17 +73,41 @@ class futuresInterestPairs(object):
 
 					futures_long = self.getFuturesPosition(futuresData.loc[self._datesFutures],self.interestRates)
 					forwards_short = -1*self.getForwardPosition(startPrice, endPrice)
-					fut_for_diffs.append((forwards_short + futures_long[-1])/abs(forwards_short))
-					maturities_days.append(len(futuresData))
-					startDates.append(self._datesFutures[0])
-			else:
-				pass
-				#print "matching interest rates not found for " + str(column)
-				#print "number of futures dates is " + str(len(self.interestRates))
+
+
+					
+					if forwards_short != 0: #in power, the price will not have moved at all, yeilding forward = 0
+						fut_for_diffs.append((forwards_short + futures_long[-1])/abs(forwards_short))
+						#fut_for_diffs.append((forwards_short + futures_long[-1]))
+						maturities_days.append(len(futuresData))
+						startDates.append(self._datesFutures[0])
+						
+
+					else:
+						pass
+						# print "futures_long = " + str(futures_long[-1])
+						# print "forwards_short = " + str(forwards_short)
+						# print "column = " + str(column)
+						# print "interestRates_at_startDates = " + str(interestRates_at_startDates[-1])
+						# print "startPrice = " + str(startPrice)
+						# print "endPrice = " + str(endPrice)
+						# print "fut_for_diffs = " + str(fut_for_diffs[-1])
+						
+					
+			else:	
+				pass			
+				# print "matching interest rates not found for " + str(column)
+				# print "number of futures dates is " + str(len(self.interestRates))
 
 
 
 		if SUMMARY_PLOTS:
+			print "summarizing all futures"
+
+			print "len(maturities_days) = "  + str(len(maturities_days))
+			print "len(fut_for_diffs) = "  + str(len(fut_for_diffs))
+			print "len(startDates) = "  + str(len(startDates))
+			print "len(interestRates_at_startDates) = "  + str(len(interestRates_at_startDates))
 			self.saveArgsForSummaryPlot(fut_for_diffs,maturities_days, startDates,nameOfFutures,interestRates_at_startDates)
 		
 
@@ -89,14 +122,14 @@ class futuresInterestPairs(object):
 		i = 0
 		for date in datesFutures:
 			i += 1
-			if datesInterest[datesInterest['dates'].values == date].index.tolist(): #spara 'ven vilka datum som finns'
+			if datesInterest[datesInterest == date].index.tolist(): #spara 'ven vilka datum som finns'
 				#print datesInterest[datesInterest['dates'].values == date].index.tolist()
-				ZeroCouponMat_index.append(datesInterest[datesInterest['dates'].values == date].index.tolist()[0])
+				ZeroCouponMat_index.append(datesInterest[datesInterest == date].index.tolist()[0])
 
 				self._datesFutures.append(date) #only save those who have a corresponding interest rate date
 				timeToMats.append(timeToMat - i) 
 			else: 
-				 _unusedDatesFutures.append(datesInterest[datesInterest['dates'].values == date].index.tolist())
+				 _unusedDatesFutures.append(datesInterest[datesInterest == date].index.tolist())
 
 
 		return ZeroCouponMat[ZeroCouponMat_index,timeToMats]	#interestRates is now a matrix of all possible spot rates for the correct dates.
@@ -124,34 +157,25 @@ class futuresInterestPairs(object):
 			futuresPositions.append(futuresPosition)
 		return futuresPositions
 
-
-# -------------one plot per future --------------------
+# -------------------------------------------------------------
+#
+#        Do  one plot per future 
+#
+# ---------------------------------------------------------------
 	def do_OnePlotPerFuture(self,futuresPrices, _datesFutures, interestRates, column):
 		
 		endPrice = futuresPrices.loc[_datesFutures[-1]]
-		print "endPrice = " + str(endPrice)
 	 	startPrice = futuresPrices.loc[self._datesFutures[0]]
-	 	print "startPrice = " + str(startPrice)
 		#how much the futures position is worth over time when you buy at startti
 		futures_pos_over_time = self.getFuturesPosition(futuresPrices, interestRates) #list
-
 		# futures_value_over_time = self.getFuturesValue()
 		# forward_value_over_time = elf.getForwardValue()
 
-	
-	 	forward_pos_over_time = [self.getForwardPosition(startPrice, endPrice)] *len(futures_pos_over_time)
-
-
-	 		
+	 	forward_pos_over_time = [self.getForwardPosition(startPrice, endPrice)] *len(futures_pos_over_time)	
  		forward_long = forward_pos_over_time
  		futures_long = futures_pos_over_time
 
-
  		fut_forDiffs = [fut_i - for_i for fut_i, for_i in zip(futures_long, forward_long)]
-
-
-
-		
 		#startDates, diffs, prices, nameOfFuture
 		_onePlotPerFuture(_datesFutures,fut_forDiffs, futures_pos_over_time, futuresPrices ,forward_pos_over_time, interestRates, column)  
 		
@@ -164,8 +188,11 @@ class futuresInterestPairs(object):
 		self.columns = nameOfFutures
 		self.interestRates_at_startDates = interestRates_at_startDates
 
-
-# ------------------Plotting summaries-----------------------------
+# -------------------------------------------------------------
+#
+#         Summary plots
+#
+# ---------------------------------------------------------------
 
 def summaryPlot(futures_realisation):
 	fut_for_diffs = []
@@ -174,7 +201,7 @@ def summaryPlot(futures_realisation):
 	columns = []
 	interestRates_at_startDates = []
 
-
+	print "len(futures_realisation) = "  + str(len(futures_realisation))
 
 	for i in xrange(len(futures_realisation)):
 		#print "len(futures_realisation[i].fut_for_diffs) = " + str(len(futures_realisation[i].fut_for_diffs))
@@ -184,44 +211,37 @@ def summaryPlot(futures_realisation):
 		columns.extend(futures_realisation[i].columns)
 		interestRates_at_startDates.extend(futures_realisation[i].interestRates_at_startDates)
 
-
-	
+	print "len(maturities_days) = "  + str(len(maturities_days))
+	print "len(fut_for_diffs) = "  + str(len(fut_for_diffs))
+	print "len(startDates) = "  + str(len(startDates))
+	print "len(interestRates_at_startDates) = "  + str(len(interestRates_at_startDates))
 
 	maturities_days, fut_for_diffs, startDates, interestRates_at_startDates = sortDataOnMaturityDays(maturities_days, fut_for_diffs, startDates, interestRates_at_startDates)		
 
-
-	print "printing maturities in days"
-	print len(maturities_days)
-	print maturities_days
-
-	print "Printing diffs vs startdates in different maturity groups"
+#	print "printing maturities in days"
+#	print maturities_days
 	
 	if POWER:
-		titleStrings = ["Diffs in Power position: \n maturities 57 - 64 days", "Diffs in Power position: \n short for + long future - maturities 476 - 485 days", "Diffs in Power position: \n short for + long future - maturities 1247 - 1513 days" ]
-		matGroups = [80, 133, 160]
+		titleStrings = ["Diffs in Power position: \n maturities uo to 3M", "Diffs in Power position: \n maturities uo to 3M-6M", "Diffs in Power position: \n short for + long future - maturities 6M - 1Y", "Diffs in Power position: \n short for + long future - maturities 1Y - 2Y", "Diffs in Power position: \n short for + long future - maturities 2Y - 3Y" , "Diffs in Power position: \n short for + long future - maturities 3Y - 4Y", "Diffs in Power position: \n short for + long future - maturities 4Y - 7Y"   ]
+		matGroups = [718, 1114, 1331, 1405, 1508, 1526, 1544]
 		savePath = "Plots/Diffs/Power/diffs_matGroup" 
-		
-
-
 	if OIL:
-		titleStrings = ["Diffs in Oil position: \n maturities 57 - 64 days", "Diffs in Oil position: \n short for + long future - maturities 476 - 485 days", "Diffs in Oil position: \n short for + long future - maturities 1247 - 1513 days" ]
+		titleStrings = ["Diffs in Oil position: \n maturities 1M - 3M", "Diffs in Oil position: \n short for + long future - maturities 476 - 485 days", "Diffs in Oil position: \n short for + long future - maturities 1247 - 1513 days" ]
 		matGroups = [80, 133, 160]
 		#get corresponding interest date for the maturities for the specific startdate
 		savePath = "Plots/Diffs/OIL/diffs_matGroup"
-	
-
 	if GOLD:
 		#multiple plots over the different maturity groups
-		titleStrings = ["Diffs in Gold position: \n maturities 57 - 64 days", "Diffs in Gold position: \n short for + long future - maturities 476 - 485 days", "Diffs in Gold position: \n short for + long future - maturities 1247 - 1513 days" , "Diffs in Gold position: \n maturities 57 - 1513 days"]
+		titleStrings = ["Diffs in Gold position: \n maturities 1M- 2M", "Diffs in Gold position: \n short for + long future - maturities 2Y - 3Y", "Diffs in Gold position: \n short for + long future - maturities 3Y - 6Y" , "Diffs in Gold position: \n maturities 1M- 6Y"]
 		savePath = "Plots/Diffs/GOLD/diffs_matGroup" 
-		matGroups = [80, 133, 160]
+		matGroups = [222, 398, 443]
 		#get corresponding interest date for the maturities for the specific startdates
 
 
-	#do the plot
+	#do the plots
 	i  = 0
 	for mat_index, titleString in zip(matGroups, titleStrings):
-
+		
 		saveString = savePath + str(mat_index) + ".png"
 		_summaryPlot(titleString, saveString, startDates[i:mat_index], fut_for_diffs[i:mat_index], maturities_days[i:mat_index], interestRates_at_startDates[i:mat_index])
 		#print maturities_days[i:mat_index]
@@ -234,9 +254,11 @@ def summaryPlot(futures_realisation):
 
 
 
-
-
-
+# -------------------------------------------------------------
+#
+#        Modify data for plotting
+#
+# ---------------------------------------------------------------
 
 def sortDataOnMaturityDays( maturities_days, fut_for_diffs, startDates, interestRates_at_startDates):
 	#sort the maturities and fut_for_diffs accordingly, unzip
@@ -245,49 +267,19 @@ def sortDataOnMaturityDays( maturities_days, fut_for_diffs, startDates, interest
 
 
 
-		
-def takeMeanOfAllEqualMaturitiesDiffs(maturities_days, fut_for_diffs):
-
-
-	#convert arrays into np arrays in order to use specific np function
-	maturities_days_temp = np.asarray(maturities_days)
-	fut_for_diffs_temp = np.asarray(fut_for_diffs)
-
-
-	maturities_days = []
-	fut_for_diffs = []
-	i = 0
-	while i  < len(maturities_days_temp):
-
-		mean_numbers = 0 
-
-		#if the number is a duplicate, take the mean of all and save it in list of maturities
-		if len(np.where(maturities_days_temp == maturities_days_temp[i])[0]) >1:
-			mean_index = np.where(maturities_days_temp == maturities_days_temp[i])[0]
-
-			diffs = [fut_for_diffs_temp[j] for j in mean_index]
-			meanDiffs = float(sum(diffs))/len(mean_index)
 
 
 
-			fut_for_diffs.append(meanDiffs)
-			maturities_days.append(maturities_days_temp[i])
-		
-			i +=len(mean_index)
-
-	
-		else: #value is unique, save it in list of maturities
-			fut_for_diffs.append(fut_for_diffs_temp[i])
-			maturities_days.append(maturities_days_temp[i])
-			i += 1
 
 
-	return zip(*zip(maturities_days,fut_for_diffs))
 
+# -------------------------------------------------------------
+#
+#        EXTRACT DATA functions for extracing rates
+#
+# ---------------------------------------------------------------
 
-# ------------------For getting interest rate data-----------------------------
-
-def getInterestRateDates(EONIA, FFE, GCCU):
+def getInterestRateDates(EONIA, FFE, USGG):
 	if EONIA:
 		print "calculations using EONIA rates"
 		pathToData = 'Data/OIS_Data.xlsx'
@@ -304,29 +296,64 @@ def getInterestRateDates(EONIA, FFE, GCCU):
 		datesInterest = pd.read_excel(pathToData,sheet ,parse_cols = [0]) #dates, row wise of interest rate data
 		datesInterest['dates'] = pd.to_datetime(datesInterest['dates'])  # pandas.core.frame.DataFrame of 'numpy.datetime64'> elements
 		return datesInterest
-	if GCCU :
-		print "calculations using FFE rates"
-		pathToData = 'Data/OIS_Data.xlsx'
-		sheet = 'FFE_MID'
-		#maturitiesInterest = loadFromHDF5('EONIAask.hdf5','times') #maturities, column wise of interest data
-		datesInterest = pd.read_excel(pathToData,sheet ,parse_cols = [0]) #dates, row wise of interest rate data
-		datesInterest['dates'] = pd.to_datetime(datesInterest['dates'])  # pandas.core.frame.DataFrame of 'numpy.datetime64'> elements
+	if USGG :
+		print "calculations using USSG rates"
+		datesInterest = getInterestRates(EONIA = False, FFE = False, USGG = True).index 
+
+
 		return datesInterest
 
 
 	else:
 		print "no interest rate choosen"
 
-def getInterestRates():
-	return loadFromHDF5('EONIAask.hdf5','ZCMat') #interest rates data, type
+def getInterestRates(EONIA, FFE, USGG):
+	if EONIA:
+		return loadFromHDF5('EONIAask.hdf5','ZCMat') #interest rates data, type
+	if FFE:
+		print "type(loadFromHDF5('FFEmid.hdf5','ZCMat'))" + str(type(loadFromHDF5('FFEmid.hdf5','ZCMat')))
+		return loadFromHDF5('FFEmid.hdf5','ZCMat')
+
+	if USGG:
+		dataCutoff = 4100
+		OISsheet = 'USGG_MID'
+		pathToData = 'Data/OIS_data.xlsx'
+
+		ZCData = xlExtract(pathToData, OISsheet, 0) # Load from data frame to get indexes and columns
+		dfZCData = ZCData.dflinterp[:dataCutoff]
+
+		#FFE rates added to first month as USSG rates does not exist for shorter times
+		originalZCMat = loadFromHDF5('USGGmid.hdf5','ZCMat')
+		originalTimes = loadFromHDF5('USGGmid.hdf5','times')
+		print originalTimes[0]
+
+		# Extend to include all times down to 1 day
+		extraTimes = np.arange(1/365,originalTimes[0]-1/365,1/365)
+		times = np.append(extraTimes, originalTimes)
+
+		extraSteps = extraTimes.shape[0]
+		extendedZCMat = np.repeat(originalZCMat[:,0:1],extraSteps, axis=1)
+		ZCMat = np.column_stack((extendedZCMat, originalZCMat))
+
+		dfZCMat = pd.DataFrame(data=ZCMat[:dataCutoff,:], index=ZCData.index[:dataCutoff], columns=times) # Dataframe of ZC matrix to use for date-matching
 
 
-# ------------------Getting data-----------------------------
+		return dfZCMat.values #pandas dataframe
+
+
+# -------------------------------------------------------------
+#
+#                EXTRACT DATA main code
+#
+# ---------------------------------------------------------------
 
 if GOLD:
 	#interest rate dates and data
-	datesInterest = getInterestRateDates(EONIA = False, FFE = False, GCCU = True)
-	ZeroCouponMat = getInterestRates()
+	
+	ZeroCouponMat = getInterestRates(EONIA = False, FFE = False, USGG = True)
+	datesInterest = getInterestRateDates(EONIA = False, FFE = True, USGG = True)
+	if len(ZeroCouponMat) != len(datesInterest): #if they are not the same length, bad data has been cut of
+		datesInterest = datesInterest.iloc[0:len(ZeroCouponMat)]
 
 	#futures dates and data
 	pathToData =  'Data/GoldFutures.xlsx'
@@ -353,8 +380,10 @@ if ALU:
 
 if OIL:
 	#interest rate dates and data
-	datesInterest = getInterestRateDates(EONIA = False, FFE = False, GCCU = True)
-	ZeroCouponMat = getInterestRates()
+	ZeroCouponMat = getInterestRates(EONIA = False, FFE = False, USGG = True)
+	datesInterest = getInterestRateDates(EONIA = False, FFE = True, USGG = True)
+	if len(ZeroCouponMat) != len(datesInterest): #if they are not the same length, bad data has been cut of
+		datesInterest = datesInterest.iloc[0:len(ZeroCouponMat)]
 
 
 	pathToData = 'Data/OilFutures.xlsx'
@@ -370,8 +399,10 @@ if OIL:
 
 if POWER:
 	#interest rate dates and data
-	datesInterest = getInterestRateDates(EONIA = True, FFE = False, GCCU = False)
-	ZeroCouponMat = getInterestRates()
+	datesInterest = getInterestRateDates(EONIA = True, FFE = False, USGG = False)
+	ZeroCouponMat = getInterestRates(EONIA = True, FFE = False, USGG = False)
+	if len(ZeroCouponMat) != len(datesInterest): #if they are not the same length, bad data has been cut of
+		datesInterest = datesInterest.iloc[0:len(ZeroCouponMat)]
 
 	pathToData = 'Data/PowerFutures.xlsx'
 	sheets = ['ReutersNordpoolPowerTS_1','ReutersNordpoolPowerTS_2']

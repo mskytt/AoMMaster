@@ -19,6 +19,7 @@ genMatlabEigs = True
 sheetName = 'EONIA_MID' # Sheet name
 storageFile = 'EONIAmid.hdf5' # Name of file where data is to be/ is currently stored
 MATLABstorageFile = 'MatlabEONIA05midForward100.hdf5'  # Name of Matlab file to use
+
 """
 	Different matlab generated hdf5 files: 
 
@@ -35,7 +36,7 @@ MATLABstorageFile = 'MatlabEONIA05midForward100.hdf5'  # Name of Matlab file to 
 """
 runGenerateData(readExcel, genForward, genZC, sheetName, storageFile) # Generates data from excel sheet using 'only' cubic splines
 # ZCMatUSGG = loadFromHDF5(storageFile,'ZCMat')
-# ZCMatFFE = loadFromHDF5('FFEmid.hdf5','ZCMat' )
+# ZCMatFFE = loadFromHDF5('FFEmid.hdf5','ZCMat')
 # ZCMat = loadFromHDF5(storageFile,'ZCMat')
 # print ZCMatFFE.shape, ZCMatUSGG.shape
 # combined = np.column_stack((ZCMatFFE[:100,:23],ZCMatUSGG[:100,:100]))

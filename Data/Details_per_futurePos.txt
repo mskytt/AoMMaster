@@ -1,0 +1,886 @@
+GCQ6^1 :Diff: -0.80009617869 Mean Interest rate: 0.0106359214261 Vol Interest rate: 0.00111223204351 Mean futures price: 1201.37628866 Vol futures price: 73.7715210231
+ 
+GCZ6^1 :Diff: -17.4339030812 Mean Interest rate: 0.0129367120036 Vol Interest rate: 0.00196548901944 Mean futures price: 1448.91910112 Vol futures price: 256.495477837
+ 
+GCG7^1 :Diff: 0.280009578832 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 1210.34575569 Vol futures price: 80.8581409774
+ 
+GCF7^1 :Diff: -0.172999894735 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 1196.77258065 Vol futures price: 47.6856073822
+ 
+GCN6^1 :Diff: 0.0422192043108 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 1289.16031746 Vol futures price: 39.8527589202
+ 
+GCH7^1 :Diff: 0.138502423363 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 1218.52459016 Vol futures price: 25.0819486767
+ 
+GCX6^1 :Diff: -0.0698253228339 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 1279.95396825 Vol futures price: 43.8183726973
+ 
+GCV6^1 :Diff: -0.0340244213061 Mean Interest rate: 0.0106359214261 Vol Interest rate: 0.00111223204351 Mean futures price: 1209.98804124 Vol futures price: 78.9231735354
+ 
+GCM6^1 :Diff: 4.63787147948 Mean Interest rate: 0.0128221465058 Vol Interest rate: 0.00191229618292 Mean futures price: 1455.17542896 Vol futures price: 249.317361875
+ 
+GCK6^1 :Diff: 0.0654483238751 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 1249.8640625 Vol futures price: 20.3230270198
+ 
+GCJ6^1 :Diff: -1.51544034612 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 1197.11363636 Vol futures price: 70.3673455976
+ 
+GCH6^1 :Diff: 0.242350804149 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 1179.0147541 Vol futures price: 69.2793225747
+ 
+GCG6^1 :Diff: -2.25190003229 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 1201.28447205 Vol futures price: 75.4444472729
+ 
+GCF6^1 :Diff: -0.138554814267 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 1083.72786885 Vol futures price: 20.7630277582
+ 
+GCZ5^1 :Diff: 7.21759234431 Mean Interest rate: 0.0125630122455 Vol Interest rate: 0.00179322655888 Mean futures price: 1464.03175676 Vol futures price: 241.823941906
+ 
+GCX5^1 :Diff: -0.0168281882924 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 1125.85079365 Vol futures price: 33.0946783859
+ 
+GCV5^1 :Diff: -0.300153014627 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 1228.74442149 Vol futures price: 66.9296277607
+ 
+GCU5^1 :Diff: -0.124064156315 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 1125.3640625 Vol futures price: 25.6301297743
+ 
+GCQ5^1 :Diff: -2.38048178248 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 1243.01528926 Vol futures price: 64.9120101658
+ 
+GCN5^1 :Diff: -0.0837345640072 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 1171.503125 Vol futures price: 34.2995306489
+ 
+GCM5^1 :Diff: 12.0327555885 Mean Interest rate: 0.0124326140052 Vol Interest rate: 0.00173410468667 Mean futures price: 1485.84141732 Vol futures price: 216.368486144
+ 
+GCK5^1 :Diff: -0.0433936059619 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 1192.5484375 Vol futures price: 19.1602126178
+ 
+GCJ5^1 :Diff: -3.39100722448 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 1274.24016563 Vol futures price: 62.5612458638
+ 
+GCH5^1 :Diff: 0.0434198502245 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 1217.57704918 Vol futures price: 41.9966563597
+ 
+GCG5^1 :Diff: -7.46089810644 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 1299.2552795 Vol futures price: 82.068005861
+ 
+GCF5^1 :Diff: 0.0127823615146 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 1207.50655738 Vol futures price: 38.944343931
+ 
+GCZ4^1 :Diff: 18.1284032726 Mean Interest rate: 0.0124178097213 Vol Interest rate: 0.00172743224373 Mean futures price: 1481.15851148 Vol futures price: 200.428989536
+ 
+GCX4^1 :Diff: -0.160753377836 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 1216.5031746 Vol futures price: 33.2485634885
+ 
+GCV4^1 :Diff: -8.46304651876 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 1372.65258799 Vol futures price: 149.975896506
+ 
+GCU4^1 :Diff: -0.0746688487651 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 1284.4265625 Vol futures price: 34.8169420065
+ 
+GCQ4^1 :Diff: -8.52034991454 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 1419.47971014 Vol futures price: 178.86837337
+ 
+GCN4^1 :Diff: -0.00877824930054 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 1294.09375 Vol futures price: 24.7184892527
+ 
+GCM4^1 :Diff: 30.9353016698 Mean Interest rate: 0.0124093425271 Vol Interest rate: 0.00172361989017 Mean futures price: 1459.06028594 Vol futures price: 211.33053406
+ 
+GCK4^1 :Diff: -0.0442105278247 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 1309.96666667 Vol futures price: 27.1760048222
+ 
+GCJ4^1 :Diff: -2.1116235128 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 1480.48690229 Vol futures price: 188.345490189
+ 
+GCH4^1 :Diff: 0.177387832596 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 1290.80655738 Vol futures price: 48.2753776593
+ 
+GCG4^1 :Diff: -3.59438539656 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 1507.91452282 Vol futures price: 186.036512714
+ 
+GCF4^1 :Diff: -0.214305443565 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 1250.62419355 Vol futures price: 33.0258485544
+ 
+GCZ3^1 :Diff: 33.5038420045 Mean Interest rate: 0.0124178097213 Vol Interest rate: 0.00172743224373 Mean futures price: 1419.60475059 Vol futures price: 247.978797256
+ 
+GCX3^1 :Diff: -0.208432540998 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 1317.9047619 Vol futures price: 40.8033589832
+ 
+GCV3^1 :Diff: -3.58672171437 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 1580.86198347 Vol futures price: 159.704415763
+ 
+GCU3^1 :Diff: 0.246597740553 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 1323.9484375 Vol futures price: 51.321142671
+ 
+GCQ3^1 :Diff: -0.265389745172 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 1613.63167702 Vol futures price: 144.050804137
+ 
+GCN3^1 :Diff: -0.246448224093 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 1353.2859375 Vol futures price: 75.3279307163
+ 
+GCM3^1 :Diff: 15.1654041794 Mean Interest rate: 0.0124093425271 Vol Interest rate: 0.00172361989017 Mean futures price: 1372.23288324 Vol futures price: 284.143763128
+ 
+GCK3^1 :Diff: -0.159164193126 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 1499.27142857 Vol futures price: 87.8226376944
+ 
+GCJ3^1 :Diff: 2.60978899173 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 1667.52691511 Vol futures price: 87.5791010705
+ 
+GCH3^1 :Diff: -0.0833047144308 Mean Interest rate: 0.00822621680525 Vol Interest rate: 0.000333045627643 Mean futures price: 1632.89152542 Vol futures price: 41.6994951322
+ 
+GCG3^1 :Diff: 4.46712209029 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 1663.87525988 Vol futures price: 87.76468675
+ 
+GCF3^1 :Diff: -0.0510622743827 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 1693.97868852 Vol futures price: 29.1426908687
+ 
+GCZ2^1 :Diff: 19.4880833869 Mean Interest rate: 0.0124114598454 Vol Interest rate: 0.00172457294406 Mean futures price: 1313.91928571 Vol futures price: 292.857092
+ 
+GCX2^1 :Diff: 0.119390105413 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 1738.48387097 Vol futures price: 28.9870393371
+ 
+GCV2^1 :Diff: 4.43577874778 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 1613.16012397 Vol futures price: 126.825446846
+ 
+GCU2^1 :Diff: 0.203783565898 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 1647.64444444 Vol futures price: 66.5759544222
+ 
+GCQ2^1 :Diff: 5.60211985344 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 1578.91673554 Vol futures price: 135.859904709
+ 
+GCN2^1 :Diff: -0.160028967164 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 1595.9078125 Vol futures price: 29.8568266099
+ 
+GCM2^1 :Diff: 25.9152534755 Mean Interest rate: 0.0124114598454 Vol Interest rate: 0.00172457294406 Mean futures price: 1223.17134921 Vol futures price: 289.044965409
+ 
+GCK2^1 :Diff: -0.326238451809 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 1644.228125 Vol futures price: 48.860251831
+ 
+GCJ2^1 :Diff: 5.79617523132 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 1511.13429752 Vol futures price: 183.318288611
+ 
+GCH2^1 :Diff: 0.322822219496 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 1689.98709677 Vol futures price: 53.0138158617
+ 
+GCG2^1 :Diff: 7.18769786482 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 1469.51327801 Vol futures price: 195.254124735
+ 
+GCF2^1 :Diff: -0.0816165254181 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 1682.02295082 Vol futures price: 68.323361805
+ 
+GCZ1^1 :Diff: 20.8929596742 Mean Interest rate: 0.0124114598454 Vol Interest rate: 0.00172457294406 Mean futures price: 1129.36373016 Vol futures price: 273.640489689
+ 
+GCX1^1 :Diff: -0.22375407808 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 1727.09032258 Vol futures price: 75.9200825777
+ 
+GCV1^1 :Diff: 3.35877871973 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 1369.78198758 Vol futures price: 195.973352824
+ 
+GCU1^1 :Diff: 0.408567864556 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 1699.9171875 Vol futures price: 115.591186346
+ 
+GCQ1^1 :Diff: 6.06902030027 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 1313.91428571 Vol futures price: 175.306858982
+ 
+GCN1^1 :Diff: 0.00455391372438 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 1535.7984127 Vol futures price: 35.4546591384
+ 
+GCM1^1 :Diff: 14.3925688534 Mean Interest rate: 0.0124072248618 Vol Interest rate: 0.0017226668601 Mean futures price: 1026.1572337 Vol futures price: 215.73373821
+ 
+GCK1^1 :Diff: 0.118262399718 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 1467.4968254 Vol futures price: 42.6715397822
+ 
+GCJ1^1 :Diff: 4.29128821787 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 1200.673706 Vol futures price: 153.371789417
+ 
+GCH1^1 :Diff: -0.0483563175835 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 1387.81451613 Vol futures price: 33.4952902167
+ 
+GCG1^1 :Diff: 4.50426885937 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 1153.59313929 Vol futures price: 150.532393979
+ 
+GCF1^1 :Diff: 0.0411433594103 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 1377.23709677 Vol futures price: 23.8500573738
+ 
+GCZ0^1 :Diff: 20.9672367763 Mean Interest rate: 0.0124093425271 Vol Interest rate: 0.00172361989017 Mean futures price: 944.330738681 Vol futures price: 180.401353444
+ 
+GCX0^1 :Diff: 0.160755939283 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 1326.57741935 Vol futures price: 45.9422583578
+ 
+GCV0^1 :Diff: 4.94180753004 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 1069.61493776 Vol futures price: 137.57961929
+ 
+GCU0^1 :Diff: -0.0486055654984 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 1225.615625 Vol futures price: 35.6479058762
+ 
+GCQ0^1 :Diff: 1.9676002809 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 1025.02448133 Vol futures price: 135.692486354
+ 
+GCN0^1 :Diff: 0.0933921651557 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 1211.10634921 Vol futures price: 24.2088064327
+ 
+GCM0^1 :Diff: 23.4769251238 Mean Interest rate: 0.0124051068494 Vol Interest rate: 0.00172171385434 Mean futures price: 858.173667462 Vol futures price: 169.828700392
+ 
+GCK0^1 :Diff: 0.0665047795656 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 1152.48730159 Vol futures price: 38.9040435001
+ 
+GCJ0^1 :Diff: 0.505327685863 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 971.230705394 Vol futures price: 110.685841223
+ 
+GCH0^1 :Diff: 0.0286408714252 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 1110.26333333 Vol futures price: 21.217791015
+ 
+GCG0^1 :Diff: -0.302220021453 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 952.28981289 Vol futures price: 99.3342711365
+ 
+GCF0^1 :Diff: 0.180421762543 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 1124.72833333 Vol futures price: 34.9827533301
+ 
+GCZ9^0 :Diff: 17.7912920876 Mean Interest rate: 0.0124072248618 Vol Interest rate: 0.0017226668601 Mean futures price: 783.31327504 Vol futures price: 165.868262244
+ 
+GCX9^0 :Diff: 0.204315797877 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 1049.91774194 Vol futures price: 54.469022046
+ 
+GCV9^0 :Diff: 1.75422220127 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 918.358713693 Vol futures price: 69.555076365
+ 
+GCU9^0 :Diff: 0.065720468627 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 959.50952381 Vol futures price: 29.0500865463
+ 
+GCQ9^0 :Diff: 2.07982720545 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 899.616770186 Vol futures price: 64.5404711036
+ 
+GCN9^0 :Diff: 0.101420565331 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 936.892063492 Vol futures price: 20.4893724027
+ 
+GCM9^0 :Diff: 16.8763573933 Mean Interest rate: 0.0124029884894 Vol Interest rate: 0.00172076087336 Mean futures price: 716.717117834 Vol futures price: 161.017935519
+ 
+GCK9^0 :Diff: -0.0616725879941 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 915.130645161 Vol futures price: 23.1454000774
+ 
+GCJ9^0 :Diff: 2.86228755914 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 857.321161826 Vol futures price: 84.0040982026
+ 
+GCH9^0 :Diff: 0.0436916307881 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 909.366666667 Vol futures price: 44.6979741027
+ 
+GCG9^0 :Diff: 2.44055822433 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 838.275467775 Vol futures price: 88.3458921167
+ 
+GCF9^0 :Diff: 0.182264094983 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 809.886666667 Vol futures price: 54.9014676995
+ 
+GCZ8^0 :Diff: 12.3477550873 Mean Interest rate: 0.0124029884894 Vol Interest rate: 0.00172076087336 Mean futures price: 659.277070064 Vol futures price: 159.600002743
+ 
+GCX8^0 :Diff: -0.0683586595998 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 798.046774194 Vol futures price: 60.3140697161
+ 
+GCV8^0 :Diff: 2.05853903359 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 806.854451346 Vol futures price: 96.4184264359
+ 
+GCU8^0 :Diff: -0.119319121285 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 871.380952381 Vol futures price: 65.3817941194
+ 
+GCQ8^0 :Diff: 2.77865821377 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 788.369502075 Vol futures price: 103.501171658
+ 
+GCN8^0 :Diff: 0.0851878905692 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 907.217460317 Vol futures price: 31.135268318
+ 
+GCM8^0 :Diff: 15.5437511898 Mean Interest rate: 0.012396631322 Vol Interest rate: 0.00171790208418 Mean futures price: 604.901596169 Vol futures price: 157.14424359
+ 
+GCK8^0 :Diff: -0.112408567015 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 923.106451613 Vol futures price: 40.7642311227
+ 
+GCJ8^0 :Diff: 0.41564423452 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 740.955809129 Vol futures price: 96.4240662778
+ 
+GCH8^0 :Diff: 0.174722279035 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 925.132786885 Vol futures price: 39.4180732506
+ 
+GCG8^0 :Diff: 1.53568493596 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 715.505613306 Vol futures price: 74.6689558133
+ 
+GCF8^0 :Diff: 0.0716920058787 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 834.267213115 Vol futures price: 40.0124354494
+ 
+GCZ7^0 :Diff: 10.7291358829 Mean Interest rate: 0.012392391468 Vol Interest rate: 0.00171599635784 Mean futures price: 540.608872902 Vol futures price: 125.671423911
+ 
+GCX7^0 :Diff: 0.171283561363 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 760.079032258 Vol futures price: 39.5394908231
+ 
+GCV7^0 :Diff: 2.63453605931 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 659.917012448 Vol futures price: 46.1666995833
+ 
+GCU7^0 :Diff: 0.0562082617601 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 680.020634921 Vol futures price: 22.7015079475
+ 
+GCQ7^0 :Diff: 2.83260746051 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 635.812681913 Vol futures price: 54.2247446917
+ 
+GCN7^0 :Diff: -0.0482727150343 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 665.05 Vol futures price: 12.6514821266
+ 
+GCM7^0 :Diff: 8.32294234048 Mean Interest rate: 0.0123902710175 Vol Interest rate: 0.00171504353612 Mean futures price: 491.6464 Vol futures price: 110.734599647
+ 
+GCK7^0 :Diff: -0.0166995963107 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 669.057142857 Vol futures price: 12.9377596045
+ 
+GCJ7^0 :Diff: 3.13994704472 Mean Interest rate: 0.0106228454437 Vol Interest rate: 0.00111056771102 Mean futures price: 591.097708333 Vol futures price: 76.6676328854
+ 
+GCH7^0 :Diff: 0.0183557280539 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 650.903278689 Vol futures price: 17.4025527354
+ 
+GCG7^0 :Diff: 2.25718734182 Mean Interest rate: 0.0106228454437 Vol Interest rate: 0.00111056771102 Mean futures price: 568.157916667 Vol futures price: 79.6715027723
+ 
+GCF7^0 :Diff: 0.0430214725476 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 629.678333333 Vol futures price: 10.6120229248
+ 
+GCZ6^0 :Diff: 8.44530578065 Mean Interest rate: 0.0123817857193 Vol Interest rate: 0.00171123253751 Mean futures price: 451.850722311 Vol futures price: 96.4242721118
+ 
+GCX6^0 :Diff: -0.0615538300366 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 604.316129032 Vol futures price: 20.8315067947
+ 
+GCV6^0 :Diff: 1.05368745782 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 529.798336798 Vol futures price: 77.489714141
+ 
+GCU6^0 :Diff: 0.0128414401148 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 623.201612903 Vol futures price: 23.1651050974
+ 
+GCQ6^0 :Diff: 1.49682291127 Mean Interest rate: 0.010620222511 Vol Interest rate: 0.00111024016045 Mean futures price: 513.865762004 Vol futures price: 76.3206306364
+ 
+GCN6^0 :Diff: -0.0398402652353 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 636.685714286 Vol futures price: 40.2186202519
+ 
+GCM6^0 :Diff: 5.98015019053 Mean Interest rate: 0.0123839075688 Vol Interest rate: 0.00171218524289 Mean futures price: 413.564635124 Vol futures price: 80.8658716543
+ 
+GCU5^0 :Diff: -3.30690368635e-05 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 439.782539683 Vol futures price: 13.2836997581
+ 
+GCJ6^0 :Diff: 1.1412480768 Mean Interest rate: 0.0106175969435 Vol Interest rate: 0.00110991436962 Mean futures price: 468.356485356 Vol futures price: 51.6483777728
+ 
+GCH6^0 :Diff: 0.0727515439403 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 554.695081967 Vol futures price: 10.8235690945
+ 
+GCG6^0 :Diff: 0.142305380775 Mean Interest rate: 0.0106149687169 Vol Interest rate: 0.00110959033304 Mean futures price: 450.877148847 Vol futures price: 39.3229242415
+ 
+GCF6^0 :Diff: 0.0851514398616 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 510.76557377 Vol futures price: 30.541591557
+ 
+GCZ5^0 :Diff: 2.97380917273 Mean Interest rate: 0.0123839075688 Vol Interest rate: 0.00171218524289 Mean futures price: 379.407137129 Vol futures price: 54.9685526958
+ 
+GCX5^0 :Diff: 0.0648147012297 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 467.081967213 Vol futures price: 12.0208631233
+ 
+GCV5^0 :Diff: 0.407547220498 Mean Interest rate: 0.010620222511 Vol Interest rate: 0.00111024016045 Mean futures price: 429.189770355 Vol futures price: 18.706941087
+ 
+GCK6^0 :Diff: 0.0954908537558 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 613.446875 Vol futures price: 50.3005466196
+ 
+GCQ5^0 :Diff: 0.611313397544 Mean Interest rate: 0.0106175969435 Vol Interest rate: 0.00110991436962 Mean futures price: 421.174058577 Vol futures price: 17.5813803138
+ 
+GCN5^0 :Diff: -0.0153392701426 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 427.119047619 Vol futures price: 6.69043043536
+ 
+GCM5^0 :Diff: -1.18137521775 Mean Interest rate: 0.0123796635193 Vol Interest rate: 0.00171027986251 Mean futures price: 362.073172691 Vol futures price: 46.7420652285
+ 
+GCK5^0 :Diff: -0.0147238892721 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 430.365625 Vol futures price: 7.64448777613
+ 
+GCJ5^0 :Diff: 0.771917199952 Mean Interest rate: 0.0106149687169 Vol Interest rate: 0.00110959033304 Mean futures price: 407.242557652 Vol futures price: 24.6659844407
+ 
+GCH5^0 :Diff: -0.0239319292684 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 428.695 Vol futures price: 7.83312251489
+ 
+GCG5^0 :Diff: 1.19878772889 Mean Interest rate: 0.0106123378062 Vol Interest rate: 0.00110926804506 Mean futures price: 398.572689076 Vol futures price: 28.0394614244
+ 
+GCF5^0 :Diff: 0.0137374445928 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 436.241666667 Vol futures price: 10.536496756
+ 
+GCZ4^0 :Diff: -0.53168391429 Mean Interest rate: 0.0123796635193 Vol Interest rate: 0.00171027986251 Mean futures price: 350.565542169 Vol futures price: 41.4246676967
+ 
+GCX4^0 :Diff: 0.0175117452431 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 421.067213115 Vol futures price: 13.3176417116
+ 
+GCV4^0 :Diff: 1.26472424781 Mean Interest rate: 0.0106175969435 Vol Interest rate: 0.00110991436962 Mean futures price: 383.290585774 Vol futures price: 26.7319801127
+ 
+GCU4^0 :Diff: 0.0181386921511 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 401.992063492 Vol futures price: 6.55100383892
+ 
+GCQ4^0 :Diff: 0.923674353064 Mean Interest rate: 0.0106175969435 Vol Interest rate: 0.00110991436962 Mean futures price: 374.763807531 Vol futures price: 29.3255833827
+ 
+GCN4^0 :Diff: 0.00692977506859 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 391.88852459 Vol futures price: 8.59721835229
+ 
+GCM4^0 :Diff: 0.673327915553 Mean Interest rate: 0.0123817857193 Vol Interest rate: 0.00171123253751 Mean futures price: 337.635232745 Vol futures price: 35.4072147077
+ 
+GCK4^0 :Diff: 0.00724821233188 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 399.365079365 Vol futures price: 14.9539521636
+ 
+GCJ4^0 :Diff: 0.401266263119 Mean Interest rate: 0.0106149687169 Vol Interest rate: 0.00110959033304 Mean futures price: 361.474004193 Vol futures price: 32.3047211033
+ 
+GCH4^0 :Diff: -0.0160823309365 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 408.528333333 Vol futures price: 9.66735213087
+ 
+GCG4^0 :Diff: 0.76625517162 Mean Interest rate: 0.0106149687169 Vol Interest rate: 0.00110959033304 Mean futures price: 352.914255765 Vol futures price: 30.5810646618
+ 
+GCF4^0 :Diff: 0.037500777851 Mean Interest rate: 0.00820139812473 Vol Interest rate: 0.00031085839302 Mean futures price: 404.984210526 Vol futures price: 12.404537787
+ 
+GCZ3^0 :Diff: -0.877227167873 Mean Interest rate: 0.0123839075688 Vol Interest rate: 0.00171218524289 Mean futures price: 326.462149158 Vol futures price: 28.5608776425
+ 
+GCX3^0 :Diff: 0.0116689047675 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 382.042622951 Vol futures price: 7.2950119724
+ 
+GCV3^0 :Diff: 1.04289966553 Mean Interest rate: 0.0106175969435 Vol Interest rate: 0.00110991436962 Mean futures price: 333.737238494 Vol futures price: 26.563842618
+ 
+GCU3^0 :Diff: 0.0336481657912 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 362.882539683 Vol futures price: 12.9795142581
+ 
+GCQ3^0 :Diff: 0.496925324865 Mean Interest rate: 0.0106175969435 Vol Interest rate: 0.00110991436962 Mean futures price: 324.530962343 Vol futures price: 25.5433498849
+ 
+GCN3^0 :Diff: 0.0336890071985 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 354.450793651 Vol futures price: 9.1371537546
+ 
+GCM3^0 :Diff: -2.33875174683 Mean Interest rate: 0.0123860290682 Vol Interest rate: 0.00171313797813 Mean futures price: 317.955128205 Vol futures price: 23.1114670586
+ 
+GCK3^0 :Diff: -0.0215371593539 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 341.335483871 Vol futures price: 13.3818497296
+ 
+GCJ3^0 :Diff: 0.677133136901 Mean Interest rate: 0.0106097041867 Vol Interest rate: 0.00110894749994 Mean futures price: 310.528842105 Vol futures price: 24.3752149729
+ 
+GCH3^0 :Diff: 0.0111290529043 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 353.043333333 Vol futures price: 12.5679137312
+ 
+GCG3^0 :Diff: 0.661635843111 Mean Interest rate: 0.0106097041867 Vol Interest rate: 0.00110894749994 Mean futures price: 304.767157895 Vol futures price: 24.423952336
+ 
+GCF3^0 :Diff: 0.0345991098448 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 336.761666667 Vol futures price: 16.7023660167
+ 
+GCZ2^0 :Diff: -2.4821837856 Mean Interest rate: 0.0123860290682 Vol Interest rate: 0.00171313797813 Mean futures price: 313.322676282 Vol futures price: 22.860571116
+ 
+GCX2^0 :Diff: 0.0120459539765 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 318.577419355 Vol futures price: 3.53126219575
+ 
+GCV2^0 :Diff: -0.0921480629286 Mean Interest rate: 0.0106149687169 Vol Interest rate: 0.00110959033304 Mean futures price: 293.202515723 Vol futures price: 16.8095720573
+ 
+GCU2^0 :Diff: -0.000453420342805 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 314.286885246 Vol futures price: 5.72533842968
+ 
+GCQ2^0 :Diff: -0.281369556296 Mean Interest rate: 0.0106123378062 Vol Interest rate: 0.00110926804506 Mean futures price: 290.039495798 Vol futures price: 15.0651217673
+ 
+GCN2^0 :Diff: 0.0157270858657 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 316.946774194 Vol futures price: 6.0680739821
+ 
+GCM2^0 :Diff: -7.06855920414 Mean Interest rate: 0.0123881502177 Vol Interest rate: 0.00171409074271 Mean futures price: 314.572938351 Vol futures price: 30.9559542113
+ 
+GCK2^0 :Diff: 0.0126259291866 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 304.023809524 Vol futures price: 8.43663052965
+ 
+GCJ2^0 :Diff: -0.378129015295 Mean Interest rate: 0.0106097041867 Vol Interest rate: 0.00110894749994 Mean futures price: 286.289052632 Vol futures price: 12.9953613646
+ 
+GCH2^0 :Diff: 0.0219825663184 Mean Interest rate: 0.00822621680525 Vol Interest rate: 0.000333045627643 Mean futures price: 290.427118644 Vol futures price: 7.30328647889
+ 
+GCG2^0 :Diff: -0.466749880349 Mean Interest rate: 0.010607067833 Vol Interest rate: 0.00110862869178 Mean futures price: 285.6 Vol futures price: 13.4704928349
+ 
+GCF2^0 :Diff: -0.00552768071992 Mean Interest rate: 0.00822621680525 Vol Interest rate: 0.000333045627643 Mean futures price: 278.325423729 Vol futures price: 3.7128541363
+ 
+GCZ1^0 :Diff: -8.87039882099 Mean Interest rate: 0.0123902710175 Vol Interest rate: 0.00171504353612 Mean futures price: 321.56232 Vol futures price: 44.9291970573
+ 
+GCX1^0 :Diff: 0.0132763392288 Mean Interest rate: 0.00822621680525 Vol Interest rate: 0.000333045627643 Mean futures price: 281.728813559 Vol futures price: 7.1378449686
+ 
+GCV1^0 :Diff: -0.58766419779 Mean Interest rate: 0.0106175969435 Vol Interest rate: 0.00110991436962 Mean futures price: 287.917259414 Vol futures price: 16.9504977099
+ 
+GCU1^0 :Diff: 0.00327993491535 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 274.12 Vol futures price: 7.55228000893
+ 
+GCQ1^0 :Diff: -0.448880671399 Mean Interest rate: 0.0106228454437 Vol Interest rate: 0.00111056771102 Mean futures price: 289.192291667 Vol futures price: 18.9725537224
+ 
+GCN1^0 :Diff: 0.0133052030646 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 270.66984127 Vol futures price: 5.32393919445
+ 
+GCM1^0 :Diff: -8.88604844138 Mean Interest rate: 0.012396631322 Vol Interest rate: 0.00171790208418 Mean futures price: 333.745490822 Vol futures price: 58.2623482079
+ 
+GCK1^0 :Diff: -0.00761713172631 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 265.884126984 Vol futures price: 6.96627263295
+ 
+GCJ1^0 :Diff: -0.0963070484445 Mean Interest rate: 0.010620222511 Vol Interest rate: 0.00111024016045 Mean futures price: 286.293528184 Vol futures price: 17.7267799214
+ 
+GCH1^0 :Diff: -0.0222267889642 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 264.393442623 Vol futures price: 4.15111554639
+ 
+GCG1^0 :Diff: -0.268789253335 Mean Interest rate: 0.0106175969435 Vol Interest rate: 0.00110991436962 Mean futures price: 287.500627615 Vol futures price: 16.5990062345
+ 
+GCF1^0 :Diff: 0.00203994740343 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 268.628333333 Vol futures price: 3.3700193702
+ 
+GCZ0^0 :Diff: -7.25793369575 Mean Interest rate: 0.012398750726 Vol Interest rate: 0.00171885498779 Mean futures price: 347.342503987 Vol futures price: 65.8455243868
+ 
+GCX0^0 :Diff: -0.0204231915079 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 270.950819672 Vol futures price: 4.84343811468
+ 
+GCV0^0 :Diff: -0.476372688249 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 290.163201663 Vol futures price: 15.7367400321
+ 
+GCU0^0 :Diff: -0.0331598502406 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 277.313114754 Vol futures price: 5.05635375039
+ 
+GCQ0^0 :Diff: -0.483646304988 Mean Interest rate: 0.0106228454437 Vol Interest rate: 0.00111056771102 Mean futures price: 291.525208333 Vol futures price: 15.9644321448
+ 
+GCN0^0 :Diff: 0.0118942917881 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 281.679032258 Vol futures price: 5.16567882985
+ 
+GCM0^0 :Diff: -8.78141772475 Mean Interest rate: 0.012398750726 Vol Interest rate: 0.00171885498779 Mean futures price: 360.343221691 Vol futures price: 70.3244414361
+ 
+GCK0^0 :Diff: -0.0289235037217 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 281.93015873 Vol futures price: 6.791536164
+ 
+GCJ0^0 :Diff: -0.445915806225 Mean Interest rate: 0.0106228454437 Vol Interest rate: 0.00111056771102 Mean futures price: 293.435416667 Vol futures price: 16.6776858105
+ 
+GCH0^0 :Diff: 0.00180566458787 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 291.614754098 Vol futures price: 9.03241586814
+ 
+GCG0^0 :Diff: -0.599525894847 Mean Interest rate: 0.010620222511 Vol Interest rate: 0.00111024016045 Mean futures price: 295.291022965 Vol futures price: 18.7736918599
+ 
+GCF0^0 :Diff: -0.0256464895534 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 288.575 Vol futures price: 5.90453568595
+ 
+GCZ9^9 :Diff: -10.3374208135 Mean Interest rate: 0.0124029884894 Vol Interest rate: 0.00172076087336 Mean futures price: 375.237818471 Vol futures price: 75.8724991383
+ 
+GCX9^9 :Diff: 0.0671773660734 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 289.38852459 Vol futures price: 22.1837933633
+ 
+GCV9^9 :Diff: -0.502723030408 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 296.341372141 Vol futures price: 19.5901746075
+ 
+GCU9^9 :Diff: -0.0125773159969 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 258.841269841 Vol futures price: 7.71073535127
+ 
+GCQ9^9 :Diff: -1.26431327799 Mean Interest rate: 0.0106228454437 Vol Interest rate: 0.00111056771102 Mean futures price: 299.2925 Vol futures price: 21.4306154154
+ 
+GCN9^9 :Diff: -0.0476399657874 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 266.151612903 Vol futures price: 10.4322969656
+ 
+GCM9^9 :Diff: -8.47873500938 Mean Interest rate: 0.0124008697817 Vol Interest rate: 0.00171980791768 Mean futures price: 391.548924303 Vol futures price: 77.1796285079
+ 
+GCK9^9 :Diff: -0.0122686684621 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 283.36031746 Vol futures price: 5.9753339465
+ 
+GCJ9^9 :Diff: -1.4362624575 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 311.655717256 Vol futures price: 23.2479443473
+ 
+GCH9^9 :Diff: -0.00430319648784 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 288.05 Vol futures price: 3.12817838366
+ 
+GCG9^9 :Diff: -1.41786677582 Mean Interest rate: 0.010620222511 Vol Interest rate: 0.00111024016045 Mean futures price: 317.842797495 Vol futures price: 27.5869947821
+ 
+GCF9^9 :Diff: -0.0053459104113 Mean Interest rate: 0.00822621680525 Vol Interest rate: 0.000333045627643 Mean futures price: 291.76779661 Vol futures price: 4.1493083221
+ 
+GCZ8^9 :Diff: -4.81235663683 Mean Interest rate: 0.012396631322 Vol Interest rate: 0.00171790208418 Mean futures price: 404.112130886 Vol futures price: 71.5386421099
+ 
+GCX8^9 :Diff: 0.0347252096394 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 293.742622951 Vol futures price: 4.65612443557
+ 
+GCV8^9 :Diff: -1.52031538364 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 329.27780083 Vol futures price: 34.0293671216
+ 
+GCU8^9 :Diff: -0.0212332021692 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 289.392063492 Vol futures price: 5.65102326981
+ 
+GCQ8^9 :Diff: -1.47902333233 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 337.185031185 Vol futures price: 38.0969021671
+ 
+GCN8^9 :Diff: -0.0291693169007 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 295.76031746 Vol futures price: 4.99019800105
+ 
+GCM8^9 :Diff: -2.86245492796 Mean Interest rate: 0.0124051068494 Vol Interest rate: 0.00172171385434 Mean futures price: 411.323786794 Vol futures price: 60.0491490475
+ 
+GCK8^9 :Diff: 0.00207883138164 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 302.232258065 Vol futures price: 5.93632269669
+ 
+GCJ8^9 :Diff: -1.49179649827 Mean Interest rate: 0.010620222511 Vol Interest rate: 0.00111024016045 Mean futures price: 353.902713987 Vol futures price: 41.4805930041
+ 
+GCH8^9 :Diff: 0.00873811805827 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 295.09 Vol futures price: 6.35113375705
+ 
+GCG8^9 :Diff: -1.28506746231 Mean Interest rate: 0.010620222511 Vol Interest rate: 0.00111024016045 Mean futures price: 362.476617954 Vol futures price: 41.8834932962
+ 
+GCF8^9 :Diff: -0.0350811083198 Mean Interest rate: 0.00822621680525 Vol Interest rate: 0.000333045627643 Mean futures price: 295.518644068 Vol futures price: 10.8361991363
+ 
+GCZ7^9 :Diff: 0.217368153273 Mean Interest rate: 0.0124093425271 Vol Interest rate: 0.00172361989017 Mean futures price: 413.949960286 Vol futures price: 44.8368648985
+ 
+GCX7^9 :Diff: -0.0118948721617 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 320.26557377 Vol futures price: 9.08823568959
+ 
+GCV7^9 :Diff: -0.678175420415 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 378.630641822 Vol futures price: 34.4238959116
+ 
+GCU7^9 :Diff: -0.0269527691803 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 324.480952381 Vol futures price: 3.63037700359
+ 
+GCQ7^9 :Diff: -0.619839688121 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 384.265560166 Vol futures price: 30.9650401286
+ 
+GCN7^9 :Diff: -0.0102124231248 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 337.5 Vol futures price: 10.0782718013
+ 
+GCM7^9 :Diff: -1.06441453195 Mean Interest rate: 0.0124114598454 Vol Interest rate: 0.00172457294406 Mean futures price: 415.391349206 Vol futures price: 29.5549165424
+ 
+GCK7^9 :Diff: -0.0388981698412 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 348.069354839 Vol futures price: 6.08855586219
+ 
+GCJ7^9 :Diff: -0.541892146556 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 394.639834025 Vol futures price: 22.8421852216
+ 
+GCH7^9 :Diff: -0.0358581738793 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 353.291666667 Vol futures price: 6.27028153718
+ 
+GCG7^9 :Diff: -0.702988562818 Mean Interest rate: 0.0106228454437 Vol Interest rate: 0.00111056771102 Mean futures price: 399.013333333 Vol futures price: 19.5107318047
+ 
+GCF7^9 :Diff: -0.028180069273 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 368.823809524 Vol futures price: 10.1313706477
+ 
+GCZ6^9 :Diff: -2.10129153788 Mean Interest rate: 0.0124093425271 Vol Interest rate: 0.00172361989017 Mean futures price: 414.233915806 Vol futures price: 19.5559388239
+ 
+GCX6^9 :Diff: -0.0150234412537 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 381.880327869 Vol futures price: 3.07809924701
+ 
+GCV6^9 :Diff: -0.558066535051 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 403.92505176 Vol futures price: 12.6930057584
+ 
+GCU6^9 :Diff: 0.00267215298178 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 386.0140625 Vol futures price: 2.61843626924
+ 
+GCQ6^9 :Diff: -0.699706730169 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 405.254771784 Vol futures price: 12.6857856567
+ 
+GCN6^9 :Diff: -0.010481235037 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 388.407936508 Vol futures price: 5.02012779156
+ 
+GCM6^9 :Diff: -5.13916061806 Mean Interest rate: 0.012413576817 Vol Interest rate: 0.00172552602127 Mean futures price: 412.443140365 Vol futures price: 22.1420694521
+ 
+GCK6^9 :Diff: -0.0182324396508 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 395.1296875 Vol futures price: 3.51063917291
+ 
+GCJ6^9 :Diff: -0.480955923357 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 405.528008299 Vol futures price: 11.5862982363
+ 
+GCH6^9 :Diff: 0.0269438585826 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 400.3953125 Vol futures price: 5.81448701756
+ 
+GCG6^9 :Diff: -0.351082477995 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 404.191683992 Vol futures price: 11.2714352719
+ 
+GCF6^9 :Diff: 0.013105139406 Mean Interest rate: 0.00830189862437 Vol Interest rate: 0.000396495087441 Mean futures price: 390.878461538 Vol futures price: 6.17843625493
+ 
+GCZ5^9 :Diff: -6.94849877858 Mean Interest rate: 0.0124093425271 Vol Interest rate: 0.00172361989017 Mean futures price: 410.306513106 Vol futures price: 28.8980015386
+ 
+GCX5^9 :Diff: -0.00122527994592 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 384.882258065 Vol futures price: 1.86966653863
+ 
+GCV5^9 :Diff: 0.190544556437 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 400.368115942 Vol futures price: 10.0064646791
+ 
+GCU5^9 :Diff: -0.011773124824 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 385.7578125 Vol futures price: 2.71867411891
+ 
+GCQ5^9 :Diff: 0.576302567724 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 397.567012448 Vol futures price: 9.27189854845
+ 
+GCN5^9 :Diff: -0.00773802603773 Mean Interest rate: 0.00830189862437 Vol Interest rate: 0.000396495087441 Mean futures price: 388.18 Vol futures price: 2.69370776783
+ 
+GCM5^9 :Diff: -7.35957042047 Mean Interest rate: 0.012230222535 Vol Interest rate: 0.00164370224045 Mean futures price: 405.434723404 Vol futures price: 32.0256652833
+ 
+GCK5^9 :Diff: 0.017261030016 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 387.15 Vol futures price: 4.64525968058
+ 
+GCJ5^9 :Diff: -0.203540361446 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 393.252282158 Vol futures price: 10.5737660267
+ 
+GCH5^9 :Diff: -0.0132071688259 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 380.288888889 Vol futures price: 3.43377764629
+ 
+GCG5^9 :Diff: 0.779327905564 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 389.295435685 Vol futures price: 12.4152086794
+ 
+GCF5^9 :Diff: -0.00990305443931 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 381.829032258 Vol futures price: 4.21859887674
+ 
+GCZ4^9 :Diff: -5.99926819762 Mean Interest rate: 0.0119565969272 Vol Interest rate: 0.00152500596439 Mean futures price: 397.880457579 Vol futures price: 31.85127512
+ 
+GCX4^9 :Diff: 0.00196585381631 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 389.801639344 Vol futures price: 4.61837001277
+ 
+GCV4^9 :Diff: 0.500217913695 Mean Interest rate: 0.0106359214261 Vol Interest rate: 0.00111223204351 Mean futures price: 379.184536082 Vol futures price: 18.3567237616
+ 
+GCU4^9 :Diff: -0.00595130926552 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 386.319047619 Vol futures price: 5.08348890138
+ 
+GCQ4^9 :Diff: 0.128934060764 Mean Interest rate: 0.0106359214261 Vol Interest rate: 0.00111223204351 Mean futures price: 374.362061856 Vol futures price: 18.5615677627
+ 
+GCN4^9 :Diff: 0.0151661393929 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 385.00952381 Vol futures price: 3.46459252446
+ 
+GCM4^9 :Diff: -4.25202721591 Mean Interest rate: 0.0116765222647 Vol Interest rate: 0.00140965704214 Mean futures price: 390.258288191 Vol futures price: 31.7511853729
+ 
+GCK4^9 :Diff: -0.00183687514796 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 382.34375 Vol futures price: 5.73851774742
+ 
+GCJ4^9 :Diff: 0.0378859661198 Mean Interest rate: 0.0106359214261 Vol Interest rate: 0.00111223204351 Mean futures price: 367.937938144 Vol futures price: 18.1257544138
+ 
+GCH4^9 :Diff: -0.0165112822383 Mean Interest rate: 0.00830189862437 Vol Interest rate: 0.000396495087441 Mean futures price: 385.336923077 Vol futures price: 5.6682806844
+ 
+GCG4^9 :Diff: -0.195009273275 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 364.566115702 Vol futures price: 17.5868931461
+ 
+GCF4^9 :Diff: 0.0241526642413 Mean Interest rate: 0.00830189862437 Vol Interest rate: 0.000396495087441 Mean futures price: 382.118461538 Vol futures price: 7.3773852426
+ 
+GCZ3^9 :Diff: -3.2845608762 Mean Interest rate: 0.0113916709311 Vol Interest rate: 0.00130220575423 Mean futures price: 382.8 Vol futures price: 32.2996143587
+ 
+GCX3^9 :Diff: -0.0188840834916 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 364.716129032 Vol futures price: 9.38934182221
+ 
+GCV3^9 :Diff: -0.874872702675 Mean Interest rate: 0.0106385290509 Vol Interest rate: 0.0011125702609 Mean futures price: 360.595884774 Vol futures price: 17.5393849441
+ 
+GCU3^9 :Diff: -0.00583025876945 Mean Interest rate: 0.00830189862437 Vol Interest rate: 0.000396495087441 Mean futures price: 376.198461538 Vol futures price: 17.4965622321
+ 
+GCQ3^9 :Diff: -0.502737024298 Mean Interest rate: 0.0106385290509 Vol Interest rate: 0.0011125702609 Mean futures price: 361.309876543 Vol futures price: 19.2845837379
+ 
+GCN3^9 :Diff: 0.0421697903727 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 377.2109375 Vol futures price: 11.5740701191
+ 
+GCM3^9 :Diff: -2.25980450255 Mean Interest rate: 0.0110919708966 Vol Interest rate: 0.00120619827577 Mean futures price: 375.479402985 Vol futures price: 31.6264374521
+ 
+GCK3^9 :Diff: 0.0303920440351 Mean Interest rate: 0.00830189862437 Vol Interest rate: 0.000396495087441 Mean futures price: 345.723076923 Vol futures price: 15.6929750989
+ 
+GCJ3^9 :Diff: -0.894993459236 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 360.573140496 Vol futures price: 22.8466397527
+ 
+GCH3^9 :Diff: -0.00875955762256 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 330.0046875 Vol futures price: 1.79838727124
+ 
+GCG3^9 :Diff: -0.678856101616 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 363.795859213 Vol futures price: 22.623277726
+ 
+GCF3^9 :Diff: -0.0165876280968 Mean Interest rate: 0.00830189862437 Vol Interest rate: 0.000396495087441 Mean futures price: 333.529230769 Vol futures price: 3.62774450279
+ 
+GCZ2^9 :Diff: -1.46869410726 Mean Interest rate: 0.0107886812167 Vol Interest rate: 0.00113580636157 Mean futures price: 373.708073394 Vol futures price: 27.7183311145
+ 
+GCX2^9 :Diff: -0.00326541642178 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 342.447619048 Vol futures price: 6.05427455298
+ 
+GCV2^9 :Diff: -1.23366170556 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 371.938095238 Vol futures price: 23.8345678225
+ 
+GCU2^9 :Diff: 0.00490769945636 Mean Interest rate: 0.00830189862437 Vol Interest rate: 0.000396495087441 Mean futures price: 347.547692308 Vol futures price: 7.24518105507
+ 
+GCQ2^9 :Diff: -1.77297158182 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 376.458385093 Vol futures price: 26.5683747593
+ 
+GCN2^9 :Diff: 0.0142118905951 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 344.096875 Vol futures price: 6.92380334313
+ 
+GCM2^9 :Diff: -0.795014091012 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 381.700622407 Vol futures price: 30.5433991556
+ 
+GCK2^9 :Diff: -0.0322782825078 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 341.5515625 Vol futures price: 5.65398068255
+ 
+GCJ2^9 :Diff: -0.720610097012 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 384.525726141 Vol futures price: 27.517280915
+ 
+GCH2^9 :Diff: -0.00871740761029 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 351.89516129 Vol futures price: 6.01716435786
+ 
+GCG2^9 :Diff: -0.761626448201 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 388.693555094 Vol futures price: 26.0716185378
+ 
+GCF2^9 :Diff: -0.00429067513689 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 359.595238095 Vol futures price: 5.9540150138
+ 
+GCZ1^9 :Diff: -1.90061520869 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 394.434439834 Vol futures price: 31.5722371443
+ 
+GCX1^9 :Diff: 0.00512595990961 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 356.828571429 Vol futures price: 5.47010427838
+ 
+GCV1^9 :Diff: -1.5189720571 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 399.405186722 Vol futures price: 35.0868471128
+ 
+GCU1^9 :Diff: -0.0257008076123 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 359.103225806 Vol futures price: 9.36403496814
+ 
+GCQ1^9 :Diff: -0.261441756998 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 402.125311203 Vol futures price: 32.7344892541
+ 
+GCN1^9 :Diff: 0.0116572639072 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 365.141935484 Vol futures price: 4.45745292476
+ 
+GCM1^9 :Diff: -0.233319962504 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 402.353112033 Vol futures price: 29.6160324534
+ 
+GCK1^9 :Diff: -0.00733508766784 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 361.19375 Vol futures price: 5.15842378421
+ 
+GCJ1^9 :Diff: -0.0854439630784 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 403.121161826 Vol futures price: 26.5060192079
+ 
+GCH1^9 :Diff: -0.0498144001278 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 373.228333333 Vol futures price: 12.8545723599
+ 
+GCG1^9 :Diff: -0.967779196238 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 405.196887967 Vol futures price: 24.4938355075
+ 
+GCF1^9 :Diff: 0.000784016737062 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 383.719672131 Vol futures price: 7.32419792894
+ 
+GCZ0^9 :Diff: -0.984664531702 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 407.249377593 Vol futures price: 25.7292786067
+ 
+GCX0^9 :Diff: -0.00100269022398 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 385.688709677 Vol futures price: 9.85594801317
+ 
+GCV0^9 :Diff: -1.93628941514 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 410.396680498 Vol futures price: 30.4109056755
+ 
+GCU0^9 :Diff: 0.044165741705 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 383.362903226 Vol futures price: 16.0770246191
+ 
+GCQ0^9 :Diff: -0.872269580558 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 413.514906832 Vol futures price: 33.9576606636
+ 
+GCN0^9 :Diff: -0.0212833254493 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 363.647619048 Vol futures price: 8.95618713415
+ 
+GCM0^9 :Diff: -1.85122257682 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 418.758178054 Vol futures price: 37.7726717516
+ 
+GCK0^9 :Diff: -0.0650065030254 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 381.668253968 Vol futures price: 14.6049113874
+ 
+GCJ0^9 :Diff: -2.0364645315 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 426.623858921 Vol futures price: 41.0295651833
+ 
+GCH0^9 :Diff: 0.00368928668735 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 408.532258065 Vol futures price: 12.9648379833
+ 
+GCG0^9 :Diff: -1.85707871879 Mean Interest rate: 0.0106228454437 Vol Interest rate: 0.00111056771102 Mean futures price: 432.145625 Vol futures price: 44.5392465233
+ 
+GCF0^9 :Diff: 0.0572997719659 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 406.133870968 Vol futures price: 10.7690408047
+ 
+GCZ9^8 :Diff: -1.74948046177 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 434.923602484 Vol futures price: 47.6660221821
+ 
+GCX9^8 :Diff: 0.0200480365163 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 375.693650794 Vol futures price: 14.1691132119
+ 
+GCV9^8 :Diff: -2.71756872436 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 442.923760331 Vol futures price: 56.638321445
+ 
+GCU9^8 :Diff: -0.0187874822167 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 369.996774194 Vol futures price: 8.28317314416
+ 
+GCQ9^8 :Diff: -1.65943028494 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 452.676859504 Vol futures price: 56.8397519207
+ 
+GCN9^8 :Diff: -0.0189667922804 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 374.263492063 Vol futures price: 6.68688129521
+ 
+GCM9^8 :Diff: -1.49911348512 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 461.079296066 Vol futures price: 54.1598766815
+ 
+GCK9^8 :Diff: -0.0157555656213 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 384.996825397 Vol futures price: 9.83577803757
+ 
+GCJ9^8 :Diff: -1.09924195217 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 468.552795031 Vol futures price: 47.5584566466
+ 
+GCH9^8 :Diff: -0.0371217090955 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 396.819672131 Vol futures price: 9.32735830808
+ 
+GCG9^8 :Diff: 0.196779376953 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 473.609128631 Vol futures price: 41.9679713837
+ 
+GCF9^8 :Diff: 0.00101820029439 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 416.953225806 Vol futures price: 9.5361742133
+ 
+GCZ8^8 :Diff: 0.697915901393 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 472.326763485 Vol futures price: 35.3332388721
+ 
+GCX8^8 :Diff: -0.043243799705 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 415.227419355 Vol futures price: 10.6975753864
+ 
+GCV8^8 :Diff: 0.492212464915 Mean Interest rate: 0.0106359214261 Vol Interest rate: 0.00111223204351 Mean futures price: 468.584123711 Vol futures price: 32.1612492626
+ 
+GCU8^8 :Diff: -0.0654484691499 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 430.4453125 Vol futures price: 14.1754511578
+ 
+GCQ8^8 :Diff: -0.0885224133096 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 467.237190083 Vol futures price: 26.7250397405
+ 
+GCN8^8 :Diff: 0.00567048683365 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 449.128333333 Vol futures price: 9.96104230936
+ 
+GCM8^8 :Diff: 1.37041198087 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 462.575776398 Vol futures price: 26.2686797023
+ 
+GCK8^8 :Diff: 0.0353486598997 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 450.661290323 Vol futures price: 6.68569379802
+ 
+GCJ8^8 :Diff: 1.50637952 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 452.250935551 Vol futures price: 32.6064169188
+ 
+GCH8^8 :Diff: -0.0577383637944 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 454.749180328 Vol futures price: 19.0133311554
+ 
+GCG8^8 :Diff: 1.52587408677 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 441.498547718 Vol futures price: 37.2945455887
+ 
+GCF8^8 :Diff: 0.0123877133745 Mean Interest rate: 0.00822621680525 Vol Interest rate: 0.000333045627643 Mean futures price: 479.474576271 Vol futures price: 8.93834992584
+ 
+GCZ7^8 :Diff: 0.677174203273 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 430.983609959 Vol futures price: 38.2069235247
+ 
+GCX7^8 :Diff: 0.0202218878376 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 465.387096774 Vol futures price: 5.66550068598
+ 
+GCV7^8 :Diff: 0.931316696969 Mean Interest rate: 0.010620222511 Vol Interest rate: 0.00111024016045 Mean futures price: 418.550730689 Vol futures price: 36.8335588691
+ 
+GCU7^8 :Diff: -0.00800813855529 Mean Interest rate: 0.0082892012928 Vol Interest rate: 0.000386245116498 Mean futures price: 458.6734375 Vol futures price: 6.18127824027
+ 
+GCQ7^8 :Diff: 0.63679497287 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 406.707484407 Vol futures price: 35.2797018981
+ 
+GCN7^8 :Diff: -0.00685228535539 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 455.325396825 Vol futures price: 9.46289274631
+ 
+GCM7^8 :Diff: 0.243840637389 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 395.861746362 Vol futures price: 32.1376501544
+ 
+GCK7^8 :Diff: 0.0540015733083 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 436.277419355 Vol futures price: 22.6169250024
+ 
+GCJ7^8 :Diff: 0.317112015293 Mean Interest rate: 0.0106228454437 Vol Interest rate: 0.00111056771102 Mean futures price: 384.158125 Vol futures price: 27.0765115118
+ 
+GCH7^8 :Diff: 0.151002762441 Mean Interest rate: 0.00832734312957 Vol Interest rate: 0.000416607693267 Mean futures price: 404.585074627 Vol futures price: 12.1574159388
+ 
+GCG7^8 :Diff: -0.43383452543 Mean Interest rate: 0.0106228454437 Vol Interest rate: 0.00111056771102 Mean futures price: 376.307708333 Vol futures price: 24.2596630867
+ 
+GCF7^8 :Diff: -0.0271212625228 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 400.890163934 Vol futures price: 9.95385591186
+ 
+GCZ6^8 :Diff: 0.653765280563 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 368.216008316 Vol futures price: 23.2804115252
+ 
+GCX6^8 :Diff: 0.0531628106288 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 416.337096774 Vol futures price: 15.9729330923
+ 
+GCV6^8 :Diff: -0.862274646433 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 361.830434783 Vol futures price: 22.4132070006
+ 
+GCU6^8 :Diff: 0.0614764938819 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 381.269354839 Vol futures price: 28.5191084143
+ 
+GCQ6^8 :Diff: -1.55172794149 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 356.634647303 Vol futures price: 21.0301202384
+ 
+GCN6^8 :Diff: -0.00851604503152 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 345.925806452 Vol futures price: 3.84485141639
+ 
+GCM6^8 :Diff: -0.566297583006 Mean Interest rate: 0.0106541237106 Vol Interest rate: 0.00111463740835 Mean futures price: 358.052439024 Vol futures price: 28.5700695863
+ 
+GCK6^8 :Diff: 0.00378142516857 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 344.287096774 Vol futures price: 4.89161507305
+ 
+GCJ6^8 :Diff: -2.82988499979 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 362.207246377 Vol futures price: 39.8867461042
+ 
+GCH6^8 :Diff: 0.0260208384964 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 345.0 Vol futures price: 7.98093561767
+ 
+GCG6^8 :Diff: -2.48000835218 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 367.770600414 Vol futures price: 48.648745726
+ 
+GCF6^8 :Diff: 0.00645211923857 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 332.266129032 Vol futures price: 11.0882085517
+ 
+GCZ5^8 :Diff: -1.57862714132 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 373.022520661 Vol futures price: 54.8408675456
+ 
+GCX5^8 :Diff: -0.0250709014894 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 326.306451613 Vol futures price: 3.39315587084
+ 
+GCV5^8 :Diff: -2.22055778287 Mean Interest rate: 0.0106359214261 Vol Interest rate: 0.00111223204351 Mean futures price: 378.32556701 Vol futures price: 56.2086173635
+ 
+GCU5^8 :Diff: 0.0264045461178 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 325.036065574 Vol futures price: 7.20534939681
+ 
+GCQ5^8 :Diff: -2.25048239473 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 384.366528926 Vol futures price: 57.3912186563
+ 
+GCN5^8 :Diff: -0.00621314443461 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 317.84516129 Vol futures price: 4.05485282416
+ 
+GCM5^8 :Diff: -2.72121354307 Mean Interest rate: 0.0106359214261 Vol Interest rate: 0.00111223204351 Mean futures price: 393.982680412 Vol futures price: 62.1167878186
+ 
+GCK5^8 :Diff: 0.0556923769356 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 316.047619048 Vol futures price: 12.6616137433
+ 
+GCJ5^8 :Diff: -2.57961909113 Mean Interest rate: 0.0106359214261 Vol Interest rate: 0.00111223204351 Mean futures price: 403.431340206 Vol futures price: 63.5123931997
+ 
+GCH5^8 :Diff: -0.0195680477431 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 302.914516129 Vol futures price: 10.5277796387
+ 
+GCG5^8 :Diff: -1.67880371077 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 414.045341615 Vol futures price: 63.1876114292
+ 
+GCF5^8 :Diff: -0.0295327183562 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 323.601639344 Vol futures price: 18.9898462239
+ 
+GCZ4^8 :Diff: -3.60487688614 Mean Interest rate: 0.0106359214261 Vol Interest rate: 0.00111223204351 Mean futures price: 427.426185567 Vol futures price: 63.9659528871
+ 
+GCX4^8 :Diff: -2.1129240635 Mean Interest rate: 0.0106901915672 Vol Interest rate: 0.0011197168366 Mean futures price: 434.203754941 Vol futures price: 66.5182732608
+ 
+GCV4^8 :Diff: -1.65084907536 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 438.613842975 Vol futures price: 65.0482274559
+ 
+GCU4^8 :Diff: -0.0710055101534 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 348.736507937 Vol futures price: 9.6383542952
+ 
+GCQ4^8 :Diff: -0.738938663353 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 444.722727273 Vol futures price: 59.266836538
+ 
+GCN4^8 :Diff: -0.0279635325019 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 371.349206349 Vol futures price: 17.6172342839
+ 
+GCM4^8 :Diff: 0.722879431337 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 450.157142857 Vol futures price: 53.8382475599
+ 
+GCK4^8 :Diff: -0.0295726885576 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 387.366666667 Vol futures price: 11.006462748
+ 
+GCH4^8 :Diff: -0.00842370874196 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 385.870967742 Vol futures price: 10.3027147549
+ 
+GCG4^8 :Diff: 0.795490332968 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 442.461697723 Vol futures price: 46.3407462696
+ 
+GCF4^8 :Diff: -0.0217242789701 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 382.477419355 Vol futures price: 10.6959808453
+ 
+GCZ3^8 :Diff: -1.08171588361 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 441.076970954 Vol futures price: 42.5169176575
+ 
+GCX3^8 :Diff: -0.0545374686996 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 398.624193548 Vol futures price: 16.0030610528
+ 
+GCV3^8 :Diff: -1.07610806621 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 443.966942149 Vol futures price: 42.3558481691
+ 
+GCU3^8 :Diff: -0.00520957786414 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 419.9 Vol futures price: 7.77176411507
+ 
+GCQ3^8 :Diff: -2.73887348844 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 448.21884058 Vol futures price: 50.2517792924
+ 
+GCN3^8 :Diff: -0.0212461373718 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 426.972580645 Vol futures price: 12.8561541602
+ 
+GCM3^8 :Diff: -1.20222874538 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 452.525879917 Vol futures price: 58.5643569571
+ 
+GCK3^8 :Diff: -0.0459396649927 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 432.396825397 Vol futures price: 8.48150121958
+ 
+GCH3^8 :Diff: 0.0216564235291 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 466.080645161 Vol futures price: 35.9811726696
+ 
+GCG3^8 :Diff: -4.12675681978 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 465.395426195 Vol futures price: 81.8222220975
+ 
+GCF3^8 :Diff: 0.0329064711355 Mean Interest rate: 0.00821377214572 Vol Interest rate: 0.00032201628819 Mean futures price: 447.681034483 Vol futures price: 26.7807925052
+ 
+GCZ2^8 :Diff: -4.23276120531 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 468.575726141 Vol futures price: 93.2541381725
+ 
+GCX2^8 :Diff: 0.0315547928771 Mean Interest rate: 0.00822621680525 Vol Interest rate: 0.000333045627643 Mean futures price: 425.991525424 Vol futures price: 20.9208944954
+ 
+GCV2^8 :Diff: -7.73828502195 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 487.647619048 Vol futures price: 122.604006845
+ 
+GCU2^8 :Diff: 0.121717670815 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 380.819354839 Vol futures price: 45.3838071119
+ 
+GCQ2^8 :Diff: -7.99976770831 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 512.565767635 Vol futures price: 154.328676615
+ 
+GCN2^8 :Diff: -0.0440190650336 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 331.771666667 Vol futures price: 16.7834451337
+ 
+GCM2^8 :Diff: -4.55857920837 Mean Interest rate: 0.010620222511 Vol Interest rate: 0.00111024016045 Mean futures price: 541.788726514 Vol futures price: 165.282145681
+ 
+GCK2^8 :Diff: -0.0704004271558 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 342.358730159 Vol futures price: 14.1965302593
+ 
+GCH2^8 :Diff: -0.0768272362355 Mean Interest rate: 0.00822621680525 Vol Interest rate: 0.000333045627643 Mean futures price: 367.972881356 Vol futures price: 27.3862196605
+ 
+GCG2^8 :Diff: -2.07784144513 Mean Interest rate: 0.0106228454437 Vol Interest rate: 0.00111056771102 Mean futures price: 584.127708333 Vol futures price: 140.876077942
+ 
+GCF2^8 :Diff: -0.066544689058 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 406.516393443 Vol futures price: 18.8512484287
+ 
+GCZ1^8 :Diff: -6.01328938204 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 610.209958506 Vol futures price: 145.81015091
+ 
+GCX1^8 :Diff: -0.00127867895369 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 436.541935484 Vol futures price: 19.425984829
+ 
+GCV1^8 :Diff: 2.6264691169 Mean Interest rate: 0.0106228454437 Vol Interest rate: 0.00111056771102 Mean futures price: 622.73125 Vol futures price: 139.150844644
+ 
+GCU1^8 :Diff: -0.0307790841851 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 424.815873016 Vol futures price: 17.7345435171
+ 
+GCQ1^8 :Diff: 3.54396161048 Mean Interest rate: 0.0106306986746 Vol Interest rate: 0.00111156097424 Mean futures price: 612.317391304 Vol futures price: 131.244878783
+ 
+GCN1^8 :Diff: -0.0814114945679 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 454.782258065 Vol futures price: 34.2096313744
+ 
+GCM1^8 :Diff: 4.54393961132 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 596.557883817 Vol futures price: 129.870299447
+ 
+GCK1^8 :Diff: -0.0198128277528 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 495.488709677 Vol futures price: 21.7229780591
+ 
+GCH1^8 :Diff: -0.160590254719 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 525.601639344 Vol futures price: 43.2121738
+ 
+GCG1^8 :Diff: 5.6906625273 Mean Interest rate: 0.0106254657659 Vol Interest rate: 0.0011108970267 Mean futures price: 544.217255717 Vol futures price: 156.496848764
+ 
+GCF1^8 :Diff: -0.109421672502 Mean Interest rate: 0.00822621680525 Vol Interest rate: 0.000333045627643 Mean futures price: 600.615254237 Vol futures price: 35.0622923321
+ 
+GCZ0^8 :Diff: 5.00724622836 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 512.606016598 Vol futures price: 165.628615157
+ 
+GCX0^8 :Diff: 0.0376717452331 Mean Interest rate: 0.00825128214058 Vol Interest rate: 0.000354715694438 Mean futures price: 661.46557377 Vol futures price: 31.9422372378
+ 
+GCV0^8 :Diff: 5.21501981572 Mean Interest rate: 0.0106333113083 Vol Interest rate: 0.0011118956162 Mean futures price: 473.676859504 Vol futures price: 170.489170549
+ 
+GCU0^8 :Diff: -0.0259078362032 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 651.917460317 Vol futures price: 27.5654749537
+ 
+GCQ0^8 :Diff: 3.58010405573 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 428.897095436 Vol futures price: 162.906889731
+ 
+GCN0^8 :Diff: 0.10396297572 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 587.577777778 Vol futures price: 54.7468008617
+ 
+GCM0^8 :Diff: 3.12944778505 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 386.029875519 Vol futures price: 150.74618242
+ 
+GCK0^8 :Diff: -0.271058164917 Mean Interest rate: 0.00826388641322 Vol Interest rate: 0.000365355643257 Mean futures price: 535.772580645 Vol futures price: 45.28979152
+ 
+GCJ0^8 :Diff: 2.77502653905 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 349.784024896 Vol futures price: 142.024313176
+ 
+GCH0^8 :Diff: 0.247318664144 Mean Interest rate: 0.00827652841993 Vol Interest rate: 0.0003758654031 Mean futures price: 637.487301587 Vol futures price: 80.1744080849
+ 
+GCG0^8 :Diff: 2.03713580606 Mean Interest rate: 0.0106280835017 Vol Interest rate: 0.00111122811273 Mean futures price: 314.219709544 Vol futures price: 128.487658664
+ 
+GCF0^8 :Diff: 0.224477896368 Mean Interest rate: 0.00823872296868 Vol Interest rate: 0.000343945601641 Mean futures price: 507.065 Vol futures price: 123.720658239
+ 
+GCZ9^7 :Diff: 1.31618323675 Mean Interest rate: 0.0106228454437 Vol Interest rate: 0.00111056771102 Mean futures price: 270.3675 Vol futures price: 67.3949663211
+ 
