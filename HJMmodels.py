@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """
-   Stochastic models for interest rate term structures
-
-    v0.1 - Mans Skytt
+    Stochastic models for interest rate term structures
+ 	Run script to simulate. Option to replace input with own input. See bottom of file
+    v0.1 - Mans Skytt (m@skytt.eu)
 """
 from __future__ import division
 import numpy as np
@@ -14,8 +14,7 @@ from forwardCurves import runSurfPlot
 """
 def checkTimesteps(timesteps):
 	if timesteps % 1 != 0:
-		print 'Timesteps not even. type(T) = int => T = years, otherwise use T = days/365 '
-		return None
+		return int(round(timesteps))
 	else:
 		timestepsInt = int(timesteps)
 		return timestepsInt
@@ -61,30 +60,29 @@ def twoFactorHJM(initVec, endTime):
 	initVec : Initial forward interest rate term structure
 	returns: Time series of forecasted term strucutres
 	"""
-	sigma1 = 0.005 # Winged volatility constants
+	sigma1 = 0.005 # volatility constants, replace with estimate made w suitable approximation (ML or kalman)
 	sigma2 = 0.01
 	kappa = 0.1
 	dt = 1/365 # time horizion time step 
-	simdt = 1/365 # simulation timestep
+	simdt = 7/365 # simulation timestep
 	T = 10
 	horizonTimesteps = initVec.shape[0] # Timesteps in horizon
 	simTimesteps = checkTimesteps(endTime/simdt) # Timesteps for simulation
-	if checkTimesteps:
-		# Generate volatility and drift functions
-		t = np.linspace(7/365, T, horizonTimesteps) # time horizon
-		sigmaf1 = sigma1*np.ones(t.shape) # first volatility function, constant over entire horizon
-		sigmaf2 = sigma2*np.exp(-kappa*t) # second volatility function, varying over horizion
-		mu = sigma1**2*t + sigma2**2/kappa*np.exp(-kappa*t)*(1-np.exp(-kappa*t)) # drift function
-		# Generate brownian motions until end of simulation
+	# Generate volatility and drift functions
+	t = np.linspace(7/365, T, horizonTimesteps) # time horizon
+	sigmaf1 = sigma1*np.ones(t.shape) # first volatility function, constant over entire horizon
+	sigmaf2 = sigma2*np.exp(-kappa*t) # second volatility function, varying over horizion
+	mu = sigma1**2*t + sigma2**2/kappa*np.exp(-kappa*t)*(1-np.exp(-kappa*t)) # drift function
+	# Generate brownian motions until end of simulation
 
-		dW1 = genBrownian(endTime, simdt) 
-		dW2 = genBrownian(endTime, simdt) 
-		# Simulate yield curve progression
-		dphi = np.zeros((simTimesteps+1,initVec.shape[0]))# Pre allocate dphi array space
-		dphi[0,:] = initVec # Add initial Vector as first
-		for i in range(1, simTimesteps):
-			dphi[i,:] = mu*dt + sigmaf1*dW1[i] + sigmaf2*dW2[i]
-		return np.cumsum(dphi, axis=0) 
+	dW1 = genBrownian(endTime, simdt) 
+	dW2 = genBrownian(endTime, simdt) 
+	# Simulate yield curve progression
+	dphi = np.zeros((simTimesteps,initVec.shape[0]))# Pre allocate dphi array space
+	dphi[0,:] = initVec # Add initial Vector as first
+	for i in range(1, simTimesteps):
+		dphi[i,:] = mu*dt + sigmaf1*dW1[i] + sigmaf2*dW2[i]
+	return np.cumsum(dphi, axis=0) 
 
 """
 #	PC-based HJM
@@ -93,41 +91,69 @@ def PCHJM(initVec, endTime, PCsMat):
 	"""
 	endTime : Time until stop of simulation, in years
 	initVec : Initial forward interest rate term structure
-	PCsMat : Principal components equivalent of the volatility functions
+	PCsMat : Principal components equivalent of the volatility functions. Could also be volatility functions for every time horizon
 	returns: Time series of forecasted term strucutres
 	"""
 	dt = 1/365 # time horizion time step 
-	simdt = 1/365 # simulation timestep
-	T = 10
+	simdt = 7/365 # simulation timestep
+	T = 10 # Time horizon max
 	numbFactors = PCsMat.shape[1]
 	horizonTimesteps = initVec.shape[0] # Timesteps in horizon
 	simTimesteps = checkTimesteps(endTime/simdt) # Timesteps for simulation
-	if checkTimesteps:
-		t = np.linspace(7/365, T, horizonTimesteps) # time horizon
-		integratedSigma = np.cumsum(PCsMat, axis=0) # row equal time horizon index, column equal sigma
-		mu = np.sum(integratedSigma*PCsMat, axis=1) # 
-		dW = genXBrownians(endTime, simdt, numbFactors) 
-		# Simulate yield curve progression
-		dphi = np.zeros((simTimesteps,initVec.shape[0]))# Pre allocate dphi array space
-		dphi[0,:] = initVec # Add initial Vector as first
-		for i in range(1, simTimesteps):
-			sigmaTemp = np.sum(PCsMat*dW[i,:], axis = 1)
-			dphi[i,:] = mu*dt + sigmaTemp
-	print dphi.shape
+
+	integratedSigma = np.cumsum(PCsMat, axis=0) # row equal time horizon index, column equal different sigmas
+	mu = np.sum(integratedSigma*PCsMat, axis=1) # 
+	dW = genXBrownians(endTime, simdt, numbFactors) 
+	# Simulate yield curve progression
+	dphi = np.zeros((simTimesteps,initVec.shape[0]))# Pre allocate dphi array space
+	dphi[0,:] = initVec # Add initial Vector as first
+	for i in range(1, simTimesteps):
+		sigmaTemp = np.sum(np.multiply(PCsMat,dW[i,:]), axis = 1)*np.sqrt(252)
+		dphi[i,:] = mu*dt + sigmaTemp
 	return np.cumsum(dphi, axis = 0)
 
-storageFile = 'EONIAmid.hdf5' # Name of file where data is to be/ is currently stored
+def HoLee(initVec, endTime, vol):
+	"""
+	endTime : Time until stop of simulation, in years
+	initVec : Initial forward interest rate term structure
+	vol : volatility, yearly basis
+	returns: Time series of forecasted term strucutres
+	"""
+	dt = 1/365 # time horizion time step 
+	simdt = 7/365 # simulation timestep
+	T = 10
+	horizonTimesteps = initVec.shape[0] # Timesteps in horizon
+	simTimesteps = checkTimesteps(endTime/simdt) # Timesteps for simulation
+	# Generate volatility and drift functions
+	t = np.linspace(7/365, T, horizonTimesteps) # time horizon
+	volf = vol*np.ones(t.shape) # volatility, constant over entire horizon
+	mu = vol**2*t # drift function
+	# Generate brownian motions until end of simulation
+	dW = genBrownian(endTime, simdt) 
+	
+	# Simulate yield curve progression
+	dphi = np.zeros((simTimesteps,initVec.shape[0]))# Pre allocate dphi array space
+	dphi[0,:] = initVec # Add initial Vector as first
+	for i in range(1, simTimesteps):
+		dphi[i,:] = mu*dt + volf*dW[i]
+	return np.cumsum(dphi, axis=0) 
 
+
+
+# Load from storage file
+storageFile = 'EONIAmid.hdf5' # Name of file where data is currently stored
 MATLABForwardMat = loadFromHDF5(storageFile,'MATLABForwardMat')
 MATLABForwardVec = MATLABForwardMat[0,:]
 times = loadFromHDF5(storageFile,'times')
 MATLABForPCs = loadFromHDF5(storageFile, 'MATLABForPCs')
-#phi = PCHJM(MATLABForwardVec, 5, MATLABForPCs)
-plt.plot(MATLABForPCs)
-plt.show()
-phi = twoFactorHJM(MATLABForwardVec, 8)
-print phi.shape, times.shape
+
+# Run simulations, comment out the ones not used
+phi = PCHJM(MATLABForwardVec, 5, MATLABForPCs)
+# phi = twoFactorHJM(MATLABForwardVec, 8)
+#phi = HoLee(MATLABForwardVec, 5, 0.1)
+
 runSurfPlot(phi[:,:times.shape[0]], times)
+plt.show()
 
 
 

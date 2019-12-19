@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 """
     - OIS data processing 
-    - Building forward interest rate curves
+    - Building forward interest rate curves from either cubic splines or utilising matlab-smoothened curves.
     - Computing eigenvectors and principal components
 
-    v0.1 - Mans Skytt
+    v0.1 - Mans Skytt (m@skytt.eu)
 """
 from __future__ import division
 from xlExtract import xlExtract
@@ -69,7 +69,7 @@ def OIStoForMatHelp(OISdataVec, matDates):
     return csForwardRates
 
 def OIStoZCMatHelp(OISdataVec, matDates):
-    # Helpter function to OISMatToForwardMat(), only returning interpolated forward rates
+    # Helpter function to OISMatToZCMat(), only returning interpolated Zero coupon rates
     forwardRates, csForwardRates, ZCRates, csZCRates, times = runCubicInterp(OISdataVec, matDates)
     return csZCRates
 
@@ -86,6 +86,9 @@ def OISMatToZCMat(OISdataMat, matDates):
     return ZCMat, times
 
 def runPlotLoop(endRow, startRow, matDates, OISdataMat):
+    """
+        # Run through vectors
+    """
     plt.axis([min(matDates),max(matDates),-0.4,1.7]) # lock axis
     plt.ion()
     row = startRow
@@ -114,9 +117,10 @@ def runSurfPlot(forwardMat, times):
 
     surf = ax.plot_surface(X, Y, forwardMat, cmap=cm.coolwarm, linewidth=0, antialiased=False)
     fig.colorbar(surf, shrink=0.5, aspect=5)
-    plt.show()
+    #plt.show()
 
 def genEigs(mat):
+    # Compute eigen values from matrix
     # Matrix with one observations on each row and one variable in each column 
     covMat = np.cov(mat.T)
     eigVals, eigVecs = np.linalg.eigh(covMat)
@@ -128,10 +132,15 @@ def genEigs(mat):
     return eigVals, eigVecs, eigPerc
 
 def genPCs(eigVals, eigVecs, eigPerc, percExpl):
+    """
+        # Compute principal components given eigen values, eigen vectors, 
+        # percentages explained by each eigen vector and the desierd explanation percentage
+    """
     i = 0
     cumPerc = 0
     PC = np.zeros(eigVecs.shape)
     while cumPerc < percExpl:
+        print eigPerc[i], eigVals[i]
         PC[:,i] = eigVecs[:,i]*np.sqrt(eigVals[i])
         cumPerc += eigPerc[i]
         i += 1
@@ -148,12 +157,19 @@ def genTimeDelta(dataInd):
     return timeDeltas
 
 def genOISData(readExcel, sheetName, storageFile, matDates, dataCutoff):
+    """
+        # Extracting OIS data from excel file (special format requried)
+        # readExcel - Bool determening if data is to be read from excel files or from HDF5 file
+        # storageFile - HDF5 File where to store/load data to/from 
+        # matDates - instrument matuirty dates
+        # dataCutoff - when to truncate data
+    """
     if readExcel:
         OISdata = xlExtract('Data/OIS_data.xlsx',sheetName,0)
         OISdataDF = OISdata.dflinterp # type: pandas.core.frame.DataFrame
         OISdataInd = OISdata.index # type: pandas.tseries.index.DatetimeIndex or nump.ndarray
         OISdataCol = OISdata.columns # type: pandas.indexes.base.Index
-        OISdataMat = OISdataDF.values/100 # type: numpy.ndarray
+        OISdataMat = OISdataDF.values/100 # type: numpy.ndarray, interpolated between points
         OISdataMat = OISdataMat[:,0:len(matDates)]
         OISTimeDelta = genTimeDelta(OISdataInd)
         print 'Extracted data using xlExtract.'
@@ -167,7 +183,13 @@ def genOISData(readExcel, sheetName, storageFile, matDates, dataCutoff):
     return
 
 def genForwardData(genForward, sheetName, storageFile, matDates, dataCutoff):
-    
+    """
+        # Compute forward rates from the OIS quotes
+        # genForward - Bool determening if data is to be computed from 'scratch' or read from HDF5 file
+        # storageFile - HDF5 File where to store/load data to/from 
+        # matDates - instrument matuirty dates
+        # dataCutoff - when to truncate data
+    """
     OISdataMat = loadFromHDF5(storageFile,'OISdataMat')
 
     if genForward:
@@ -187,7 +209,14 @@ def genForwardData(genForward, sheetName, storageFile, matDates, dataCutoff):
     return
 
 def genZCData(genZC, sheetName, storageFile, matDates, dataCutoff):
-    
+
+        # Compute Zero coupon rates from the OIS quotes
+        # genForward - Bool determening if data is to be computed from 'scratch' or read from HDF5 file
+        # storageFile - HDF5 File where to store/load data to/from 
+        # matDates - instrument matuirty dates
+        # dataCutoff - when to truncate data
+
+
     OISdataMat = loadFromHDF5(storageFile,'OISdataMat')
 
     if genZC:
@@ -219,6 +248,16 @@ def interpUSG(dataMat, matDates, outputTimes):
         return csZCRates
 
 def genUSGGData(genZC, sheetName, storageFile, matDates, dataCutoff):
+    
+    """
+        # Compute forward data from the USGG quotes
+        # genZC - Bool determening if data is to be computed from 'scratch' or read from HDF5 file
+        # storageFile - HDF5 File where to store/load data to/from 
+        # matDates - instrument matuirty dates
+        # dataCutoff - when to truncate data
+    """
+
+
     OISdataMat = loadFromHDF5(storageFile,'OISdataMat')
 
     if genZC:
@@ -241,7 +280,11 @@ def genUSGGData(genZC, sheetName, storageFile, matDates, dataCutoff):
 
 def runGenerateData(readExcel, genForward, genZC, sheetName, storageFile):
     """
+        readExcel : bool deciding whether or not data will be read from excel or hdf5
+        genForward : bool deciding whether or not forward data will be generated or read from hdf5
+        genZC : bool deciding whether or not Zero coupon data will be generated or read from hdf5
         sheetName : Name of sheet
+        storageFile: name of file to store/load data to/from
     """
     print 'Started.'
     """
@@ -359,10 +402,14 @@ def runGenMatlabEigs(genMatlabEigs, storageFile):
     return
 
 def runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageFile):
+    """
+        # generate corresponting data from matlab generated forward yield curves. Use with output from forward.m
+    """
 
     EONIAdataCutoff = 3000 # Number of days with valid data, for EONIA: 3037, from 2005-08-11 and forward
     FFE2YdataCutoff = 1399
     FFE1YdataCutoff = 2800
+    print 'MAtlab shape \n \n', MATLABForwardMat.shape, '\n'
 
     if sheetName[0:3] == 'EON':
         dataCutoff = EONIAdataCutoff
@@ -375,6 +422,11 @@ def runGenMatlab(genMatlab, genMatlabEigs, MATLABForwardMat, sheetName, storageF
         MATLABForwardMat = np.flipud(MATLABForwardMat.T)
         MATLABForwardMat = MATLABForwardMat[:dataCutoff,:]
         MATLABForMatDiff = -1*np.diff(MATLABForwardMat, axis = 0)
+        # times = loadFromHDF5(storageFile, 'times')
+        # runSurfPlot(MATLABForwardMat[:EONIAdataCutoff-1000,:times.shape[0]], times)
+        # runSurfPlot(MATLABForMatDiff[:EONIAdataCutoff-1000,:times.shape[0]], times)
+        # plt.show()
+
         print 'Generated Matlab forward matrices.', MATLABForwardMat.shape
         storeToHDF5(storageFile, 'MATLABForMatDiff', MATLABForMatDiff)
         storeToHDF5(storageFile, 'MATLABForwardMat', MATLABForwardMat)
@@ -415,7 +467,7 @@ def runGenZCPCs(genZCEigs, ZCMatDiff, storageFile):
 def runGenForPCs(genForEigs, forMatDiff, storageFile):
     print 'Started runGenForPCs.'
     """
-    #    Generate forward/Zero-coupon eigen values
+    #    Generate forward/Zero-coupon principal components from matrix with forward curve differences between days 
     """
     if genForEigs:
         forEigVals, forEigVecs, forEigPerc = genEigs(forMatDiff)
@@ -437,10 +489,18 @@ def runGenForPCs(genForEigs, forMatDiff, storageFile):
     return
 
 def run(storageFile, sheetName):
+    """
+        # Used for testing, debugging and plotting
+    """
+
+    # Define dates and numbers
     EONIAmatDates = [1/52, 2/52,3/52,1/12,2/12,3/12,4/12,5/12,6/12,7/12,8/12,9/12,10/12,11/12,1,15/12,18/12,21/12,2,3,4,5,6,7,8,9,10] #,12,15,20,30,40,50]
     FFEmatDates = [1/52, 2/52, 3/52, 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 1, 2]
     USGGmatDates = [1/12, 3/12, 6/12, 1, 2, 5, 7, 10]
-    OISTopDate = pd.to_datetime('2017-04-20') # Most recent available date
+    #
+    #  ADD MANUALLY if used
+    #
+    OISTopDate = pd.to_datetime('2017-04-20') # Most recent available date, manually added
     
     USGGdataCutoff = 4100
     EONIAdataCutoff = 3000
@@ -453,12 +513,12 @@ def run(storageFile, sheetName):
     ZCMat = loadFromHDF5(storageFile,'ZCMat')
     OISTimeDelta = loadFromHDF5(storageFile,'OISTimeDelta')
 
-    startRow = 800
-    startCol = 365
-    ZCBondPriceMat = genZCBondPrices(ZCMat, times)
-    bondPV, bondLogReturns, dateVec = genZCBondTS(ZCBondPriceMat, OISTimeDelta, OISTopDate, startRow, startCol)
-    runSurfPlot(ZCBondPriceMat[0:2000,:], times)
-    runSurfPlot(ZCMat[0:2000,:], times)
+    # startRow = 800
+    # startCol = 365
+    # ZCBondPriceMat = genZCBondPrices(ZCMat, times)
+    # bondPV, bondLogReturns, dateVec = genZCBondTS(ZCBondPriceMat, OISTimeDelta, OISTopDate, startRow, startCol)
+    # runSurfPlot(ZCBondPriceMat[0:2000,:], times)
+    # runSurfPlot(ZCMat[0:3000,:], times)
     # plt.plot(dateVec, bondPV)
     # plt.show()
     # plt.plot(dateVec[1:], bondLogReturns)
@@ -467,21 +527,22 @@ def run(storageFile, sheetName):
     # forwardMat = loadFromHDF5(storageFile,'forwardMat')
     # forEigVecs = loadFromHDF5(storageFile, 'forEigVecs')
     # forEigPerc = loadFromHDF5(storageFile,'forEigPerc')
-    # MATLABForwardMat = loadFromHDF5(storageFile,'MATLABForwardMat')
-    # OISdataMat = loadFromHDF5(storageFile,'OISdataMat')
-    # MATLABForEigVals = loadFromHDF5(storageFile,'MATLABForEigVals')
-    # MATLABForEigVecs = loadFromHDF5(storageFile,'MATLABForEigVecs')
-    # MATLABForEigPerc = loadFromHDF5(storageFile,'MATLABForEigPerc') 
-    # MATLABForPCs = loadFromHDF5(storageFile,'MATLABForPCs') 
-    # MATLABForMatDiff = loadFromHDF5(storageFile,'MATLABForMatDiff') 
+    MATLABForwardMat = loadFromHDF5(storageFile,'MATLABForwardMat')
+    OISdataMat = loadFromHDF5(storageFile,'OISdataMat')
+    MATLABForEigVals = loadFromHDF5(storageFile,'MATLABForEigVals')
+    MATLABForEigVecs = loadFromHDF5(storageFile,'MATLABForEigVecs')
+    MATLABForEigPerc = loadFromHDF5(storageFile,'MATLABForEigPerc') 
+    MATLABForPCs = loadFromHDF5(storageFile,'MATLABForPCs') 
+    MATLABForMatDiff = loadFromHDF5(storageFile,'MATLABForMatDiff') 
 
     # plt.plot(MATLABForEigVecs[:,0:3])
-    # plt.show()
+    # # plt.show()
     # plt.plot(MATLABForPCs)
     # plt.show()
 
     # print MATLABForEigPerc
-    # runSurfPlot(MATLABForwardMat[:EONIAdataCutoff-1000,:times.shape[0]], times)
+    runSurfPlot(MATLABForwardMat[:EONIAdataCutoff-1000,:times.shape[0]], times)
+    plt.show()
     # runSurfPlot(ZCBondPriceMat[:EONIAdataCutoff,:times.shape[0]], times)
     # runSurfPlot(OISdataMat[:FFE2YdataCutoff,:], FFEmatDates)
     # startRow = 0

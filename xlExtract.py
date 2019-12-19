@@ -3,6 +3,8 @@
     Class to extract data from excel files with column indices at first row and 
     row indices specified using indexcolumn in initializer, default is 0.
 
+    See files OilFutures.xlsx or OIS_data.xlsx for format examples.
+
     v0.1 - Mans Skytt
     ----------------------------------------------------------
     Added linear interpolation of data and changed .ws to .df to represent data frame

@@ -2,7 +2,7 @@
 """
     - Reworked correlation
 
-    v0.1 - Mans Skytt
+    v0.1 - Mans Skytt (m@skytt.eu)
 """
 from __future__ import division
 from xlExtract import xlExtract
@@ -53,16 +53,18 @@ def genBondTSfromDf(BondDf):
     return bondTS, logReturns
 
 
-def genRowMeanFromDF(df):
+def genRollingMeanFromDF(df):
     """
-    # Compute mean at each time step and how many data points used
+    # Compute statistics at each time step and how many data points used, adding index levels
+    # Return: newDf - New dataframe with added statistics 
     """
-    newDf = pd.DataFrame() 
+    newDf = pd.DataFrame()
     newDf['meanVal'] = df.mean(axis=1, skipna=True)
     newDf['amount'] = df.count(axis=1)
     newDf['rollingMean30'] = newDf['meanVal'].rolling(30).mean()
     newDf['rollingMean200'] = newDf['meanVal'].rolling(200).mean()
-    print newDf
+    newDf['rollingMean700'] = newDf['meanVal'].rolling(700).mean()
+    newDf.index.names = ['Date']
     return newDf
 
 #Data extraction parameters
@@ -133,13 +135,12 @@ def genStats(pathToSaveFile, activeCommodity):
     dfZCMat = pd.DataFrame(data=ZCMat[:dataCutoff,:], index=ZCData.index[:dataCutoff], columns=times) # Dataframe of ZC matrix to use for date-matching
     dfAllEWMCov = pd.DataFrame() # Create frame for EWMA covariance data frame
     dfAllEWMCorr = pd.DataFrame() # Create frame for EWMA covariance data frame
-    
+    instrumentSpecs = pd.DataFrame(index=['maturity'])
     # Loop through sheets defined above
     for sheet_ in sheets[commodityNumb]:
         print 'In sheet: ', sheet_
         futuresDataMat = xlExtract(pathsToData[commodityNumb], sheet_, 0) #extract one sheet with index column 0 
         dfFuturesData = futuresDataMat.df
-        
         # Loop through instruments (=column) in sheets
         for column in dfFuturesData.columns:
             #print 'At instrument: ', column, ' (', sheet_, ')'
@@ -206,7 +207,7 @@ def genStats(pathToSaveFile, activeCommodity):
             #uniounIndex = ewmCovDF.index.union(dfAllEWMCov.index) # Union of indices, not used in this configuration
             dfAllEWMCov = pd.concat([dfAllEWMCov,ewmCovDF], axis=1) # Add most recent instrument
             dfAllEWMCorr = pd.concat([dfAllEWMCorr,ewmCorrDF], axis=1) # Add most recent instrument
-
+            instrumentSpecs[column] = pd.Series(maturity.days, index=instrumentSpecs.index)
             # Store to file 
             storeToHDF5(pathToSaveFile, 'EWMACovData'+column, EWMACovData) # Store every TS to unique path
 
@@ -222,29 +223,41 @@ def genStats(pathToSaveFile, activeCommodity):
             instrumentVec = np.append(instrumentVec, column.encode('ascii','ignore')) 
             maturityVec = np.append(maturityVec, maturity.days)
 
+
             numbInstruments += 1 
             if np.abs(np.amax(futureLogReturns)) > 2:
                 print column, 'has abnormal log-returns (abs > 200%).'
             # print covMatEntireTS, '\n', corrCoefPearson, '\n', corrCoefSpearman, pValSpearman
 
-
-    meanCovDF = genRowMeanFromDF(dfAllEWMCov)
-    meanCorrDF = genRowMeanFromDF(dfAllEWMCorr)
+    statCovDF = genRollingMeanFromDF(dfAllEWMCov)
+    statCorrDF = genRollingMeanFromDF(dfAllEWMCorr)
     
     fig1, ax1 = plt.subplots()
     ax2 = ax1.twinx()
-    meanCovDF.amount.plot(ax=ax1, style='g-')
-    meanCovDF.meanVal.plot(ax=ax2, style='b-')
-    meanCovDF.rollingMean30.plot(ax=ax2, style='r-')
-    meanCovDF.rollingMean200.plot(ax=ax2, style='k-')
+    statCovDF.amount.plot(ax=ax1, style='g-', label='Active instruments')
+    statCovDF.meanVal.plot(ax=ax2, style='0.8', label='EWMA')
+    statCovDF.rollingMean30.plot(ax=ax2, style='0.5', label='EWMA, Rolling window mean, 30 days')
+    statCovDF.rollingMean200.plot(ax=ax2, style='0.3', label='EWMA, Rolling window mean, 200 days')
+    statCovDF.rollingMean700.plot(ax=ax2, style='k-', label='EWMA, Rolling window mean, 700 days')
+    h1, l1 = ax1.get_legend_handles_labels()
+    h2, l2 = ax2.get_legend_handles_labels()
+    ax1.legend(h1+h2, l1+l2, loc='best')
+    fig1.tight_layout()
+    plt.title('Rolling mean covariance: ' + activeCommodity)
     plt.show()
 
     fig1, ax1 = plt.subplots()
     ax2 = ax1.twinx()
-    meanCorrDF.amount.plot(ax=ax1, style='g-')
-    meanCorrDF.meanVal.plot(ax=ax2, style='b-')
-    meanCorrDF.rollingMean30.plot(ax=ax2, style='r-')
-    meanCorrDF.rollingMean200.plot(ax=ax2, style='k-')
+    statCorrDF.amount.plot(ax=ax1, style='g-', label='Active instruments')
+    statCorrDF.meanVal.plot(ax=ax2, style='0.8', label='EWMA')
+    statCorrDF.rollingMean30.plot(ax=ax2, style='0.5', label='EWMA, Rolling window mean, 30 days')
+    statCorrDF.rollingMean200.plot(ax=ax2, style='0.3', label='EWMA, Rolling window mean, 200 days')
+    statCorrDF.rollingMean700.plot(ax=ax2, style='k-', label='EWMA, Rolling window mean, 700 days')
+    h1, l1 = ax1.get_legend_handles_labels()
+    h2, l2 = ax2.get_legend_handles_labels()
+    ax1.legend(h1+h2, l1+l2, loc='best')
+    fig1.tight_layout()
+    plt.title('Rolling mean correlation: ' + activeCommodity)
     plt.show()
 
     storeToHDF5(pathToSaveFile, activeCommodity+'InstrumentVec', instrumentVec)
@@ -311,6 +324,7 @@ def plotMeansInBins(valuesVec, numbOfEach, bins):
         fig, ax1 = plt.subplots()
         ax1.bar(left=binLimitVec, height=numbWithMaturity, width=np.append(np.diff(binLimitVec),binLimitVec[1]-binLimitVec[0]), color='0.5', label='Number of instruments with maturity')
         #ax1.plot(uniqueMaturities, numbWithMaturity, 'g-', label='Number of instruments with maturity')
+        ax1.set_xlabel('Maturity (days)')
         ax1.set_ylabel('Amount', color='0.5')
         ax1.tick_params('y', colors='0.5')
 
@@ -358,11 +372,11 @@ def plotMeanCovCorr(pathToSaveFile, activeCommodity):
         #   Plot mania
         """
         fig, ax1 = plt.subplots()
-        ax1.bar(left=uniqueMaturities+np.append(np.diff(uniqueMaturities),1)/2, height=numbWithMaturity, width=np.append(np.diff(uniqueMaturities), 1), color='g', label='Number of instruments with maturity')
+        ax1.bar(left=uniqueMaturities+np.append(np.diff(uniqueMaturities),1)/2, height=numbWithMaturity, width=np.append(np.diff(uniqueMaturities), 1), color='0.5', label='Number of instruments with maturity')
         #ax1.plot(uniqueMaturities, numbWithMaturity, 'g-', label='Number of instruments with maturity')
         ax1.set_xlabel('Maturity (days)')
-        ax1.set_ylabel('Amount', color='g')
-        ax1.tick_params('y', colors='g')
+        ax1.set_ylabel('Amount', color='0.5')
+        ax1.tick_params('y', colors='0.5')
 
         ax2 = ax1.twinx()
         ax2.plot(uniqueMaturities, covMean, 'b^', label='Mean '+ name +' for maturity')
@@ -381,24 +395,53 @@ def plotMeanCovCorr(pathToSaveFile, activeCommodity):
 def plotLogReturnHist(pathToSaveFile, activeCommodity):
     stackedLogReturns = loadFromHDF5(pathToSaveFile, activeCommodity+'StackedLogReturns')
 
-    plt.hist(stackedLogReturns[:,0], bins=100, normed=True)
+    plt.hist(stackedLogReturns[:,0], bins=100, normed=True, label='Log-returns')
     plt.xlim((min(stackedLogReturns[:,0]), max(stackedLogReturns[:,0])))
-
+    print stackedLogReturns.size
     mean = np.mean(stackedLogReturns[:,0])
     variance = np.var(stackedLogReturns[:,0])
     sigma = np.sqrt(variance)
     x = np.linspace(min(stackedLogReturns[:,0]), max(stackedLogReturns[:,0]), 100)
-    plt.plot(x, mlab.normpdf(x, mean, sigma))
-
+    plt.plot(x, mlab.normpdf(x, mean, sigma), label='Normal distribution')
+    plt.title('Log-return Distribution: ' + activeCommodity + '\n Daily: $\mu$ = ' + str(mean) + ', $\sigma$ = ' + str(sigma) )
+    plt.legend(loc='best')
     plt.show()
+
+    scipy.stats.probplot(stackedLogReturns[:,0], dist="norm", plot=plt)
+    plt.title('QQ-plot, Log-returns vs Norm dist: ' + activeCommodity + '\n $\mu$ = ' + str(mean) + ', $\sigma$ = ' + str(sigma) )
+    plt.show()
+
     return
 
+
 pathToSaveFile = 'stats.hdf5'
-activeCommodity = 'Gold'
+activeCommodity = 'Oil'
+
 genStats(pathToSaveFile, activeCommodity)
-# plotMeansInBins(pathToSaveFile, activeCommodity, 10)
-# plotMeanCovCorr(pathToSaveFile, activeCommodity)
-# plotLogReturnHist(pathToSaveFile, activeCommodity)
+
+
+plotMeansInBins(pathToSaveFile, activeCommodity, 10)
+plotMeanCovCorr(pathToSaveFile, activeCommodity)
+plotLogReturnHist(pathToSaveFile, activeCommodity)
+
+"""
+# Print to text file
+"""
+# np.set_printoptions(threshold='nan')
+# f = open('statfile'+activeCommodity+'.txt', 'w')
+# corrCoefPearsonVec = loadFromHDF5(pathToSaveFile, activeCommodity+'CorrCoefPearsonVec')
+# corrCoefSpearmanVec = loadFromHDF5(pathToSaveFile, activeCommodity+'CorrCoefSpearmanVec')
+# instrumentVec = loadFromHDF5(pathToSaveFile, activeCommodity+'InstrumentVec')
+# pValSpearmanVec = loadFromHDF5(pathToSaveFile, activeCommodity+'pValSpearmanVec')
+
+# f.write('\n'+activeCommodity+ ':\n')
+# f.write(np.array2string(instrumentVec, separator='\n', suppress_small=False))
+# f.write('\n Pearson:\n')
+# f.write(np.array2string(corrCoefPearsonVec, separator='\n', suppress_small=False))
+# f.write('\n Spearman: \n')
+# f.write(np.array2string(corrCoefSpearmanVec, separator='\n', suppress_small=False))
+# f.write('\n pVal: \n')
+# f.write(np.array2string(pValSpearmanVec, separator='\n', suppress_small=False)) 
 
 
 # plt.plot(uniqueMaturities, covMean, uniqueMaturities, covMedian)

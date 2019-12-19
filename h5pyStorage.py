@@ -3,7 +3,10 @@ import numpy as np
 import os.path
 
 """
+	Loading/reading to hdf5 file
 	Create file and store data
+
+	v0.1 - Mans Skytt (m@skytt.eu)
 """
 def storeToHDF5(filename, datasetName, data_):
 	if os.path.isfile(filename): # Pre-existing file, only append
@@ -34,14 +37,6 @@ def loadFromHDF5(filename, datasetName):
 		return None
 	f.close()
 	return loadedData
-
-# a = np.array([9, 9, 9, 67, 7])
-# aLoaded = 0
-# storeToHDF5('EONIAask.hdf5', 'OISdataMat', a)
-# storeToHDF5('ArrayStorage.hdf5','aMat',a)
-# aLoaded = loadFromHDF5('EONIAask.hdf5','OISdataMat')
-
-# print aLoaded
 
 
 
